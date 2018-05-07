@@ -1,0 +1,151 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Chiesi.Products;
+using Chiesi.Tanks;
+using Chiesi.BasicInfos;
+using Chiesi.Log;
+using System.Threading;
+using Chiesi.Converter;
+
+namespace Chiesi.Operation
+{
+    class ZeroLoadCell : OperationHandler, IOperation
+    {
+        public TankClass tank { get; set; }
+
+        public Convertion convert { get; set; }
+
+        public BasicInfoClass basicInfo { get; set; }
+
+        public string OperationName { get; set; }
+
+        public ErrorLog errorlog { get; set; }
+
+        private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
+
+        private IEquipament eq;
+
+        public Dictionary<string, string> TagsValues { get; set; }
+
+        public ZeroLoadCell(EquipamentType typeEq)
+        {
+            this.TagsValues = new Dictionary<string, string>();
+            this.tank = TankClass.GetTankClass();
+            this.basicInfo = BasicInfoClass.GetBasicInfo();
+            this.eq = this.eqFact.ConstructEquipament(typeEq);
+            errorlog = new ErrorLog();
+            this.convert = new Convertion(typeEq);
+        }
+
+        public bool checkError()
+        {
+            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+
+            while (tagerror)
+            {
+                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+                Thread.Sleep(1000);
+            }
+            return tagerror;
+        }
+
+        public bool WaitSign()
+        {
+            var tagerror = checkError();
+
+            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
+
+            //configuravel
+            if (!tagerror)
+            {
+                while (!sign)
+                {
+                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
+                }
+            }
+            else
+            {
+                while (tagerror)
+                {
+                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+                }
+                return WaitSign();
+            }
+
+            return sign;
+        }
+
+        /// <summary>
+        /// Método utilizado para calcular e/ou pegar valores que serão colocados dentro do txt 
+        /// e passar o txt para a operação sucessora
+        /// </summary>
+        public override void Calculate(Text txt)
+        {
+            var signal = WaitSign();
+            bool gerarPdf = false;
+
+            try
+            {
+                this.tank.ReadPlc();
+                this.eq.Write(StaticValues.TAGSIGN, "False");
+                Thread.Sleep(1000);
+            }
+            catch (Exception e)
+            {
+                errorlog.writeLog("ZeroLoadCell", "tag não especificada", e.ToString(), DateTime.Now);
+                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+            }
+
+            // TESTANDO FORMAT DOT TO COMMA
+            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tank.TankWeight/100));
+
+            try
+            {
+                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
+            }
+            catch (Exception e)
+            {
+                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
+                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+            }
+
+            if (!gerarPdf)
+            {
+                txt.addItem(x);
+                txt.saveTxt(x, false);
+            }
+
+            if (successor != null)
+            {
+                if (gerarPdf)
+                {
+                    Pdf pdf = new Pdf(txt.txtAtual);
+                    pdf.gerarPdf(txt.Header, basicInfo);
+                    txt.cleanTxt();
+                }
+                else
+                {
+                    successor.Calculate(txt);
+                }
+            }
+        }
+
+        public string CreateString(params string[] values)
+        {
+            string txtCreate =
+                "<h3>Zerar Célula de Carga</h3>" +
+                "<label>Peso do Tanque : </label><span class='campo'>" + values[0] + "kg</span>" +
+                "<br>" + basicInfo.CreateString();
+
+            return txtCreate;
+
+        }
+
+    }
+}

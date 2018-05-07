@@ -1,0 +1,64 @@
+﻿
+
+body {
+    font-family: sans-serif;
+    line-height: 2em;
+}
+
+footer{
+    page-break-after:always;
+}
+
+.fot{
+    page-break-after:always;
+}
+
+#produto {
+    font-size: 12pt;
+    margin-bottom: 3%;
+    text-align: center;
+    width: 100%;
+}
+
+.campo {
+    text-decoration: underline;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+label {
+    font-weight: 500;
+}
+
+.lab {
+    padding-left: 10%;
+}
+
+.basic-info {
+    display: inline-block;
+}
+
+table {
+    margin-bottom: 1em;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th{
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.no-border{
+    border: none;
+}
+
+td, th {
+    padding: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+}
+

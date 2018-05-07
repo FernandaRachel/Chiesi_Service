@@ -1,0 +1,96 @@
+﻿using Chiesi.AverageSpeed;
+using Chiesi.Loading;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Chiesi.Operation;
+using Chiesi.Monitoring;
+using Chiesi.Valve;
+using Chiesi.Filling;
+
+
+namespace Chiesi.Reports
+{
+    class ReportClenilSubType3 : IReport
+    {
+
+        OperationHandler op1;
+        OperationHandler op2;
+        OperationHandler op3;
+        OperationHandler op4;
+        OperationHandler op5;
+        OperationHandler op11;
+        OperationHandler op12;
+        OperationHandler op13;
+        OperationHandler op14;
+        OperationHandler op15;
+        OperationHandler op16_1;
+        OperationHandler op16_2;
+        OperationHandler op16_3;
+        OperationHandler op17;
+        OperationHandler op18;
+        //OperationHandler op19;
+        //OperationHandler op19_1;
+        //OperationHandler op20;
+        public Text txt;
+
+        EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
+
+        public ReportClenilSubType3(EquipamentType eqtype)
+        {
+            this.eqFact = EquipamentFactory.GetEquipamentFactory();
+
+            op1 = new BeginOfManipulation(eqtype, "BeginOfManipulation", "Clenil");
+            op2 = new ZeroLoadCell(eqtype);
+            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro ", "1.2", "3");
+            op4 = new TempMonitoringClass(eqtype, true);
+            op5 = new SecondLoadingClass(eqtype, "2º Carregamento de Álcool Etílico Anidro + Glicerol", "1.2", "3", false, false);
+            op11 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, true, "5");
+            op12 = new AdditionClass(eqtype, "Adição de Dipropionato de Beclometasona", false, false);
+            op13 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, false, "10");
+            op14 = new LowSpeedMix(eqtype, "10", "30", false);
+            op15 = new TankFinalWeight(eqtype, "TankFinalWeight", true);
+            op16_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10");
+            op16_2 = new ValveClass(eqtype, "5", false, true, "200", "494", "V9");
+            op17 = new RecirculationHoseDrain(eqtype);
+            op16_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8");
+            op18 = new EndOfManipulation(eqtype, true, true);
+            //op19 = new FillingStart(eqtype, "Clenil");
+            //op19_1 = new ValveClass(eqtype, "1", false, true, "200", "494", "V8");
+            //op20 = new EndFilling(eqtype, false);
+            this.txt = new Text();
+            StartReport();
+        }
+
+        public void StartReport()
+        {
+            Status.SetInProcessMode();
+            txt.generateTxt("Relatório de Batch Record");
+            op1.SetSuccessor(op2);
+            op2.SetSuccessor(op3);
+            op3.SetSuccessor(op4);
+            op4.SetSuccessor(op5);
+            op5.SetSuccessor(op11);
+            op11.SetSuccessor(op12);
+            op12.SetSuccessor(op13);
+            op13.SetSuccessor(op14);
+            op14.SetSuccessor(op15);
+            op15.SetSuccessor(op16_1);
+            op16_1.SetSuccessor(op16_2);
+            op16_2.SetSuccessor(op17);
+            op17.SetSuccessor(op16_3);
+            op16_3.SetSuccessor(op18);
+            //op16_3.SetSuccessor(op18);
+            //op18.SetSuccessor(op19); 
+            //op19.SetSuccessor(op19_1);
+            //op19_1.SetSuccessor(op20);
+
+            op1.Calculate(txt);
+
+            Console.WriteLine("Press any key to exit.");
+            Console.Read();
+        }
+    }
+}
