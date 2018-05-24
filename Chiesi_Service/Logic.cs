@@ -91,6 +91,7 @@ namespace Chiesi
             StaticValues.ENDHOURHIGHMIX = n.ENDHOURHIGHMIX;
             StaticValues.INIHOURDRAIN = n.INIHOURDRAIN;
             StaticValues.ENDHOURDRAIN = n.ENDHOURDRAIN;
+            StaticValues.PATHLOGCHIESITOSAVE = n.PATHLOGCHIESITOSAVE;
         }
         public static void MainLogic(string[] args)
         {
