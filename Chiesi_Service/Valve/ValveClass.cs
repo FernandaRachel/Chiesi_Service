@@ -4,6 +4,7 @@ using Chiesi.Converter;
 using Chiesi.Lobules;
 using Chiesi.Log;
 using Chiesi.Operation;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace Chiesi.Valve
 
         public ErrorLog errorlog { get; set; }
 
-        public Dictionary<string, string> TagsValues { get; set; }
+        public LogAction logAction { get; set; }
 
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -70,120 +71,76 @@ namespace Chiesi.Valve
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
             this.eq = this.eqFact.ConstructEquipament(typeEq);
+            this.logAction = new LogAction();
         }
 
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(400);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         public override void Calculate(Text txt)
         {
-            //var signal = WaitSign();
+
+            logAction.writeLog("Entrando no método 'Calculate do ValveClass(Recirculação)' para iniciar leituras das tags necessárias");
+
             checkError();
             bool gerarPdf = false;
 
             try
             {
-                var inidate = Convert.ToBoolean(this.eq.Read(StaticValues.INISPEEDTIME));
-                var enddate = Convert.ToBoolean(this.eq.Read(StaticValues.ENDSPEEDTIME));
-                var readSpeed = Convert.ToBoolean(this.eq.Read(StaticValues.TAGTRIGGERSPEED));
 
 
-                while (Status.getStatus() != StatusType.Fail && inidate == false)
-                {
-                    inidate = Convert.ToBoolean(this.eq.Read(StaticValues.INISPEEDTIME));
+                logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
 
-                }
-                if (inidate == true)
+                if (valvName.ToLower() == "v10")
                 {
-                    if (valvName.ToLower() == "v10")
-                    {
-                        IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE10));
-                        this.eq.Write(StaticValues.INISPEEDTIME, "False");
-                    }
-                    else if (valvName.ToLower() == "v9")
-                    {
-                        IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE9));
-                        this.eq.Write(StaticValues.INISPEEDTIME, "False");
-                    }
-                    else if (valvName.ToLower() == "v8")
-                    {
-                        IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE8));
-                        this.eq.Write(StaticValues.INISPEEDTIME, "False");
-                    }
+                    IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE10));
+                }
+                else if (valvName.ToLower() == "v9")
+                {
+                    IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE9));
+                }
+                else if (valvName.ToLower() == "v8")
+                {
+                    IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE8));
+                }
 
-                }
-                while (Status.getStatus() != StatusType.Fail && enddate == false)
-                {
-                    enddate = Convert.ToBoolean(this.eq.Read(StaticValues.ENDSPEEDTIME));
 
-                }
-                if (enddate == true)
+
+                logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                if (valvName.ToLower() == "v10")
                 {
-                    if (valvName.ToLower() == "v10")
-                    {
-                        EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE10));
-                        this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                    }
-                    else if (valvName.ToLower() == "v9")
-                    {
-                        EndTime = IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE9));
-                        this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                    }
-                    else if (valvName.ToLower() == "v8")
-                    {
-                        EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE8));
-                        this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                    }
+                    EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE10));
                 }
-                while (Status.getStatus() != StatusType.Fail && readSpeed == false)
+                else if (valvName.ToLower() == "v9")
                 {
-                    readSpeed = Convert.ToBoolean(this.eq.Read(StaticValues.TAGTRIGGERSPEED));
+                    EndTime = IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE9));
                 }
-                if (readSpeed == true)
+                else if (valvName.ToLower() == "v8")
                 {
-                    anchor.AnchorSpeed = Convert.ToDouble(this.eq.Read(StaticValues.ANCHORSPEED));
-                    lobules.lobulesSpeed = Convert.ToDouble(this.eq.Read(StaticValues.LOBULESSPEED));
-                    basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
-                    basicInfo.Date = EndTime;
-                    this.eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
-                    Thread.Sleep(250);
+                    EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE8));
                 }
+
+                basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
+                basicInfo.Date = EndTime;
+
+                logAction.writeLog("Iniciando leituras das tags necessárias");
+
+                anchor.AnchorSpeed = Convert.ToDouble(this.eq.Read(StaticValues.ANCHORSPEED));
+                lobules.lobulesSpeed = Convert.ToDouble(this.eq.Read(StaticValues.LOBULESSPEED));
+                
             }
             catch (Exception e)
             {
@@ -212,6 +169,8 @@ namespace Chiesi.Valve
             {
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
 
@@ -233,6 +192,8 @@ namespace Chiesi.Valve
         public string CreateString(params string[] values)
         {
 
+            logAction.writeLog("Iniciando CreateString");
+
             string txtCreate = "";
 
             if (checkIniValve)
@@ -248,8 +209,7 @@ namespace Chiesi.Valve
                             "<th>Velocidade Bomba de Lobulos: </th>" +
                             "<th>Limite RPM: </th>" +
                             "<th>Tempo: </th>" +
-                        "</tr>"
-                    ;
+                        "</tr>";
             }
             txtCreate += "<tr>" +
                               "<td>" + valvName + "</td>" +
@@ -262,6 +222,9 @@ namespace Chiesi.Valve
                            "</tr>";
             if (finalValve)
                 txtCreate += "</table>" + basicInfo.CreateString();
+
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+
             return txtCreate;
         }
 

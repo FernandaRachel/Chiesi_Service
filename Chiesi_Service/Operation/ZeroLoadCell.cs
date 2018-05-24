@@ -31,11 +31,9 @@ namespace Chiesi.Operation
 
         private IEquipament eq;
 
-        public Dictionary<string, string> TagsValues { get; set; }
 
         public ZeroLoadCell(EquipamentType typeEq)
         {
-            this.TagsValues = new Dictionary<string, string>();
             this.tank = TankClass.GetTankClass();
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.eq = this.eqFact.ConstructEquipament(typeEq);

@@ -30,8 +30,6 @@ namespace Chiesi.Operation
 
         public LogAction logAction { get; set; }
 
-        public Dictionary<string, string> TagsValues { get; set; }
-
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
