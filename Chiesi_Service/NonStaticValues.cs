@@ -118,6 +118,9 @@ namespace Chiesi
 
         public string PATHLOGCHIESITOSAVE { get; set; }
 
+        public string PATHLOGACTION { get; set; }
+        
+
         public string ReadConfig(string path)
         {
             StreamReader x;

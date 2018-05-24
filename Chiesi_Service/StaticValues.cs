@@ -94,6 +94,8 @@ namespace Chiesi
         public static string INIHOURDRAIN = "";
         public static string ENDHOURDRAIN = "";
         public static string PATHLOGCHIESITOSAVE = "";
+        public static string PATHLOGACTION = "";
+        
 
 
         public static string ReadConfig(string path)
