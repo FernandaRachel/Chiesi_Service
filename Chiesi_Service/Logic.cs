@@ -5,6 +5,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Chiesi.Converter;
 using Chiesi.Log;
+using Chiesi_Service.Log;
 
 namespace Chiesi
 {
@@ -91,31 +92,25 @@ namespace Chiesi
             StaticValues.ENDHOURHIGHMIX = n.ENDHOURHIGHMIX;
             StaticValues.INIHOURDRAIN = n.INIHOURDRAIN;
             StaticValues.ENDHOURDRAIN = n.ENDHOURDRAIN;
+            StaticValues.PATHLOGCHIESITOSAVE = n.PATHLOGCHIESITOSAVE;
+            StaticValues.PATHLOGACTION = n.PATHLOGACTION;
+            
         }
         public static void MainLogic(string[] args)
         {
             EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
             IEquipament eq;
+            LogAction logAction = new LogAction();
 
             try
             {
-                
                 string JSONPATH = ConfigurationManager.AppSettings["EnderecoJson"];
                 //var path = Directory.GetCurrentDirectory() + JSONPATH;
                 LerJson(JSONPATH);
+                logAction.writeLog("Feita a leitura dos nomes das tags -> 'teste.json'");
 
                 eq = eqFact.ConstructEquipament(EquipamentType.PLC);
 
-                var a1 = eq.Read(StaticValues.INIHOURVALVE10);
-                var a2 = eq.Read(StaticValues.ENDHOURVALVE10);
-                var a3 = eq.Read(StaticValues.INIHOURVALVE9);
-                var a4 = eq.Read(StaticValues.ENDHOURVALVE9);
-                var a5 = eq.Read(StaticValues.INIHOURVALVE8);
-                var a6 = eq.Read(StaticValues.ENDHOURVALVE8);
-                var a7 = eq.Read(StaticValues.INIHOURHIGHMIX);
-                var a8 = eq.Read(StaticValues.ENDHOURHIGHMIX);
-                var a9 = eq.Read(StaticValues.INIHOURDRAIN);
-                var a10 = eq.Read(StaticValues.ENDHOURDRAIN);
 
                 //int sign = Convert.ToInt32(eq.Read(StaticValues.TAGSIGN));
                 int report;
@@ -125,12 +120,16 @@ namespace Chiesi
 
                 Thread NewThread = new Thread(Process);
                 NewThread.IsBackground = true;
-                NewThread.Start(); // inicia a Thread do LifeBit
+                //NewThread.Start(); // inicia a Thread do LifeBit
+
+                logAction.writeLog("Iniciando Loop referente ao relatório");
 
                 while (DontStopMeNOW)
                 {
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo tag de cancelar Operação - verifica se esta 'true'");
+
                         sign = Convert.ToBoolean(eq.Read(StaticValues.TAGSIGN));
                         var cancelOp = Convert.ToBoolean(eq.Read(StaticValues.TAGCANCELOP));
                         //verifica se a operação foi cancelada e derruba as TAGS - EVITA ERRO DE ACHAR QUE A OP INICIOU

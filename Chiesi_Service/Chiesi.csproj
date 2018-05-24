@@ -126,6 +126,7 @@
     <Compile Include="Lobules\Lobules.cs" />
     <Compile Include="Log\ErrorLog.cs" />
     <Compile Include="Log\InterfaceLog.cs" />
+    <Compile Include="Log\LogAction.cs" />
     <Compile Include="Log\LogClass.cs" />
     <Compile Include="Monitoring\IMonitoring.cs" />
     <Compile Include="Monitoring\TempMonitoring.cs" />
