@@ -4,6 +4,7 @@ using Chiesi.Converter;
 using Chiesi.Log;
 using Chiesi.Operation;
 using Chiesi.Turbine;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace Chiesi.AverageSpeed
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         public Convertion convert { get; set; }
 
 
@@ -50,99 +53,70 @@ namespace Chiesi.AverageSpeed
             this.rpmLimit = rpmLimit;
             this.checkBreak = checkBreak;
             this.convert = new Convertion(typeEq);
+            this.logAction = new LogAction();
         }
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         public override void Calculate(Text txt)
         {
+
+            logAction.writeLog("Entrando no método 'Calculate do LowSpeedMix' para iniciar leituras das tags necessárias");
+
             checkError();
             bool gerarPdf = false;
 
+
+            // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
+            // TODOS DADOS SERÃO RECEBIDOS DO PLC
+
             try
             {
-                var inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME, this.eq.Read(StaticValues.INISPEEDTIME));
+
+                logAction.writeLog("Iniciando leituras das tags necessárias");
+
                 eq.Write(StaticValues.TAGMIXTIME, mixTime);
-                Thread.Sleep(500);
+                Thread.Sleep(300);
                 this.anchor.ReadPlc();
 
-                while (Status.getStatus() != StatusType.Fail && inidate == false)
+                if (Status.getStatus() != StatusType.Fail)
                 {
-                    inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME, this.eq.Read(StaticValues.INISPEEDTIME));
+                    logAction.writeLog("Lendo hora inicial da mistura");
 
-                }
-                if (inidate == true)
-                {
                     anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURMIXTIME));
-                    this.eq.Write(StaticValues.INISPEEDTIME, "False");
                 }
 
-                var enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME, this.eq.Read(StaticValues.ENDSPEEDTIME));
-
-                while (Status.getStatus() != StatusType.Fail && enddate == false)
+                if (Status.getStatus() != StatusType.Fail)
                 {
-                    enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME, this.eq.Read(StaticValues.ENDSPEEDTIME));
-
-                }
-                if (enddate == true)
-                {
+                    logAction.writeLog("Lendo hora final da mistura");
                     anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURMIXTIME));
-                    this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
                 }
 
-                var readSpeed = convert.convertToBoolean(StaticValues.TAGTRIGGERSPEED, this.eq.Read(StaticValues.TAGTRIGGERSPEED));
 
-                while (Status.getStatus() != StatusType.Fail && readSpeed == false)
+                if (Status.getStatus() != StatusType.Fail)
                 {
-                    readSpeed = convert.convertToBoolean(StaticValues.TAGTRIGGERSPEED, this.eq.Read(StaticValues.TAGTRIGGERSPEED));
-                }
-                if (readSpeed == true)
-                {
+                    logAction.writeLog("Lendo velocidades da mistura e basic infos");
                     anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
                     anchor.mixTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
                     basicInfo.ReadPlc();
                     basicInfo.Date = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURMIXTIME));
-                    this.eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
                     Thread.Sleep(200);
                 }
 
-                
+
             }
             catch (Exception e)
             {
@@ -188,6 +162,8 @@ namespace Chiesi.AverageSpeed
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string breakline;
 
             if (checkBreak)
@@ -222,6 +198,7 @@ namespace Chiesi.AverageSpeed
                 + basicInfo.CreateString()
                 + breakline;
 
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }
