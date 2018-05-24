@@ -93,6 +93,8 @@ namespace Chiesi
         public static string ENDHOURHIGHMIX = "";
         public static string INIHOURDRAIN = "";
         public static string ENDHOURDRAIN = "";
+        public static string PATHLOGCHIESITOSAVE = "";
+
 
         public static string ReadConfig(string path)
         {

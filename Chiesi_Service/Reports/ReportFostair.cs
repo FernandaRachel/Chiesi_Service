@@ -32,9 +32,7 @@ namespace Chiesi.Reports
         OperationHandler op14;
         OperationHandler op15;
         OperationHandler op16;
-        //OperationHandler op17;
-        //OperationHandler op17_1;
-        //OperationHandler op18;
+       
         Text txt;
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
@@ -61,9 +59,6 @@ namespace Chiesi.Reports
             op13_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8");
             op15 = new EndOfManipulation(eqtype, true, false);
             op16 = new AdditionClass(eqtype, "Retirada de Amostra para Umidade e Titulação de HCL", false, true);
-            //op17 = new FillingStart(eqtype, "Fostair");
-            //op17_1 = new ValveClass(eqtype, "1", false, true, "200", "494", "V8");
-            //op18 = new EndFilling(eqtype, false);
 
             StartReport();
         }
@@ -88,9 +83,6 @@ namespace Chiesi.Reports
             op14.SetSuccessor(op13_3);
             op13_3.SetSuccessor(op15);
             op15.SetSuccessor(op16); 
-            //op16.SetSuccessor(op17);
-            //op17.SetSuccessor(op17_1);
-            //op17_1.SetSuccessor(op18);
 
             op1.Calculate(txt);
             Console.WriteLine("Press any key to exit.");

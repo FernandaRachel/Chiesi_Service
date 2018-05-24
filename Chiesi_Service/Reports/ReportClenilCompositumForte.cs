@@ -28,9 +28,6 @@ namespace Chiesi.Reports
         OperationHandler op12;
         OperationHandler op13;
         OperationHandler op14;
-        //OperationHandler op15;
-        //OperationHandler op15_1;
-        //OperationHandler op16;
         public Text txt;
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
@@ -58,9 +55,6 @@ namespace Chiesi.Reports
             op12 = new TankFinalWeight(eqtype, "", false);
             op13 = new ValveClass(eqtype, "15", true, true, "200", "494", "V8");
             op14 = new EndOfManipulation(eqtype, false, true);
-            //op15 = new FillingStart(eqtype, "Clenil Compositum Forte");
-            //op15_1 = new ValveClass(eqtype, "15", true, true, "200", "494", "V8");
-            //op16 = new EndFilling(eqtype, false);
 
             StartReport();
         }
@@ -83,10 +77,7 @@ namespace Chiesi.Reports
             op11.SetSuccessor(op12);
             op12.SetSuccessor(op13);
             op13.SetSuccessor(op14);
-            //op14.SetSuccessor(op15); 
-            //op15.SetSuccessor(op15_1);
-            //op15_1.SetSuccessor(op16);
-
+           
             op1.Calculate(txt);
             Console.WriteLine("Press any key to exit.");
             Console.Read();

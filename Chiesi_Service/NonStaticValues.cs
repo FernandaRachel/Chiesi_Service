@@ -116,6 +116,7 @@ namespace Chiesi
 
         public string ENDHOURDRAIN { get; set; }
 
+        public string PATHLOGCHIESITOSAVE { get; set; }
 
         public string ReadConfig(string path)
         {

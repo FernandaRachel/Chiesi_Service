@@ -23,9 +23,6 @@ namespace Chiesi.Reports
         OperationHandler op10;
         OperationHandler op11;
         OperationHandler op12;
-        //OperationHandler op13;
-        //OperationHandler op13_1;
-        //OperationHandler op14;
         Text txt;
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
@@ -48,9 +45,6 @@ namespace Chiesi.Reports
             op10 = new TankFinalWeight(eqtype, "Peso final do Produto no Tanque", true);
             op11 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8");
             op12 = new EndOfManipulation(eqtype, false, true);
-            //op13 = new FillingStart(eqtype, "Placebos");
-            //op13_1 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8");
-            //op14 = new EndFilling(eqtype, false);
             StartReport();
         }
 
@@ -66,9 +60,6 @@ namespace Chiesi.Reports
             op7.SetSuccessor(op10);
             op10.SetSuccessor(op11);
             op11.SetSuccessor(op12);
-            //op12.SetSuccessor(op13);
-            //op13.SetSuccessor(op13_1);
-            //op13_1.SetSuccessor(op14);
 
             op1.Calculate(txt);
             Console.WriteLine("Press any key to exit.");

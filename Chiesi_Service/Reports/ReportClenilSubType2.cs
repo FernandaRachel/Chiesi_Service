@@ -33,9 +33,7 @@ namespace Chiesi.Reports
         OperationHandler op16_3;
         OperationHandler op17;
         OperationHandler op18;
-        //OperationHandler op19;
-        //OperationHandler op19_1;
-        //OperationHandler op20;
+       
         public Text txt;
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
@@ -61,9 +59,6 @@ namespace Chiesi.Reports
             op17 = new RecirculationHoseDrain(eqtype);
             op16_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8");
             op18 = new EndOfManipulation(eqtype, true, true);
-            //op19 = new FillingStart(eqtype, "Clenil");
-            //op19_1 = new ValveClass(eqtype, "1", false, true, "200", "494", "V8");
-            //op20 = new EndFilling(eqtype, false);
             this.txt = new Text();
             StartReport();
         }
@@ -88,9 +83,6 @@ namespace Chiesi.Reports
             op16_2.SetSuccessor(op17);
             op17.SetSuccessor(op16_3);
             op16_3.SetSuccessor(op18);
-            //op18.SetSuccessor(op19); 
-            //op19.SetSuccessor(op19_1);
-            //op19_1.SetSuccessor(op20);
 
             op1.Calculate(txt);
 
