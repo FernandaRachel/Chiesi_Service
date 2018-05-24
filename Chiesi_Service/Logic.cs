@@ -152,7 +152,7 @@ namespace Chiesi
                                 eq.Write(StaticValues.TAGCANCELOP, "False");
                             }
                             sign = Convert.ToBoolean(eq.Read(StaticValues.TAGSIGN));
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                         }
 
                         report = Convert.ToInt32(eq.Read(StaticValues.TAGPRODUCTYPE));
@@ -161,13 +161,13 @@ namespace Chiesi
                         while (report == 0)
                         {
                             report = Convert.ToInt32(eq.Read(StaticValues.TAGPRODUCTYPE));
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                             Console.WriteLine("while");
                         }
                         while (subType == 0)
                         {
                             subType = Convert.ToInt32(eq.Read(StaticValues.TAGSUBTYPE));
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                         }
 
                         // preciso ficar lendo o sinal no MAIN, ou apenas entre as op ?????????????

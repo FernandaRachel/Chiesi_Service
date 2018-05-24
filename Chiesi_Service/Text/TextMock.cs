@@ -78,6 +78,7 @@ namespace Chiesi
         public string cleanTxt()
         {
             string path = StaticValues.PATHLOGCHIESI;
+            string pathtosave = StaticValues.PATHLOGCHIESITOSAVE;
             File.Delete(path);
             
             txtAtual = "";
