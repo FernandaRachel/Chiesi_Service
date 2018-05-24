@@ -3,6 +3,7 @@ using Chiesi.Converter;
 using Chiesi.Log;
 using Chiesi.Operation;
 using Chiesi.Tanks;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace Chiesi.Filling
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         IEquipament eq;
@@ -38,57 +41,37 @@ namespace Chiesi.Filling
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
             this.checkBreak = checkBreak;
+            this.logAction = new LogAction();
         }
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
+       
 
         public override void Calculate(Text txt)
         {
-            var signal = WaitSign();
+
+            logAction.writeLog("Entrando no método 'EndFilling' para iniciar leituras das tags necessárias");
+
             var gerarPdf = true;
 
             try
             {
                 infos.ReadPlc();
                 tank.ReadPlc();
-                this.eq.Write(StaticValues.TAGSIGN, "False");
-                Thread.Sleep(1000);
+                Thread.Sleep(250);
             }
             catch (Exception e)
             {
@@ -127,8 +110,6 @@ namespace Chiesi.Filling
                     Pdf pdf = new Pdf(txt.txtAtual);
                     pdf.gerarPdf(txt.Header, infos);
                     txt.cleanTxt();
-                    this.eq.Write(StaticValues.TAGSIGN, "False");
-                    Thread.Sleep(1000);
                 }
             }
         }
