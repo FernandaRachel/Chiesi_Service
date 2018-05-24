@@ -127,6 +127,8 @@ namespace Chiesi.AverageSpeed
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+
                         anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         turbine.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         toConvertTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
@@ -135,6 +137,8 @@ namespace Chiesi.AverageSpeed
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+
                         anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
                         turbine.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
                         basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
@@ -144,6 +148,8 @@ namespace Chiesi.AverageSpeed
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+
                         anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
                         turbine.TurbineSpeed = convert.convertToDouble(StaticValues.TURBINESPEED, this.eq.Read(StaticValues.TURBINESPEED));
                         this.eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
@@ -156,6 +162,8 @@ namespace Chiesi.AverageSpeed
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+
                         anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         clenil.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         clenilStrong.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
@@ -165,6 +173,8 @@ namespace Chiesi.AverageSpeed
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+
                         anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
                         clenil.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
                         clenilStrong.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
@@ -175,6 +185,8 @@ namespace Chiesi.AverageSpeed
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+
                         anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
                         turbine.TurbineSpeed = convert.convertToDouble(StaticValues.TURBINESPEED, this.eq.Read(StaticValues.TURBINESPEED));
                         this.eq.Write(StaticValues.TAGTRIGGERSPEED, "False");

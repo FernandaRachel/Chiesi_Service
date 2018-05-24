@@ -86,7 +86,7 @@ namespace Chiesi.AverageSpeed
             try
             {
 
-                logAction.writeLog("Iniciando leituras das tags necessárias");
+                logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
                 eq.Write(StaticValues.TAGMIXTIME, mixTime);
                 Thread.Sleep(300);
@@ -94,14 +94,14 @@ namespace Chiesi.AverageSpeed
 
                 if (Status.getStatus() != StatusType.Fail)
                 {
-                    logAction.writeLog("Lendo hora inicial da mistura");
+                    logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
 
                     anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURMIXTIME));
                 }
 
                 if (Status.getStatus() != StatusType.Fail)
                 {
-                    logAction.writeLog("Lendo hora final da mistura");
+                    logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
                     anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURMIXTIME));
                 }
 
