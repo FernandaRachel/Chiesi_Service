@@ -2,6 +2,7 @@
 using Chiesi.Converter;
 using Chiesi.Log;
 using Chiesi.Operation;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -25,6 +26,8 @@ namespace Chiesi.Loading
         public BasicInfoClass infos { get; set; }
 
         public ErrorLog errorlog { get; set; }
+
+        public LogAction logAction { get; set; }
 
         public string limitFlow { get; set; }
 
@@ -54,93 +57,59 @@ namespace Chiesi.Loading
             this.limitCell = limitCell;
             this.limitFlow = limitFlow;
             this.convert = new Convertion(typeEq);
+            this.logAction = new LogAction();
 
         }
 
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+            logAction.writeLog("Entrando no método 'checkError'");
+
+            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                Thread.Sleep(400);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         /// <summary>
         /// Método utilizado para ler os equipamentos necessários para a atual operação
         /// </summary>
         public override void Calculate(Text txt)
         {
-            //var signal = WaitSign();
+            logAction.writeLog("Entrando no método 'Calculate do Loading' para iniciar leituras das tags necessárias");
+
             checkError();
             bool gerarPdf = false;
-            bool inidate;
-            bool enddate;
             string cellVariation = "";
             string flowvariation = "";
 
+            // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
+            // TODOS DADOS SERÃO RECEBIDOS DO PLC
+
             try
             {
-                inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME,this.eq.Read(StaticValues.INISPEEDTIME));
-                enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME,this.eq.Read(StaticValues.ENDSPEEDTIME));
 
+                logAction.writeLog("Iniciando leituras das tags necessárias de Loading");
+
+                // ESSE ENVIO SERÁ DESNECESSÁRIO ???
                 eq.Write(StaticValues.FLOWMETERLIMIT, limitFlow);
                 eq.Write(StaticValues.CELLLIMIT, limitCell);
-                Thread.Sleep(1000);
-                
+                Thread.Sleep(500);
 
-                while (Status.getStatus() != StatusType.Fail && inidate == false )
-                {
-                    inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME,this.eq.Read(StaticValues.INISPEEDTIME));
-                }
 
-                this.eq.Write(StaticValues.INISPEEDTIME, "False");
 
-                while (Status.getStatus() != StatusType.Fail && enddate == false)
-                {
-                    enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME, this.eq.Read(StaticValues.ENDSPEEDTIME));
-                }
+                cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".", ",");
+                flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".", ",");
+                this.flux.ReadPlc(); // inicializa os valores do Flowmeter
+                this.cell.ReadPlc(); // inicializa os valores da LoadingCell
+                this.infos.ReadPlc(); // inicializa os valores da BasicInfo
 
-                if (enddate == true)
-                {
-                    cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".",",");
-                    flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".",",");
-                    this.flux.ReadPlc(); // inicializa os valores do Flowmeter
-                    this.cell.ReadPlc(); // inicializa os valores da LoadingCell
-                    this.infos.ReadPlc(); // inicializa os valores da BasicInfo
-                    this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-
-                }
             }
             catch (Exception e)
             {
@@ -150,9 +119,9 @@ namespace Chiesi.Loading
             }
 
             CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
-             
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty/100), flowvariation, String.Format(changeDotToComma, "{0:0.0}", flux.Limit),
-                String.Format(changeDotToComma, "{0:0.0}", cell.RealQty/100), cellVariation, cell.Limit.ToString());
+
+            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation, String.Format(changeDotToComma, "{0:0.0}", flux.Limit),
+                String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString());
 
 
             try
@@ -168,8 +137,11 @@ namespace Chiesi.Loading
 
             if (!gerarPdf)
             {
+
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
 
@@ -180,6 +152,7 @@ namespace Chiesi.Loading
                     Pdf pdf = new Pdf(txt.txtAtual);
                     pdf.gerarPdf(txt.Header, infos);
                     txt.cleanTxt();
+
                 }
                 else
                 {
@@ -190,6 +163,8 @@ namespace Chiesi.Loading
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string txtCreate =
                 "<h3>" + headerName + "</h3>" +
                 "<table class='tabela'>" +
@@ -216,6 +191,8 @@ namespace Chiesi.Loading
                     "</tr>" +
                 "</table></html>" +
                 this.infos.CreateString();
+
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }
