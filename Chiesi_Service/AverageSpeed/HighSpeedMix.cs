@@ -233,6 +233,8 @@ namespace Chiesi.AverageSpeed
             {
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
