@@ -35,7 +35,6 @@ namespace Chiesi.AverageSpeed
 
         public Convertion convert { get; set; }
 
-
         public Dictionary<string, string> TagsValues { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
