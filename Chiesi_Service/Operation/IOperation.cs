@@ -10,8 +10,6 @@ namespace Chiesi
     {
 
 
-        bool WaitSign();
-
         string CreateString(params string[] values);
 
 

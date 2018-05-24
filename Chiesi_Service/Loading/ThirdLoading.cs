@@ -3,6 +3,7 @@ using Chiesi.Converter;
 using Chiesi.Glicerol;
 using Chiesi.Log;
 using Chiesi.Operation;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -37,6 +38,8 @@ namespace Chiesi.Loading
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         public Convertion convert { get; set; }
 
         public Dictionary<string, string> TagsValues { get; set; }
@@ -63,109 +66,72 @@ namespace Chiesi.Loading
             this.limitCell = limitCell;
             this.checkBreak = checkBreak;
             this.convert = new Convertion(typeEq);
+            this.logAction = new LogAction();
 
         }
 
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+            logAction.writeLog("Entrando no método 'checkError'");
+
+            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
 
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         /// <summary>
         /// Método utilizado para ler os equipamentos necessários para a atual operação
         /// </summary>
         public override void Calculate(Text txt)
         {
-            //var signal = WaitSign();
+            logAction.writeLog("Entrando no método 'Calculate do ThirdLoading' para iniciar leituras das tags necessárias");
+
             checkError();
             bool gerarPdf = false;
-            bool inidate;
-            bool enddate;
             DateTime keepinidate = DateTime.Now;
             string cellVariation = "";
             string flowvariation = "";
 
             try
             {
-                inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME,this.eq.Read(StaticValues.INISPEEDTIME));
-                enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME,this.eq.Read(StaticValues.ENDSPEEDTIME));
-                eq.Write(StaticValues.FLOWMETERLIMIT, limitFlow);
-                eq.Write(StaticValues.CELLLIMIT, limitCell);
-                Thread.Sleep(500);
+                //PEGAR HORA DO PLC
+                logAction.writeLog("Lendo hora inicial da mistura do ThirdLoading");
+                keepinidate = DateTime.Now;
 
-                while (Status.getStatus() != StatusType.Fail && inidate == false)
-                {
-                    inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME,this.eq.Read(StaticValues.INISPEEDTIME));
-                }
-                if (inidate == true)
-                {
-                    keepinidate = DateTime.Now;
-                    this.eq.Write(StaticValues.INISPEEDTIME, "False");
-                }
-                while (Status.getStatus() != StatusType.Fail && enddate == false)
-                {
-                    enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME,this.eq.Read(StaticValues.ENDSPEEDTIME));
-                }
-                if (enddate == true)
-                {
-                    cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".", ",");
-                    flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".", ",");
-                    this.flux.ReadPlc(); // inicializa os valores do Flowmeter
-                    this.cell.ReadPlc(); // inicializa os valores da LoadingCell
-                    this.infos.ReadPlc(); // inicializa os valores da BasicInfo
-                    this.gli.ReadPlc(); // inicializa os valores de Glicerol
-                    gli.OutFlowStart = keepinidate;
-                    gli.OutFlowEnd = DateTime.Now;
-                    this.infos.Date = gli.OutFlowEnd;
-                    this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                    Thread.Sleep(250);
-                }
+                logAction.writeLog("Iniciando leituras das tags necessárias do ThirdLoading");
+                cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".", ",");
+                flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".", ",");
+                this.flux.ReadPlc(); // inicializa os valores do Flowmeter
+                this.cell.ReadPlc(); // inicializa os valores da LoadingCell
+                this.infos.ReadPlc(); // inicializa os valores da BasicInfo
+                this.gli.ReadPlc(); // inicializa os valores de Glicerol
+                //PEGAR HORA DO PLC
+                logAction.writeLog("Lendo hora final da mistura do ThirdLoading");
+                gli.OutFlowStart = keepinidate;
+                gli.OutFlowEnd = DateTime.Now;
+                this.infos.Date = gli.OutFlowEnd;
+                // ------------------------------------
+                Thread.Sleep(250);
             }
             catch (Exception e)
             {
-                errorlog.writeLog("ThirdLoading", "tag não especificada", e.ToString(), DateTime.Now);
+                errorlog.writeLog("ThirdLoading ", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
                 this.eq.Write(StaticValues.TAGERRORPLC, "True");
             }
 
             CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
 
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", gli.GliQty), String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty/100), flowvariation,
-                String.Format(changeDotToComma, "{0:0.0}", flux.Limit), String.Format(changeDotToComma, "{0:0.0}", cell.RealQty/100), cellVariation, cell.Limit.ToString(), gli.OutFlowStart.ToString("HH:mm"), gli.OutFlowEnd.ToString("HH:mm"));
+            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", gli.GliQty), String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation,
+                String.Format(changeDotToComma, "{0:0.0}", flux.Limit), String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString(), gli.OutFlowStart.ToString("HH:mm"), gli.OutFlowEnd.ToString("HH:mm"));
 
 
             try

@@ -2,6 +2,7 @@
 using Chiesi.Converter;
 using Chiesi.Log;
 using Chiesi.Products;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
-        public Dictionary<string, string> TagsValues { get; set; }
+        public LogAction logAction { get; set; }
 
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -42,82 +43,42 @@ namespace Chiesi.Operation
             this.infos = BasicInfoClass.GetBasicInfo();
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
+            this.logAction = new LogAction();
         }
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
-
+       
         public override void Calculate(Text txt)
         {
-            //var signal = WaitSign();
-            bool gerarPdf = false;
+            logAction.writeLog("Entrando no método 'Calculate do RecirculationHoseDrain' para iniciar leituras das tags necessárias");
+
             checkError();
-            bool inidate;
-            bool enddate;
+
+            bool gerarPdf = false;
             string iniTimeString = "";
             string endTimeString = "";
 
             try
             {
-                inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME,this.eq.Read(StaticValues.INISPEEDTIME));
-                enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME,this.eq.Read(StaticValues.ENDSPEEDTIME));
                 gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
 
-                while (Status.getStatus() != StatusType.Fail && inidate == false)
-                {
-                    inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME,this.eq.Read(StaticValues.INISPEEDTIME));
-                }
-                if (inidate == true)
-                {
-                    IniTime = DateTime.Now;
-                    iniTimeString = IniTime.ToString("HH:mm");
-                    this.eq.Write(StaticValues.INISPEEDTIME, "False");
-                }
-                while (Status.getStatus() != StatusType.Fail && enddate == false)
-                {
-                    enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME,this.eq.Read(StaticValues.ENDSPEEDTIME));
-                }
-                if (enddate == true)
-                {
-                    EndTime = DateTime.Now;
-                    endTimeString = EndTime.ToString("HH:mm");
-                    this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                }
+                // PEGAR HORA E DATA DO PLC !!!!!!
+                IniTime = DateTime.Now;
+                iniTimeString = IniTime.ToString("HH:mm");
+                EndTime = DateTime.Now;
+                endTimeString = EndTime.ToString("HH:mm");
+                // ---------------------------------
             }
             catch (Exception e)
             {
@@ -144,6 +105,8 @@ namespace Chiesi.Operation
             {
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -164,9 +127,13 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string txtCreate =
                 "<h3>Drenagem da Mangueira de Recirculação</h3>" +
                 "<label> Escoamento do Produto: &nbsp</label>Inicio : <span class='campo'>" + values[0] + "</span> Final : <span class='campo'>" + values[1] + "</span>";
+
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

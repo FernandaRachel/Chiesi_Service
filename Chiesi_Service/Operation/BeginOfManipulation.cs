@@ -8,12 +8,15 @@ using Chiesi.BasicInfos;
 using Chiesi.Log;
 using Chiesi.Converter;
 using System.Threading;
+using Chiesi_Service.Log;
 
 namespace Chiesi.Operation
 {
     class BeginOfManipulation : OperationHandler, IOperation
     {
         public ErrorLog errorlog { get; set; }
+
+        public LogAction logAction { get; set; }
 
         public ProductClass prod { get; set; }
 
@@ -33,7 +36,6 @@ namespace Chiesi.Operation
 
         public Convertion convert { get; set; }
 
-        public Dictionary<string, string> TagsValues { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -41,55 +43,30 @@ namespace Chiesi.Operation
 
         public BeginOfManipulation(EquipamentType typeEq, string OperationName, string Product)
         {
-            this.TagsValues = new Dictionary<string, string>();
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.OperationName = OperationName;
-            //this.Product = Product;
             this.prod = ProductClass.GetProductClass();
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
-
+            this.logAction = new LogAction();
 
         }
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
 
         /// <summary>
@@ -97,16 +74,20 @@ namespace Chiesi.Operation
         /// </summary>
         public override void Calculate(Text txt)
         {
-            var signal = WaitSign();
+            logAction.writeLog("Entrando no método 'Calculate do BeginOfManipulation' para iniciar leituras das tags necessárias");
+
+            checkError();
+
             bool gerarPdf = false;
 
             try
             {
-                this.eq.Write(StaticValues.TAGSIGN, "False");
+                logAction.writeLog("Lendo hora inicial do BeginOfManipulation");
                 this.basicInfo.ReadPlc(); // inicializa valores das prop da BasicInfo
+                logAction.writeLog("Iniciando leituras das tags necessárias do BeginOfManipulation");
                 this.prod.ReadPlc(); // inicializa valores das prop do Product
                 this.basicInfo.KeepBatch = this.prod.Batch;
-                Product =  this.eq.Read(StaticValues.TAGRECIPETYPE);
+                Product = this.eq.Read(StaticValues.TAGRECIPETYPE);
                 Thread.Sleep(500);
             }
             catch (Exception e)
@@ -133,9 +114,9 @@ namespace Chiesi.Operation
             {
                 txt.addItem(x);
                 txt.saveTxt(x, true);
-            }
 
-            
+                logAction.writeLog("Texto adicionado ao log.txt");
+            }
 
 
             if (successor != null)
@@ -157,6 +138,7 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
 
             string txtCreate =
                             "<h3>Inicio da Manipulação - Seleção da Receita</h3>" +
@@ -164,6 +146,8 @@ namespace Chiesi.Operation
                             "<label class='lab'>Produto : </label><span class='campo'>" + Product + "</span>" +
                             "<label class='lab'>Lote : </label><span class='campo'>" + prod.Batch + "</span><br>" +
                             basicInfo.CreateString();
+
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

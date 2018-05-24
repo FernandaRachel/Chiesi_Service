@@ -1,10 +1,12 @@
 ﻿using Chiesi.BasicInfos;
 using Chiesi.Converter;
 using Chiesi.Log;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chiesi.Operation
@@ -23,6 +25,8 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -37,42 +41,37 @@ namespace Chiesi.Operation
             this.infos = BasicInfoClass.GetBasicInfo();
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
+            this.logAction = new LogAction();
         }
 
-        public bool WaitSign()
+        public bool checkError()
         {
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
+            logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror) { tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC)); }
-                return WaitSign();
 
+            while (tagerror)
+            {
+                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                Thread.Sleep(500);
             }
-
-            return sign;
+            return tagerror;
         }
 
         public override void Calculate(Text txt)
         {
+            logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
+
+            checkError();
+
             if (!gerarPdf)
             {
-                var signal = WaitSign();
             }
             //var gerarPdf = false;
 
             try
             {
+                logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
                 this.infos.ReadPlc(); // inicializa valores das prop da infos
             }
             catch (Exception e)
@@ -103,6 +102,7 @@ namespace Chiesi.Operation
             //salva o texto no log.txt
             txt.saveTxt(x, false);
 
+            logAction.writeLog("Texto adicionado ao log.txt");
 
             if (successor != null)
             {
@@ -131,6 +131,8 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string breakline;
 
             if (checkBreak)
@@ -147,7 +149,8 @@ namespace Chiesi.Operation
                 infos.CreateString()
                 + breakline;
 
-            //TagValuesStored();
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+
             return txtCreate;
 
         }

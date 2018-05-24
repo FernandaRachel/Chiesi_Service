@@ -120,7 +120,7 @@ namespace Chiesi
 
                 Thread NewThread = new Thread(Process);
                 NewThread.IsBackground = true;
-                //NewThread.Start(); // inicia a Thread do LifeBit
+                NewThread.Start(); // inicia a Thread do LifeBit
 
                 logAction.writeLog("Iniciando Loop referente ao relatório");
 

@@ -1,6 +1,7 @@
 ﻿using Chiesi.BasicInfos;
 using Chiesi.Converter;
 using Chiesi.Log;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
 
         public EndOfManipulation(EquipamentType typeEq, bool checkBreak, bool gerarPdf)
         {
@@ -37,11 +40,14 @@ namespace Chiesi.Operation
             this.errorlog = new ErrorLog();
             this.checkBreak = checkBreak;
             this.gerarPdf = gerarPdf;
+            this.logAction = new LogAction();
         }
 
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
@@ -52,45 +58,29 @@ namespace Chiesi.Operation
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
 
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         public override void Calculate(Text txt)
         {
-            var signal = WaitSign();
-            EndTime = DateTime.Now;
-            string endTimeString = EndTime.ToString("HH:mm");
-            string endData = EndTime.ToString("dd/MM/yyyy");
-            var x = CreateString(endData, endTimeString);
+            logAction.writeLog("Entrando no método 'Calculate do EndOfManipulation' para iniciar leituras das tags necessárias");
 
+            checkError();
 
             try
             {
-                this.eq.Write(StaticValues.TAGSIGN, "False");
-                Thread.Sleep(1000);
+                // PEGAR DO PLC HORA E DATA
+                logAction.writeLog("Lendo hora do EndOfManipulation");
+                EndTime = DateTime.Now;
+                string endTimeString = EndTime.ToString("HH:mm");
+                string endData = EndTime.ToString("dd/MM/yyyy");
+
+                var x = CreateString(endData, endTimeString);
+
+                // adiciona o texto na variavel global da classe Text
+                txt.addItem(x);
+                //salva o texto no log.txt
+                txt.saveTxt(x, false);
+
             }
             catch (Exception e)
             {
@@ -99,10 +89,7 @@ namespace Chiesi.Operation
                 this.eq.Write(StaticValues.TAGERRORPLC, "True");
             }
 
-            // adiciona o texto na variavel global da classe Text
-            txt.addItem(x);
-            //salva o texto no log.txt
-            txt.saveTxt(x, false);
+          
 
             if (successor != null)
             {
@@ -117,7 +104,8 @@ namespace Chiesi.Operation
                     successor.Calculate(txt);
                 }
             }
-            else{
+            else
+            {
                 if (gerarPdf)
                 {
                     Pdf pdf = new Pdf(txt.txtAtual);
@@ -129,6 +117,8 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string breakline;
 
             if (checkBreak)
@@ -145,6 +135,8 @@ namespace Chiesi.Operation
                             "<label>Data: </label><span class='campo'>" + values[0] + "</span>" +
                             "<label> Hora: </label><span class='campo'>" + values[1] + "</span>"
                             + breakline;
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+
             return txtCreate;
         }
 

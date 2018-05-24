@@ -4,6 +4,7 @@ using Chiesi.Log;
 using Chiesi.Operation;
 using Chiesi.Products;
 using Chiesi.Shaker;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace Chiesi.Monitoring
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         public Convertion convert { get; set; }
 
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
@@ -48,45 +51,23 @@ namespace Chiesi.Monitoring
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
             this.checkBreak = checkBreak;
+            this.logAction = new LogAction();
         }
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         /// <summary>
         /// Método utilizado para calcular e/ou pegar valores que serão colocados dentro do txt 
@@ -94,51 +75,26 @@ namespace Chiesi.Monitoring
         /// </summary>
         public override void Calculate(Text txt)
         {
-            var signal = WaitSign();
+            logAction.writeLog("Entrando no método 'Calculate do TempMonitoring' para iniciar leituras das tags necessárias");
+
             bool gerarPdf = false;
             double prodTemp = 0;
 
             try
             {
-                var inidate = Convert.ToBoolean(this.eq.Read(StaticValues.INISPEEDTIME));
-                var enddate = Convert.ToBoolean(this.eq.Read(StaticValues.ENDSPEEDTIME));
-                var readSpeed = Convert.ToBoolean(this.eq.Read(StaticValues.TAGTRIGGERSPEED));
 
 
-                while (Status.getStatus() != StatusType.Fail && inidate == false)
-                {
-                    inidate = Convert.ToBoolean(this.eq.Read(StaticValues.INISPEEDTIME));
-                }
+                logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
-                this.eq.Write(StaticValues.INISPEEDTIME, "False");
+                this.prod.ReadPlc(); // inicializa valores das prop da Product
+                this.shaker.ReadPlc();//inicializa valores das prop da Shaker
 
-                while (Status.getStatus() != StatusType.Fail && enddate == false)
-                {
-                    enddate = Convert.ToBoolean(this.eq.Read(StaticValues.ENDSPEEDTIME));
-                }
-
-                if (enddate == true)
-                {
-                    this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                    this.prod.ReadPlc(); // inicializa valores das prop da Product
-                    this.basicInfo.ReadPlc(); //inicializa valores das prop da Basic Info
-                    this.shaker.ReadPlc();//inicializa valores das prop da Shaker
-                }
-
-                while (Status.getStatus() != StatusType.Fail && readSpeed == false)
-                {
-                    readSpeed = Convert.ToBoolean(this.eq.Read(StaticValues.TAGTRIGGERSPEED));
-                }
-
-                if (readSpeed == true)
-                {
-                    this.prod.ReadPlc(); // inicializa valores das prop da Product
-                    this.basicInfo.ReadPlc(); //inicializa valores das prop da Basic Info
-                    this.shaker.ReadPlc();//inicializa valores das prop da Shaker
-                    prodTemp = (this.prod.ProductTemp / 10);
-                    this.eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
-                    Thread.Sleep(450);
-                }
+                logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
+                // PEGAR DATA E HORA DO PLC !!!!!!!!!!!!!!!
+                this.basicInfo.ReadPlc(); //inicializa valores das prop da Basic Info
+                // ----------------------
+                prodTemp = (this.prod.ProductTemp / 10);
+                Thread.Sleep(450);
 
             }
             catch (Exception e)
@@ -167,6 +123,8 @@ namespace Chiesi.Monitoring
             {
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -186,6 +144,8 @@ namespace Chiesi.Monitoring
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string breakline;
 
             if (checkBreak)
@@ -217,6 +177,8 @@ namespace Chiesi.Monitoring
                 "</table>" +
                 basicInfo.CreateString()
                 + breakline;
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+
             return txtCreate;
         }
     }
