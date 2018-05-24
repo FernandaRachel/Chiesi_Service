@@ -5,6 +5,7 @@ using Chiesi.Converter;
 using Chiesi.Log;
 using Chiesi.Operation;
 using Chiesi.Turbine;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,8 @@ namespace Chiesi.AverageSpeed
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         public Convertion convert { get; set; }
 
         public Dictionary<string, string> TagsValues { get; set; }
@@ -74,45 +77,24 @@ namespace Chiesi.AverageSpeed
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
+            this.logAction = new LogAction();
+
         }
 
         public bool checkError()
         {
+            logAction.writeLog("Entrando no método 'checkError'");
+
             var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
 
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(250);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         public void CheckAbort()
         {
@@ -121,17 +103,18 @@ namespace Chiesi.AverageSpeed
 
         public override void Calculate(Text txt)
         {
+            logAction.writeLog("Entrando no método 'Calculate do HighSpeedMix' para iniciar leituras das tags necessárias");
+
             double toConvertTime;
-            //var signal = WaitSign();
             checkError();
             bool gerarPdf = false;
             var x = "";
 
             try
             {
-                var inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME, this.eq.Read(StaticValues.INISPEEDTIME));
-                var enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME, this.eq.Read(StaticValues.ENDSPEEDTIME));
-                var readSpeed = convert.convertToBoolean(StaticValues.TAGTRIGGERSPEED, this.eq.Read(StaticValues.TAGTRIGGERSPEED));
+                // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
+                // TODOS DADOS SERÃO RECEBIDOS DO PLC
+
 
                 this.anchor.ReadPlc();
                 this.turbine.ReadPlc();
@@ -140,23 +123,17 @@ namespace Chiesi.AverageSpeed
 
                 if (!changeTable)
                 {
-                    while (Status.getStatus() != StatusType.Fail && inidate == false)
-                    {
-                        inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME, this.eq.Read(StaticValues.INISPEEDTIME));
-                    }
-                    if (inidate == true)
+                    logAction.writeLog("Iniciando leituras das tags necessárias");
+
+                    if (Status.getStatus() != StatusType.Fail)
                     {
                         anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         turbine.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         toConvertTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
                         this.eq.Write(StaticValues.INISPEEDTIME, "False");
                     }
-                    while (Status.getStatus() != StatusType.Fail && enddate == false)
-                    {
-                        enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME, this.eq.Read(StaticValues.ENDSPEEDTIME));
 
-                    }
-                    if (enddate == true)
+                    if (Status.getStatus() != StatusType.Fail)
                     {
                         anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
                         turbine.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
@@ -164,11 +141,8 @@ namespace Chiesi.AverageSpeed
                         this.basicInfo.Date = anchor.EndTime;
                         this.eq.Write(StaticValues.ENDSPEEDTIME, "False");
                     }
-                    while (Status.getStatus() != StatusType.Fail && readSpeed == false)
-                    {
-                        readSpeed = convert.convertToBoolean(StaticValues.TAGTRIGGERSPEED, this.eq.Read(StaticValues.TAGTRIGGERSPEED));
-                    }
-                    if (readSpeed == true)
+
+                    if (Status.getStatus() != StatusType.Fail)
                     {
                         anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
                         turbine.TurbineSpeed = convert.convertToDouble(StaticValues.TURBINESPEED, this.eq.Read(StaticValues.TURBINESPEED));
@@ -178,11 +152,9 @@ namespace Chiesi.AverageSpeed
                 }
                 else
                 {
-                    while (Status.getStatus() != StatusType.Fail && inidate == false)
-                    {
-                        inidate = convert.convertToBoolean(StaticValues.INISPEEDTIME, this.eq.Read(StaticValues.INISPEEDTIME));
-                    }
-                    if (inidate == true)
+                    logAction.writeLog("Iniciando leituras das tags necessárias");
+
+                    if (Status.getStatus() != StatusType.Fail)
                     {
                         anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
                         clenil.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
@@ -190,11 +162,8 @@ namespace Chiesi.AverageSpeed
                         toConvertTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
                         this.eq.Write(StaticValues.INISPEEDTIME, "False");
                     }
-                    while (Status.getStatus() != StatusType.Fail && enddate == false)
-                    {
-                        enddate = convert.convertToBoolean(StaticValues.ENDSPEEDTIME, this.eq.Read(StaticValues.ENDSPEEDTIME));
-                    }
-                    if (enddate == true)
+
+                    if (Status.getStatus() != StatusType.Fail)
                     {
                         anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
                         clenil.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
@@ -203,11 +172,8 @@ namespace Chiesi.AverageSpeed
                         basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
                         this.basicInfo.Date = anchor.EndTime;
                     }
-                    while (Status.getStatus() != StatusType.Fail && readSpeed == false)
-                    {
-                        readSpeed = convert.convertToBoolean(StaticValues.TAGTRIGGERSPEED, this.eq.Read(StaticValues.TAGTRIGGERSPEED));
-                    }
-                    if (readSpeed == true)
+
+                    if (Status.getStatus() != StatusType.Fail)
                     {
                         anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
                         turbine.TurbineSpeed = convert.convertToDouble(StaticValues.TURBINESPEED, this.eq.Read(StaticValues.TURBINESPEED));
@@ -272,8 +238,11 @@ namespace Chiesi.AverageSpeed
             }
         }
 
+        // Este método forma o layout do html e adiciona os valores necessários dentros dos devidos campos
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string column;
             string td;
             string qtd;
@@ -359,6 +328,9 @@ namespace Chiesi.AverageSpeed
                     "<td rowspan='4'>" + mixTime + " min </td>" +
                 "<tr>" +
                 column + basicInfo.CreateString();
+
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+
             return txtCreate;
         }
     }
