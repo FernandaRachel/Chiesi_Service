@@ -2,6 +2,7 @@
 using Chiesi.Converter;
 using Chiesi.Log;
 using Chiesi.Tanks;
+using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         public string OperationName { get; set; }
 
         public bool checkBreak { get; set; }
@@ -39,6 +42,7 @@ namespace Chiesi.Operation
             this.tanks = TankClass.GetTankClass();
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
+            this.logAction = new LogAction();
         }
 
         public bool checkError()
@@ -48,7 +52,7 @@ namespace Chiesi.Operation
             while (tagerror)
             {
                 tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             return tagerror;
         }
@@ -67,15 +71,18 @@ namespace Chiesi.Operation
 
         public override void Calculate(Text txt)
         {
+            logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
+
+            checkError();
+
             // deve ser feita alteração - chamar o waitSign , pois ele precisa verificar se há erro antes de iniciar a OP
             //var signal = WaitSign();
             bool gerarPdf = false;
 
             try
             {
+                logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
                 tanks.ReadPlc();
-                //this.eq.Write(StaticValues.TAGSIGN, "False");
-                Thread.Sleep(1000);
             }
             catch (Exception e)
             {
@@ -102,6 +109,8 @@ namespace Chiesi.Operation
             {
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -122,6 +131,8 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string breakline;
 
             if (checkBreak)
@@ -136,6 +147,9 @@ namespace Chiesi.Operation
             string txtCreate = "<br><label><strong>Peso Final do Produto no Tanque : <strong></label><span class='campo'>" 
                 + values[0] + "</span> Kg"
                 + breakline;
+
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+
             return txtCreate;
         }
     }

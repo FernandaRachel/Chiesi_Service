@@ -9,6 +9,7 @@ using Chiesi.BasicInfos;
 using Chiesi.Log;
 using System.Threading;
 using Chiesi.Converter;
+using Chiesi_Service.Log;
 
 namespace Chiesi.Operation
 {
@@ -24,6 +25,8 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
+        public LogAction logAction { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -38,6 +41,7 @@ namespace Chiesi.Operation
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
+            this.logAction = new LogAction();
         }
 
         public bool checkError()
@@ -52,31 +56,6 @@ namespace Chiesi.Operation
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-            var sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-
-            //configuravel
-            if (!tagerror)
-            {
-                while (!sign)
-                {
-                    sign = convert.convertToBoolean(StaticValues.TAGSIGN, eq.Read(StaticValues.TAGSIGN));
-                }
-            }
-            else
-            {
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                }
-                return WaitSign();
-            }
-
-            return sign;
-        }
 
         /// <summary>
         /// Método utilizado para calcular e/ou pegar valores que serão colocados dentro do txt 
@@ -84,7 +63,11 @@ namespace Chiesi.Operation
         /// </summary>
         public override void Calculate(Text txt)
         {
-            var signal = WaitSign();
+
+            logAction.writeLog("Entrando no método 'Calculate do ZeroLoadCell' para iniciar leituras das tags necessárias");
+
+
+            checkError();
             bool gerarPdf = false;
 
             try
@@ -119,6 +102,8 @@ namespace Chiesi.Operation
             {
                 txt.addItem(x);
                 txt.saveTxt(x, false);
+
+                logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -138,13 +123,16 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
+            logAction.writeLog("Iniciando CreateString");
+
             string txtCreate =
                 "<h3>Zerar Célula de Carga</h3>" +
                 "<label>Peso do Tanque : </label><span class='campo'>" + values[0] + "kg</span>" +
                 "<br>" + basicInfo.CreateString();
 
-            return txtCreate;
+            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
+            return txtCreate;
         }
 
     }
