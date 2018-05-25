@@ -5,6 +5,7 @@ using System.IO;
 using Chiesi.Log;
 using Chiesi.BasicInfos;
 using NReco.PdfGenerator;
+using System.Configuration;
 
 namespace Chiesi
 {
@@ -37,15 +38,15 @@ namespace Chiesi
 
             string preBody = "<html>" +
                 "               <head>";
-            preBody += "<link rel='stylesheet' type='text/css' href='" + StaticValues.STYLESHEET + "'/>" +
+            preBody += "<link rel='stylesheet' type='text/css' href='" + ConfigurationManager.AppSettings["STYLESHEET"] + "'/>" +
                 "<meta charset='UTF - 8'/>" +
                 "               </head>" +
                 "               <body>";
 
             string posBody = "</body></html>";
             string curpath = Directory.GetCurrentDirectory();
-            string path = StaticValues.RELATORIOPATH; //mockpdf 
-            string logopath = StaticValues.LOGOPATH;
+            string path = ConfigurationManager.AppSettings["RELATORIOPATH"]; //mockpdf 
+            string logopath = ConfigurationManager.AppSettings["LOGOPATH"];
             var headermodified = header.Replace("/", "");
             var htmlContent = preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody;
             //var margins = new PageMargins();
@@ -62,7 +63,7 @@ namespace Chiesi
             //htmlToPdf.Margins = margins;
 
             var pdfBytes = htmlToPdf.GeneratePdf(htmlContent);
-            File.WriteAllBytes(StaticValues.RELATORIOPATH + headermodified + Batch + ".pdf", pdfBytes);
+            File.WriteAllBytes(ConfigurationManager.AppSettings["RELATORIOPATH"] + headermodified + Batch + ".pdf", pdfBytes);
 
             htmlToPdf.LogReceived += (sender, e) =>
             {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Chiesi.BasicInfos;
-
+using System.Configuration;
 
 namespace Chiesi
 {
@@ -41,10 +41,10 @@ namespace Chiesi
 
         public void saveTxt(string txt, bool firstOp)
         {
-            string path = StaticValues.PATHLOGCHIESI;
+            string path = ConfigurationManager.AppSettings["PATHLOGCHIESI"];
             if (firstOp && File.Exists(path))
             {
-                File.Copy(StaticValues.PATHLOGCHIESI, StaticValues.PATHDUMP + DateTime.Now.Ticks + ".txt");
+                File.Copy(ConfigurationManager.AppSettings["PATHLOGCHIESI"], ConfigurationManager.AppSettings["PATHDUMP"] + DateTime.Now.Ticks + ".txt");
                 File.Delete(path);
             }
             // This text is added only once to the file.
@@ -77,8 +77,8 @@ namespace Chiesi
 
         public string cleanTxt()
         {
-            string path = StaticValues.PATHLOGCHIESI;
-            string pathtosave = StaticValues.PATHLOGCHIESITOSAVE;
+            string path = ConfigurationManager.AppSettings["PATHLOGCHIESI"];
+            string pathtosave = ConfigurationManager.AppSettings["PATHLOGCHIESITOSAVE"];
             File.Delete(path);
             
             txtAtual = "";

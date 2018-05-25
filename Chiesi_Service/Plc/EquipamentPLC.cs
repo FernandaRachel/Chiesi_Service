@@ -40,7 +40,7 @@ namespace Chiesi
 
         private EquipamentPLC()
         {
-            address = StaticValues.connectionString;
+            address = ConfigurationManager.AppSettings["connectionString"];
             //address = "";
             errorLog = new ErrorLog();
         }
@@ -82,7 +82,7 @@ namespace Chiesi
                             {
                                 errorLog.writeLog("Read() ", Tag, "Tag não mapeada", DateTime.Now);
 
-                                Write(StaticValues.TAGERRORMESSAGE, "Nao Mapeada");
+                                Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], "Nao Mapeada");
                                 Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                                 checkError = true;
                                 Thread.Sleep(5000);
@@ -125,7 +125,7 @@ namespace Chiesi
                         {
                             errorLog.writeLog("EquipamentPLC", "Read", Tag + ex.Message, DateTime.Now);
                             Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-                            Write(StaticValues.TAGERRORMESSAGE, Tag + ex.Message);
+                            Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], Tag + ex.Message);
                             checkError = true;
                         }
                     }
@@ -161,7 +161,7 @@ namespace Chiesi
                     }
                     catch (SqlException ex)
                     {
-                        Write(StaticValues.TAGERRORMESSAGE, Tag + ex.Message);
+                        Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], Tag + ex.Message);
                         Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                         errorLog.writeLog("EquipamentPLC", "Write", Tag + ex.Message, DateTime.Now);
                     }

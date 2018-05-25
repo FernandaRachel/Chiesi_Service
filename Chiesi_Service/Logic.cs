@@ -154,18 +154,18 @@ namespace Chiesi
                             Thread.Sleep(500);
                         }
 
-                        report = Convert.ToInt32(eq.Read(StaticValues.TAGPRODUCTYPE));
-                        subType = Convert.ToInt32(eq.Read(StaticValues.TAGSUBTYPE));
+                        report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
+                        subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
 
                         while (report == 0)
                         {
-                            report = Convert.ToInt32(eq.Read(StaticValues.TAGPRODUCTYPE));
+                            report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
                             Thread.Sleep(500);
                             Console.WriteLine("while");
                         }
                         while (subType == 0)
                         {
-                            subType = Convert.ToInt32(eq.Read(StaticValues.TAGSUBTYPE));
+                            subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
                             Thread.Sleep(500);
                         }
 
@@ -173,12 +173,8 @@ namespace Chiesi
                         if (Status.getStatus() == StatusType.Idle)
                         {
                             eq.Write(StaticValues.TAGCANCELOP, "False");
-                            eq.Write(StaticValues.TAGPRODUCTYPE, "0");
-                            eq.Write(StaticValues.TAGSUBTYPE, "0");
-                            eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                            //eq.Write(StaticValues.INISPEEDTIME, "False");
-                            eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
-                            //eq.Write(StaticValues.TAGSIGN, "False");
+                            eq.Write(ConfigurationManager.AppSettings["TAGPRODUCTYPE"], "0");
+                            eq.Write(ConfigurationManager.AppSettings["TAGSUBTYPE"], "0");
 
                             ReportFactory rf = new ReportFactory();
                             rf.ConstructEquipament(report, subType, EquipamentType.PLC);// trocar o zero pela Tag do tipo de produto
@@ -201,8 +197,8 @@ namespace Chiesi
                 ErrorLog errorlog = new ErrorLog();
                 eq = eqFact.ConstructEquipament(EquipamentType.PLC);
                 errorlog.writeLog("Logic", "Erro de início", e.ToString(), DateTime.Now);
-                eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                eq.Write(StaticValues.TAGERRORPLC, "True");
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
 
             }
         }
@@ -236,7 +232,7 @@ namespace Chiesi
                         Status.SetFailMode();
                         errorlog.writeLog("Second Thread", "Falha de Conexão", "Falha de Conexão - LifeBit !", DateTime.Now);
                         //eq.Write(StaticValues.TAGERRORPLC, "True");
-                        //eq.Write(StaticValues.TAGERRORMESSAGE, "Falha de Conexão - LifeBit !");
+                        //eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], "Falha de Conexão - LifeBit !");
                         Thread.Sleep(2000);
                     }
                     else

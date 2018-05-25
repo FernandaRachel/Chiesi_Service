@@ -86,7 +86,7 @@ namespace Chiesi.Operation
             catch (Exception e)
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 

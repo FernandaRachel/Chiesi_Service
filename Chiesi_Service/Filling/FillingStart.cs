@@ -94,15 +94,15 @@ namespace Chiesi.Filling
                 prod.ReadPlc();
                 infos.ReadPlc();
                 tank.ReadPlc();
-                Product = this.eq.Read(StaticValues.TAGRECIPETYPE);
-                fillingType = this.eq.Read(StaticValues.TAGFILLINGNAME);
+                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPETYPE"]);
+                fillingType = this.eq.Read(ConfigurationManager.AppSettings["TAGFILLINGNAME"]);
                 //this.eq.Write(StaticValues.TAGSIGN, "False");
                 //Thread.Sleep(1000);
             }
             catch (Exception e)
             {
                 errorlog.writeLog("FillingStart", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
@@ -116,7 +116,7 @@ namespace Chiesi.Filling
             catch (Exception e)
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
