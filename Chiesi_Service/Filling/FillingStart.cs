@@ -94,7 +94,7 @@ namespace Chiesi.Filling
                 prod.ReadPlc();
                 infos.ReadPlc();
                 tank.ReadPlc();
-                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPETYPE"]);
+                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPENAME"]);
                 fillingType = this.eq.Read(ConfigurationManager.AppSettings["TAGFILLINGNAME"]);
                 //this.eq.Write(StaticValues.TAGSIGN, "False");
                 //Thread.Sleep(1000);

@@ -86,7 +86,7 @@ namespace Chiesi
 
         public string TAGCANCELOP { get; set; }
 
-        public string TAGRECIPETYPE { get; set; }
+        public string TAGRECIPENAME { get; set; }
 
         public string TAGFILLINGNAME { get; set; }
 
