@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chiesi
 {
-    class EquipamentMock : IEquipament
+    class EquipamentMock 
     {
 
         public Dictionary<string, string> dictMemory = new Dictionary<string, string>();

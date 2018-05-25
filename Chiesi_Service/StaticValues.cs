@@ -78,7 +78,7 @@ namespace Chiesi
         public static string PATHADCHIESI = "";
         public static string PATHDUMP = "";
         public static string TAGCANCELOP = "";
-        public static string TAGRECIPETYPE = "";
+        public static string TAGRECIPENAME = "";
         public static string TAGFILLINGNAME = "";
         public static string TAGLIFEBITCHECK = "";
         public static string INIHOURMIXTIME = "";

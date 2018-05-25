@@ -88,7 +88,7 @@ namespace Chiesi.Operation
                 logAction.writeLog("Iniciando leituras das tags necessárias do BeginOfManipulation");
                 this.prod.ReadPlc(); // inicializa valores das prop do Product
                 this.basicInfo.KeepBatch = this.prod.Batch;
-                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPETYPE"]);
+                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPENAME"]);
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chiesi_Service.Recipe;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,11 @@ namespace Chiesi
     interface IEquipament
     {
         string address { get; set; }
+        Recipe recipe { get; set; }
+        RecipeData recipeData { get; set; }
 
         void Connect();
+        Recipe ReadAllData();
         string Read(string Tag);
         void Write(string Tag, string value);
     }

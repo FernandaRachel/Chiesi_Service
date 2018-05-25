@@ -76,7 +76,7 @@ namespace Chiesi
             StaticValues.PATHDUMP = n.PATHDUMP;
             StaticValues.TAGCANCELOP = n.TAGCANCELOP;
             StaticValues.TAGSUBTYPE = n.TAGSUBTYPE;
-            StaticValues.TAGRECIPETYPE = n.TAGRECIPETYPE;
+            StaticValues.TAGRECIPENAME = n.TAGRECIPENAME;
             StaticValues.TAGFILLINGNAME = n.TAGFILLINGNAME;
             StaticValues.TAGLIFEBITCHECK = n.TAGLIFEBITCHECK;
             StaticValues.INIHOURMIXTIME = n.INIHOURMIXTIME;
