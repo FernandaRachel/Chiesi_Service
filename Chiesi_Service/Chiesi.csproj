@@ -148,6 +148,8 @@
     <Compile Include="Plc\IEquipament.cs" />
     <Compile Include="Plc\Products\Product.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Recipe\Recipe.cs" />
+    <Compile Include="Recipe\RecipeData.cs" />
     <Compile Include="Reports\IReport.cs" />
     <Compile Include="Reports\ReportClenilSubType3.cs" />
     <Compile Include="Reports\ReportClenilSubType2.cs" />
