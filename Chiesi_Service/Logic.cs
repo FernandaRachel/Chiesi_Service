@@ -106,7 +106,7 @@ namespace Chiesi
             {
                 string JSONPATH = ConfigurationManager.AppSettings["EnderecoJson"];
                 //var path = Directory.GetCurrentDirectory() + JSONPATH;
-                LerJson(JSONPATH);
+                //LerJson(JSONPATH);
                 logAction.writeLog("Feita a leitura dos nomes das tags -> 'teste.json'");
 
                 eq = eqFact.ConstructEquipament(EquipamentType.PLC);
@@ -190,7 +190,8 @@ namespace Chiesi
                     }
                     else
                     {
-                        while (eq.Read(StaticValues.TAGLIFEBIT).Equals("False")) { Thread.Sleep(1000); }
+
+                        while (eq.Read(ConfigurationManager.AppSettings["TAGLIFEBIT"]).Equals("False")) { Thread.Sleep(1000); }
                         Status.SetModeToIdle();
                     }
                 }
@@ -211,20 +212,20 @@ namespace Chiesi
             EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
             IEquipament eq;
             eq = eqFact.ConstructEquipament(EquipamentType.PLC);
-            var readLife = Convert.ToBoolean(eq.Read(StaticValues.TAGLIFEBIT));
-            var readLifeCheck = Convert.ToBoolean(eq.Read(StaticValues.TAGLIFEBITCHECK));
+            var readLife = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGLIFEBIT"]));
+            var readLifeCheck = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGLIFEBITCHECK"]));
             int count = 0;
 
             while (DontStopMeNOW)
             {
 
-                readLife = Convert.ToBoolean(eq.Read(StaticValues.TAGLIFEBIT));
-                readLifeCheck = Convert.ToBoolean(eq.Read(StaticValues.TAGLIFEBITCHECK));
+                readLife = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGLIFEBIT"]));
+                readLifeCheck = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGLIFEBITCHECK"]));
 
                 if (readLife)
                 {
                     count = 0;
-                    eq.Write(StaticValues.TAGLIFEBITCHECK, "True");
+                    eq.Write(ConfigurationManager.AppSettings["TAGLIFEBITCHECK"], "True");
                     Thread.Sleep(20000);
                 }
                 else if (!readLife)

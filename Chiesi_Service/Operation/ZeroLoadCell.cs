@@ -10,6 +10,7 @@ using Chiesi.Log;
 using System.Threading;
 using Chiesi.Converter;
 using Chiesi_Service.Log;
+using System.Configuration;
 
 namespace Chiesi.Operation
 {
@@ -44,12 +45,12 @@ namespace Chiesi.Operation
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                Thread.Sleep(1000);
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
+                Thread.Sleep(500);
             }
             return tagerror;
         }
@@ -71,14 +72,13 @@ namespace Chiesi.Operation
             try
             {
                 this.tank.ReadPlc();
-                this.eq.Write(StaticValues.TAGSIGN, "False");
-                Thread.Sleep(1000);
+               
             }
             catch (Exception e)
             {
                 errorlog.writeLog("ZeroLoadCell", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             // TESTANDO FORMAT DOT TO COMMA
@@ -93,7 +93,7 @@ namespace Chiesi.Operation
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             if (!gerarPdf)

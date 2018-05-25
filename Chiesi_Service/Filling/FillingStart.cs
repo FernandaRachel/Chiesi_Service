@@ -6,6 +6,7 @@ using Chiesi.Products;
 using Chiesi.Tanks;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -46,11 +47,11 @@ namespace Chiesi.Filling
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(1000);
             }
             return tagerror;
@@ -74,7 +75,7 @@ namespace Chiesi.Filling
             {
                 while (tagerror)
                 {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+                    tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 }
                 return WaitSign();
             }
@@ -102,7 +103,7 @@ namespace Chiesi.Filling
             {
                 errorlog.writeLog("FillingStart", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             var x = CreateString(prod.Code.ToString(), Product, prod.Batch.ToString(), fillingType);
@@ -116,7 +117,7 @@ namespace Chiesi.Filling
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             if (!gerarPdf)

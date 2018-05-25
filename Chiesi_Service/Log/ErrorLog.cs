@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Chiesi.Log
     {
         public void writeLog(string operacao, string tag, string mensagem, DateTime date)
         {
-            string path = StaticValues.PATHERRORLOGCHIESI;
+            string path = ConfigurationManager.AppSettings["PATHERRORLOGCHIESI"];
             // This text is added only once to the file.
             if (!File.Exists(path))
             {

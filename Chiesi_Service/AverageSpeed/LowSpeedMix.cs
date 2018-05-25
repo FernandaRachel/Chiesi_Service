@@ -112,7 +112,6 @@ namespace Chiesi.AverageSpeed
                     anchor.mixTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
                     basicInfo.ReadPlc();
                     basicInfo.Date = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURMIXTIME));
-                    Thread.Sleep(200);
                 }
 
 
