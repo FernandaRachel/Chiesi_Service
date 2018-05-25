@@ -5,6 +5,7 @@ using Chiesi.Tanks;
 using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -47,28 +48,17 @@ namespace Chiesi.Operation
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(500);
             }
             return tagerror;
         }
 
-        public bool WaitSign()
-        {
-            var tagerror = checkError();
-
-                while (tagerror)
-                {
-                    tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC,eq.Read(StaticValues.TAGERRORPLC));
-                }
-
-            return true;
-        }
-
+       
         public override void Calculate(Text txt)
         {
             logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
@@ -88,7 +78,7 @@ namespace Chiesi.Operation
             {
                 errorlog.writeLog("TankFinalWeight", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
@@ -102,7 +92,7 @@ namespace Chiesi.Operation
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             if (!gerarPdf)

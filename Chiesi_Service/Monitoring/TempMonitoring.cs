@@ -7,6 +7,7 @@ using Chiesi.Shaker;
 using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -41,6 +42,7 @@ namespace Chiesi.Monitoring
 
         private IEquipament eq;
 
+
         public TempMonitoringClass(EquipamentType typeEq, bool checkBreak)
         {
 
@@ -58,11 +60,11 @@ namespace Chiesi.Monitoring
         {
             logAction.writeLog("Entrando no método 'checkError'");
 
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(500);
             }
             return tagerror;
@@ -94,14 +96,13 @@ namespace Chiesi.Monitoring
                 this.basicInfo.ReadPlc(); //inicializa valores das prop da Basic Info
                 // ----------------------
                 prodTemp = (this.prod.ProductTemp / 10);
-                Thread.Sleep(450);
 
             }
             catch (Exception e)
             {
                 errorlog.writeLog("TempMonitoring", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
@@ -116,7 +117,7 @@ namespace Chiesi.Monitoring
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             if (!gerarPdf)

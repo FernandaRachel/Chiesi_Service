@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Chiesi.BasicInfos;
+using System.Configuration;
 
 namespace Chiesi.Log
 {
@@ -19,7 +20,9 @@ namespace Chiesi.Log
 
         public void writeLog(string header, BasicInfoClass basicInfo)
         {
-            string path = StaticValues.PATHADCHIESI;
+            // Pega do App.config o endereço para salvar o Log AD
+            string path = ConfigurationManager.AppSettings["PATHADCHIESI"] + DateTime.Now.ToString("dd-MM-yyyy")+ ".txt";
+            
             // This text is added only once to the file.
             if (!File.Exists(path))
             {

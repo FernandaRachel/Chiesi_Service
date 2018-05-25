@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Chiesi.Log;
 using System.Threading;
+using System.Configuration;
 
 namespace Chiesi
 {
@@ -82,7 +83,7 @@ namespace Chiesi
                                 errorLog.writeLog("Read() ", Tag, "Tag não mapeada", DateTime.Now);
 
                                 Write(StaticValues.TAGERRORMESSAGE, "Nao Mapeada");
-                                Write(StaticValues.TAGERRORPLC, "True");
+                                Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                                 checkError = true;
                                 Thread.Sleep(5000);
                             }
@@ -123,7 +124,7 @@ namespace Chiesi
                         if (count <= 2)
                         {
                             errorLog.writeLog("EquipamentPLC", "Read", Tag + ex.Message, DateTime.Now);
-                            Write(StaticValues.TAGERRORPLC, "True");
+                            Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                             Write(StaticValues.TAGERRORMESSAGE, Tag + ex.Message);
                             checkError = true;
                         }
@@ -161,7 +162,7 @@ namespace Chiesi
                     catch (SqlException ex)
                     {
                         Write(StaticValues.TAGERRORMESSAGE, Tag + ex.Message);
-                        Write(StaticValues.TAGERRORPLC, "True");
+                        Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                         errorLog.writeLog("EquipamentPLC", "Write", Tag + ex.Message, DateTime.Now);
                     }
                 }

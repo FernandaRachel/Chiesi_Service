@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Chiesi.BasicInfos;
 using System.IO;
 using Chiesi;
+using System.Configuration;
 
 namespace Chiesi_Service.Log
 {
@@ -15,7 +16,7 @@ namespace Chiesi_Service.Log
 
         public void writeLog(string info)
         {
-            string path = StaticValues.PATHLOGACTION + DateTime.Now.ToString("dd-MM-yyyy") + ".txt";
+            string path = ConfigurationManager.AppSettings["PATHLOGACTION"] + DateTime.Now.ToString("dd-MM-yyyy") + ".txt";
             // This text is added only once to the file.
             if (!File.Exists(path))
             {

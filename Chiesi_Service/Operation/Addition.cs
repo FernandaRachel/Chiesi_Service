@@ -4,6 +4,7 @@ using Chiesi.Log;
 using Chiesi_Service.Log;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -48,11 +49,11 @@ namespace Chiesi.Operation
         {
             logAction.writeLog("Entrando no método 'checkError'");
 
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(500);
             }
             return tagerror;
@@ -78,7 +79,7 @@ namespace Chiesi.Operation
             {
                 errorlog.writeLog("EndFilling", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             var x = CreateString();
@@ -94,7 +95,7 @@ namespace Chiesi.Operation
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             // adiciona o texto na variavel global da classe Text

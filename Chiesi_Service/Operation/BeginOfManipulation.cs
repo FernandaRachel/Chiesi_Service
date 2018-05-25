@@ -9,6 +9,7 @@ using Chiesi.Log;
 using Chiesi.Converter;
 using System.Threading;
 using Chiesi_Service.Log;
+using System.Configuration;
 
 namespace Chiesi.Operation
 {
@@ -57,11 +58,11 @@ namespace Chiesi.Operation
         {
             logAction.writeLog("Entrando no método 'checkError'");
 
-            var tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(StaticValues.TAGERRORPLC, eq.Read(StaticValues.TAGERRORPLC));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(500);
             }
             return tagerror;
@@ -88,13 +89,12 @@ namespace Chiesi.Operation
                 this.prod.ReadPlc(); // inicializa valores das prop do Product
                 this.basicInfo.KeepBatch = this.prod.Batch;
                 Product = this.eq.Read(StaticValues.TAGRECIPETYPE);
-                Thread.Sleep(500);
             }
             catch (Exception e)
             {
                 errorlog.writeLog("BeginOfManipulation", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             try
@@ -105,7 +105,7 @@ namespace Chiesi.Operation
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                this.eq.Write(StaticValues.TAGERRORPLC, "True");
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             var x = CreateString();
