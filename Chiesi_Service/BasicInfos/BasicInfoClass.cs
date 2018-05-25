@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,7 +57,7 @@ namespace Chiesi.BasicInfos
                 {
                     if (_instance == null)
                     {
-                        _instance = new BasicInfoClass(StaticValues.TAGDATA, StaticValues.TAGHOUR, StaticValues.TAGASSINATURA, StaticValues.TAGOPERADOR,  StaticValues.EQUIPAMENTTYPE);
+                        _instance = new BasicInfoClass(StaticValues.TAGDATA, StaticValues.TAGHOUR, ConfigurationManager.AppSettings["TAGASSINATURA"], StaticValues.TAGOPERADOR,  StaticValues.EQUIPAMENTTYPE);
 
                     };
                 }

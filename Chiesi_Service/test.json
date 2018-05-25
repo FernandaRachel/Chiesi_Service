@@ -53,7 +53,7 @@
   "TAGINITIMEVALVE": "ProjetoChiesi.plcchiesi.Valve.tag_ini_time_boolean",
   "STYLESHEET": "C:\\SPI\\Service\\Stylesheet1.css",
   "RELATORIOPATH": "C:\\SPI\\logs\\pdf\\",
-    "LOGOPATH": "C:\\SPI\\Service\\logo.png",
+  "LOGOPATH": "C:\\SPI\\Service\\logo.png",
   "INISPEEDTIME": "ProjetoChiesi.plcchiesi.Operation.tag_ini_time_boolean",
   "ENDSPEEDTIME": "ProjetoChiesi.plcchiesi.Operation.tag_end_time_boolean",
   "TAGTRIGGERSPEED": "ProjetoChiesi.plcchiesi.Operation.tag_rpm_speed_boolean",

@@ -1,6 +1,7 @@
 ﻿using Chiesi.Log;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Chiesi.Converter
         public bool convertToBoolean(string tag,string value)
         {
             bool converted = true;
-            bool tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+            bool tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             try
             {
@@ -35,13 +36,13 @@ namespace Chiesi.Converter
             catch (Exception e)
             {
                 errorLog.writeLog("ConvertionToBoolean", tag, e.ToString(), DateTime.Now);
-                eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                eq.Write(StaticValues.TAGERRORPLC, "True");
-                tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
                 while (tagerror)
                 {
-                    tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                    tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                     Thread.Sleep(1000);
                 }
 
@@ -56,7 +57,7 @@ namespace Chiesi.Converter
         {
             
             int converted;
-            bool tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+            bool tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             try
             {
@@ -66,13 +67,13 @@ namespace Chiesi.Converter
             catch (Exception e)
             {
                 errorLog.writeLog("ConvertionToInt", tag, e.ToString(), DateTime.Now);
-                eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                eq.Write(StaticValues.TAGERRORPLC, "True");
-                tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
                 while (tagerror)
                 {
-                    tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                    tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                     Thread.Sleep(1000);
                 }
 
@@ -86,7 +87,7 @@ namespace Chiesi.Converter
         public double convertToDouble(string tag, string value)
         {
             double converted;
-            bool tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+            bool tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             try
             {
@@ -96,13 +97,13 @@ namespace Chiesi.Converter
             catch (Exception e)
             {
                 errorLog.writeLog("ConvertionToDouble", tag, e.ToString(), DateTime.Now);
-                eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                eq.Write(StaticValues.TAGERRORPLC, "True");
-                tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
                 while (tagerror)
                 {
-                    tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                    tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                     Thread.Sleep(1000);
                 }
 
@@ -117,7 +118,7 @@ namespace Chiesi.Converter
         public sbyte convertToSbyte(string tag, string value)
         {
             sbyte converted;
-            bool tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+            bool tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             try
             {
@@ -127,13 +128,13 @@ namespace Chiesi.Converter
             catch (Exception e)
             {
                 errorLog.writeLog("ConvertionToSByte", tag, e.ToString(), DateTime.Now);
-                eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
-                eq.Write(StaticValues.TAGERRORPLC, "True");
-                tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
                 while (tagerror)
                 {
-                    tagerror = Convert.ToBoolean(eq.Read(StaticValues.TAGERRORPLC));
+                    tagerror = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                     Thread.Sleep(1000);
                 }
 

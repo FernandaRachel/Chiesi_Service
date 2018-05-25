@@ -101,7 +101,7 @@ namespace Chiesi.Monitoring
             catch (Exception e)
             {
                 errorlog.writeLog("TempMonitoring", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
@@ -116,7 +116,7 @@ namespace Chiesi.Monitoring
             catch (Exception e)
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 

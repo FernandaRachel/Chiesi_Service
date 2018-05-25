@@ -77,7 +77,7 @@ namespace Chiesi.Filling
             catch (Exception e)
             {
                 errorlog.writeLog("EndFilling", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 

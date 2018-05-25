@@ -88,12 +88,12 @@ namespace Chiesi.Operation
                 logAction.writeLog("Iniciando leituras das tags necessárias do BeginOfManipulation");
                 this.prod.ReadPlc(); // inicializa valores das prop do Product
                 this.basicInfo.KeepBatch = this.prod.Batch;
-                Product = this.eq.Read(StaticValues.TAGRECIPETYPE);
+                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPETYPE"]);
             }
             catch (Exception e)
             {
                 errorlog.writeLog("BeginOfManipulation", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
@@ -104,7 +104,7 @@ namespace Chiesi.Operation
             catch (Exception e)
             {
                 errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(StaticValues.TAGERRORMESSAGE, e.Message);
+                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
