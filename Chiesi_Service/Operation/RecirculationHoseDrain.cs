@@ -71,6 +71,7 @@ namespace Chiesi.Operation
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
 
             bool gerarPdf = false;
             string iniTimeString = "";
@@ -81,10 +82,8 @@ namespace Chiesi.Operation
                 gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
 
                 // PEGAR HORA E DATA DO PLC !!!!!!
-                IniTime = DateTime.Now;
-                iniTimeString = IniTime.ToString("HH:mm");
-                EndTime = DateTime.Now;
-                endTimeString = EndTime.ToString("HH:mm");
+                iniTimeString = String.Format(result.Hora_0, "HH:mm"); 
+                endTimeString = String.Format(result.Hora_1, "HH:mm");
                 // ---------------------------------
             }
             catch (Exception e)

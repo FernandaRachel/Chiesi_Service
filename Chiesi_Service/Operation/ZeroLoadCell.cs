@@ -73,12 +73,12 @@ namespace Chiesi.Operation
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
 
             bool gerarPdf = false;
-
+            double tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
             try
             {
-                this.tank.ReadPlc();
                
             }
             catch (Exception e)
@@ -90,7 +90,7 @@ namespace Chiesi.Operation
 
             // TESTANDO FORMAT DOT TO COMMA
             var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tank.TankWeight/100));
+            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tankWeigth/100));
 
             try
             {

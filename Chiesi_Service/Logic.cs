@@ -130,14 +130,11 @@ namespace Chiesi
                     {
                         logAction.writeLog("Lendo tag de cancelar Operação - verifica se esta 'true'");
 
-                        sign = Convert.ToBoolean(eq.Read(StaticValues.TAGSIGN));
+                        sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
                         var cancelOp = Convert.ToBoolean(eq.Read(StaticValues.TAGCANCELOP));
                         //verifica se a operação foi cancelada e derruba as TAGS - EVITA ERRO DE ACHAR QUE A OP INICIOU
                         if (cancelOp)
                         {
-                            eq.Write(StaticValues.INISPEEDTIME, "False");
-                            eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                            eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
                             eq.Write(StaticValues.TAGCANCELOP, "False");
                         }
 
@@ -146,11 +143,10 @@ namespace Chiesi
                         {
                             if (cancelOp)
                             {
-                                eq.Write(StaticValues.ENDSPEEDTIME, "False");
-                                eq.Write(StaticValues.TAGTRIGGERSPEED, "False");
+                                
                                 eq.Write(StaticValues.TAGCANCELOP, "False");
                             }
-                            sign = Convert.ToBoolean(eq.Read(StaticValues.TAGSIGN));
+                            sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
                             Thread.Sleep(500);
                         }
 
@@ -179,6 +175,10 @@ namespace Chiesi
                             ReportFactory rf = new ReportFactory();
                             rf.ConstructEquipament(report, subType, EquipamentType.PLC);// trocar o zero pela Tag do tipo de produto
                                                                                         // executa tal relatório
+
+                            // CONFIRM THAT ALL VALUES WERE READ
+                            eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
+
                             Thread.Sleep(2000);
                             Console.WriteLine("Press any key to exit.");
                             Console.Read();
