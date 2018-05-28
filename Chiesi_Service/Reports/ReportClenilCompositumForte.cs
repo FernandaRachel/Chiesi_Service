@@ -43,8 +43,8 @@ namespace Chiesi.Reports
             this.txt = new Text();
             op1 = new BeginOfManipulation(eqtype, "BeginOfManipulation", "Clenil Compositum Forte");
             op2 = new ZeroLoadCell(eqtype);
-            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro", "1.2", "3");
-            op4 = new FirstLoading(eqtype, "2º Carregamento de Álcool Etílico Anidro", "1.2", "3");
+            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro", "1.2", "3",0);
+            op4 = new FirstLoading(eqtype, "2º Carregamento de Álcool Etílico Anidro", "1.2", "3",0);
             op5 = new TempMonitoringClass(eqtype, false);
             op6 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,0);
             op7 = new AdditionClass(eqtype, "Adição de Dipropionato de Baclometasoma", false, false,1);

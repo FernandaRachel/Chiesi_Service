@@ -44,6 +44,7 @@ namespace Chiesi.Loading
 
         public string operationID { get; set; }
 
+        public int index { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -52,10 +53,11 @@ namespace Chiesi.Loading
         //conts
 
 
-        public ThirdLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, bool checkBreak)
+        public ThirdLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, bool checkBreak, int index)
         {
             //ID da Operação - cada operação possui um ID exceto a incial
             this.operationID = "5";
+            this.index = index;
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();
@@ -98,30 +100,36 @@ namespace Chiesi.Loading
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(index);
 
             bool gerarPdf = false;
-            DateTime keepinidate = DateTime.Now;
             string cellVariation = "";
             string flowvariation = "";
 
             try
             {
+                logAction.writeLog("Iniciando leituras das tags necessárias do ThirdLoading");
+                
                 //PEGAR HORA DO PLC
                 logAction.writeLog("Lendo hora inicial da mistura do ThirdLoading");
-                keepinidate = DateTime.Now;
+                gli.OutFlowStart = Convert.ToDateTime(result.Hora_0);
 
-                logAction.writeLog("Iniciando leituras das tags necessárias do ThirdLoading");
-                cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".", ",");
-                flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".", ",");
-                this.flux.ReadPlc(); // inicializa os valores do Flowmeter
-                this.cell.ReadPlc(); // inicializa os valores da LoadingCell
-                this.infos.ReadPlc(); // inicializa os valores da BasicInfo
-                this.gli.ReadPlc(); // inicializa os valores de Glicerol
+                //LENDO VARIAÇÕES e QTD
+                logAction.writeLog("Iniciando leituras variações e quantidades");
+                gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
+                flux.TheoricQty = result.Param_2;
+                cellVariation = result.Param_3.Replace(".", ",");
+                flowvariation = result.Param_4.Replace(".", ",");
+                
                 //PEGAR HORA DO PLC
                 logAction.writeLog("Lendo hora final da mistura do ThirdLoading");
-                gli.OutFlowStart = keepinidate;
-                gli.OutFlowEnd = DateTime.Now;
-                this.infos.Date = gli.OutFlowEnd;
+                gli.OutFlowEnd = Convert.ToDateTime(result.Hora_1);
+
+                // Define os novos valores do basic info = assinatura
+                this.infos.Hour = Convert.ToDateTime(result.Hora_1);
+                this.infos.Date = Convert.ToDateTime(result.Date);
+                this.infos.OperatorLogin = result.Asignature;
                 // ------------------------------------
             }
             catch (Exception e)
