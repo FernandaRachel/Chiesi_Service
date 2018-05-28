@@ -83,45 +83,33 @@ namespace Chiesi.AverageSpeed
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
 
             bool gerarPdf = false;
 
-
-            // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
-            // TODOS DADOS SERÃO RECEBIDOS DO PLC
 
             try
             {
 
                 logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
-                eq.Write(StaticValues.TAGMIXTIME, mixTime);
-                Thread.Sleep(300);
-                this.anchor.ReadPlc();
+                // LENDO HORA INCIAL
+                logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
+                anchor.IniTime = Convert.ToDateTime(result.Hora_0);
+                
+                // LENDO HORA FINAL
+                logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
+                anchor.EndTime = Convert.ToDateTime(result.Hora_1);
 
-                if (Status.getStatus() != StatusType.Fail)
-                {
-                    logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
-
-                    anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURMIXTIME));
-                }
-
-                if (Status.getStatus() != StatusType.Fail)
-                {
-                    logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
-                    anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURMIXTIME));
-                }
-
-
-                if (Status.getStatus() != StatusType.Fail)
-                {
-                    logAction.writeLog("Lendo velocidades da mistura e basic infos");
-                    anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
-                    anchor.mixTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
-                    basicInfo.ReadPlc();
-                    basicInfo.Date = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURMIXTIME));
-                }
-
+                // LENDO VELOCIDADES E TEMPO DE MISTURA
+                logAction.writeLog("Lendo velocidades da mistura de baixa velocidade e basic infos");
+                anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
+                anchor.mixTime = convert.convertToDouble("mixTime", mixTime);
+                
+                // Define os novos valores do basic info = assinatura
+                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                this.basicInfo.OperatorLogin = result.Asignature;
 
             }
             catch (Exception e)

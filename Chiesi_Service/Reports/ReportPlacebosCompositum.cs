@@ -38,7 +38,7 @@ namespace Chiesi.Reports
             txt = new Text();
             op1 = new BeginOfManipulation(eqtype, "BeginOfManipulation", "Placebos");
             op2 = new ZeroLoadCell(eqtype);
-            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro", "1.2", "3");
+            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro", "1.2", "3",0);
             op4 = new TempMonitoringClass(eqtype, true);
             op8 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,0);
             op9 = new LowSpeedMix(eqtype, "15", "30", false);

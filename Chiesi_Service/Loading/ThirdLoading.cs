@@ -44,6 +44,7 @@ namespace Chiesi.Loading
 
         public string operationID { get; set; }
 
+        public int index { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -52,10 +53,11 @@ namespace Chiesi.Loading
         //conts
 
 
-        public ThirdLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, bool checkBreak)
+        public ThirdLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, bool checkBreak, int index)
         {
             //ID da Operação - cada operação possui um ID exceto a incial
             this.operationID = "5";
+            this.index = index;
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();

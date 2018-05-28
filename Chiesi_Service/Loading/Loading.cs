@@ -38,15 +38,18 @@ namespace Chiesi.Loading
 
         public string operationID { get; set; }
 
+        public int index { get; set; }
+
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         IEquipament eq;
 
         //conts
 
-        public FirstLoading(EquipamentType typeEq, string headerName, string limitFlow, string limitCell)
+        public FirstLoading(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, int index)
         {
             this.operationID = "3";
+            this.index = index;
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();

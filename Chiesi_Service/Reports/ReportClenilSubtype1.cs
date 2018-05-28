@@ -42,10 +42,10 @@ namespace Chiesi.Reports
 
             op1 = new BeginOfManipulation(eqtype, "BeginOfManipulation", "Clenil");
             op2 = new ZeroLoadCell(eqtype);
-            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro ", "1.2", "3");
+            op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro ", "1.2", "3",0);
             op4 = new TempMonitoringClass(eqtype, true);
-            op5 = new SecondLoadingClass(eqtype, "2º Carregamento de Álcool Etílico Anidro + Glicerol", "1.2", "3", false, false);
-            op7 = new ThirdLoadingClass(eqtype, "3º Carregamento de Álcool Etílico Anidro + Glicerol", "1.2", "3", true);
+            op5 = new SecondLoadingClass(eqtype, "2º Carregamento de Álcool Etílico Anidro + Glicerol", "1.2", "3", false, false,0);
+            op7 = new ThirdLoadingClass(eqtype, "3º Carregamento de Álcool Etílico Anidro + Glicerol", "1.2", "3", true,1);
             op11 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, false, "5",0);
             op12 = new AdditionClass(eqtype, "Adição de Dipropionato de Beclometasona", false, false,0);
             op13 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, true, "10",1);
