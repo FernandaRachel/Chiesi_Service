@@ -43,7 +43,7 @@ namespace Chiesi.Reports
             op5 = new SecondLoadingClass(eqtype, "2º Carregamento de Álcool Etílico Anidro + Glicerol", "1.2", "3", false, false,0);
             op7 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, false, "5",0);
             op10 = new TankFinalWeight(eqtype, "Peso final do Produto no Tanque", true);
-            op11 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8");
+            op11 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8",0);
             op12 = new EndOfManipulation(eqtype, false, true);
             StartReport();
         }

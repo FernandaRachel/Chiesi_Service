@@ -54,16 +54,19 @@ namespace Chiesi.Valve
 
         public string operationID { get; set; }
 
+        public int index { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
 
         public ValveClass(EquipamentType typeEq, string valveTime, bool checkIniValve, bool finalValve,
-            string lowLimit, string highLimit, string valvName)
+            string lowLimit, string highLimit, string valvName, int index)
         {
 
             //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
             this.operationID = "10";
+            this.index = index;
             this.valvName = valvName;
             this.checkIniValve = checkIniValve;
             this.finalValve = finalValve;
@@ -103,26 +106,27 @@ namespace Chiesi.Valve
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(index);
 
             bool gerarPdf = false;
 
             try
             {
-
+                logAction.writeLog("Iniciando leituras das tags necessárias");
 
                 logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
 
                 if (valvName.ToLower() == "v10")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE10));
+                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
                 }
                 else if (valvName.ToLower() == "v9")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE9));
+                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
                 }
                 else if (valvName.ToLower() == "v8")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURVALVE8));
+                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
                 }
 
 
@@ -130,24 +134,26 @@ namespace Chiesi.Valve
                 logAction.writeLog("Lendo hora final da mistura de alta velocidade");
                 if (valvName.ToLower() == "v10")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE10));
+                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
                 }
                 else if (valvName.ToLower() == "v9")
                 {
-                    EndTime = IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE9));
+                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
                 }
                 else if (valvName.ToLower() == "v8")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURVALVE8));
+                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
                 }
 
-                basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
-                basicInfo.Date = EndTime;
+                // Define os novos valores do basic info = assinatura
+                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                this.basicInfo.OperatorLogin = result.Asignature;
 
-                logAction.writeLog("Iniciando leituras das tags necessárias");
+                logAction.writeLog("Iniciando leituras das tags de velocidade");
 
-                anchor.AnchorSpeed = Convert.ToDouble(this.eq.Read(StaticValues.ANCHORSPEED));
-                lobules.lobulesSpeed = Convert.ToDouble(this.eq.Read(StaticValues.LOBULESSPEED));
+                anchor.AnchorSpeed = Convert.ToDouble(result.Param_0);
+                lobules.lobulesSpeed = Convert.ToDouble(result.Param_1);
                 
             }
             catch (Exception e)

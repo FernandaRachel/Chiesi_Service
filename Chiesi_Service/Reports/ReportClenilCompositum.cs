@@ -51,7 +51,7 @@ namespace Chiesi.Reports
             op10 = new AdditionClass(eqtype, "Adição de Sulfato de Salbutamol Micromizado", true, false,2);
             op11 = new HighSpeedMix(eqtype, "30", "0", "2000", "2500", true, false, false,"20",1);
             op12 = new TankFinalWeight(eqtype, "", false);
-            op13 = new ValveClass(eqtype, "15", true, true, "200", "494", "V8");
+            op13 = new ValveClass(eqtype, "15", true, true, "200", "494", "V8",0);
             op14 = new EndOfManipulation(eqtype, false, true);
 
             StartReport();
