@@ -24,17 +24,21 @@ namespace Chiesi.Operation
 
         public DateTime EndTime { get; set; }
 
-        private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
-
-        private IEquipament eq;
-
         public ErrorLog errorlog { get; set; }
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
+        private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
+
+        private IEquipament eq;
+
 
         public EndOfManipulation(EquipamentType typeEq, bool checkBreak, bool gerarPdf)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "12";
             this.infos = BasicInfoClass.GetBasicInfo();
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.convert = new Convertion(typeEq);
@@ -66,6 +70,9 @@ namespace Chiesi.Operation
             logAction.writeLog("Entrando no método 'Calculate do EndOfManipulation' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+
 
             try
             {

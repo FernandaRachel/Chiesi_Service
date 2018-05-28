@@ -78,7 +78,7 @@ namespace Chiesi.Operation
             logAction.writeLog("Entrando no método 'Calculate do BeginOfManipulation' para iniciar leituras das tags necessárias");
 
             checkError();
-
+            var operationInfos = this.eq.recipe;
             bool gerarPdf = false;
 
             try

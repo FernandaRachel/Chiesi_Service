@@ -26,6 +26,8 @@ namespace Chiesi.AverageSpeed
 
         public bool checkBreak { get; set; }
 
+        public string operationID { get; set; }
+
         public AnchorClass anchor { get; set; }
 
         public BasicInfoClass basicInfo { get; set; }
@@ -45,6 +47,8 @@ namespace Chiesi.AverageSpeed
 
         public LowSpeedMix(EquipamentType typeEq, string mixTime, string rpmLimit, bool checkBreak)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial
+            this.operationID = "8";
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.anchor = AnchorClass.GetAnchorClass();
             this.mixTime = mixTime;
@@ -77,6 +81,9 @@ namespace Chiesi.AverageSpeed
             logAction.writeLog("Entrando no método 'Calculate do LowSpeedMix' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+
             bool gerarPdf = false;
 
 

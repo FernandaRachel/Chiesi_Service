@@ -36,6 +36,7 @@ namespace Chiesi.Loading
 
         public Convertion convert { get; set; }
 
+        public string operationID { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -45,6 +46,7 @@ namespace Chiesi.Loading
 
         public FirstLoading(EquipamentType typeEq, string headerName, string limitFlow, string limitCell)
         {
+            this.operationID = "3";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();
@@ -82,6 +84,8 @@ namespace Chiesi.Loading
             logAction.writeLog("Entrando no método 'Calculate do Loading' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
             bool gerarPdf = false;
             string cellVariation = "";
             string flowvariation = "";

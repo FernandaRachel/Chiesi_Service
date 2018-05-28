@@ -28,6 +28,8 @@ namespace Chiesi.Operation
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -35,6 +37,8 @@ namespace Chiesi.Operation
 
         public AdditionClass(EquipamentType typeEq, string headerName, bool checkBreak, bool gerarPdf)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "7";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.checkBreak = checkBreak;
@@ -64,6 +68,8 @@ namespace Chiesi.Operation
             logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
 
             if (!gerarPdf)
             {

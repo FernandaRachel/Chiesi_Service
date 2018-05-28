@@ -38,6 +38,8 @@ namespace Chiesi.Monitoring
 
         public Convertion convert { get; set; }
 
+        public string operationID { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -45,7 +47,8 @@ namespace Chiesi.Monitoring
 
         public TempMonitoringClass(EquipamentType typeEq, bool checkBreak)
         {
-
+            //ID da Operação - cada operação possui um ID exceto a incial
+            this.operationID = "4";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.shaker = ShakerClass.GetShakerClass();
             this.prod = ProductClass.GetProductClass();
@@ -78,6 +81,10 @@ namespace Chiesi.Monitoring
         public override void Calculate(Text txt)
         {
             logAction.writeLog("Entrando no método 'Calculate do TempMonitoring' para iniciar leituras das tags necessárias");
+
+            checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
 
             bool gerarPdf = false;
             double prodTemp = 0;
