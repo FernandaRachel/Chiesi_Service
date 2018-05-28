@@ -40,7 +40,7 @@ namespace Chiesi.Reports
             op2 = new ZeroLoadCell(eqtype);
             op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro", "1.2", "3");
             op4 = new TempMonitoringClass(eqtype, true);
-            op8 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false);
+            op8 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,0);
             op9 = new LowSpeedMix(eqtype, "15", "30", false);
             op10 = new TankFinalWeight(eqtype, "Peso final do Produto no Tanque", false);
             op11 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8");

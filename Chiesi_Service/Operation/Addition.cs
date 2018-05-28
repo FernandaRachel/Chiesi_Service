@@ -93,7 +93,7 @@ namespace Chiesi.Operation
             }
 
             // Gera o HTML com as informações
-            var x = CreateString(String.Format(result.Data,"dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
+            var x = CreateString(String.Format(result.Date,"dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
 
             try
             {
