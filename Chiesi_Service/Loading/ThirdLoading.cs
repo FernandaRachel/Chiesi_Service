@@ -22,7 +22,6 @@ namespace Chiesi.Loading
 
         public string headerName { get; set; }
 
-
         public string limitFlow { get; set; }
 
         public string limitCell { get; set; }
@@ -43,6 +42,8 @@ namespace Chiesi.Loading
 
         public Convertion convert { get; set; }
 
+        public string operationID { get; set; }
+
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -53,6 +54,8 @@ namespace Chiesi.Loading
 
         public ThirdLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, bool checkBreak)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial
+            this.operationID = "5";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();
@@ -93,6 +96,9 @@ namespace Chiesi.Loading
             logAction.writeLog("Entrando no método 'Calculate do ThirdLoading' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+
             bool gerarPdf = false;
             DateTime keepinidate = DateTime.Now;
             string cellVariation = "";

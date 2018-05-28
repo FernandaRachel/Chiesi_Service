@@ -28,6 +28,8 @@ namespace Chiesi.Operation
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -35,6 +37,8 @@ namespace Chiesi.Operation
 
         public ZeroLoadCell(EquipamentType typeEq)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "2";
             this.tank = TankClass.GetTankClass();
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.eq = this.eqFact.ConstructEquipament(typeEq);
@@ -67,6 +71,9 @@ namespace Chiesi.Operation
 
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+
             bool gerarPdf = false;
 
             try

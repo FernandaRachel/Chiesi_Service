@@ -40,7 +40,7 @@ namespace Chiesi.Loading
 
         public LogAction logAction { get; set; }
 
-        public Dictionary<string, string> TagsValues { get; set; }
+        public string operationID { get; set; }
 
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
@@ -52,7 +52,8 @@ namespace Chiesi.Loading
 
         public FourthLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell)
         {
-            this.TagsValues = new Dictionary<string, string>();
+            //ID da Operação - cada operação possui um ID exceto a incial
+            this.operationID = "5";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();
@@ -90,8 +91,10 @@ namespace Chiesi.Loading
             logAction.writeLog("Entrando no método 'Calculate do FourthLoading' para iniciar leituras das tags necessárias");
 
             checkError();
-            bool gerarPdf = false;
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
 
+            bool gerarPdf = false;
             DateTime keepinidate = DateTime.Now;
             string cellVariation = "";
             string flowvariation = "";

@@ -6,6 +6,7 @@ using Chiesi.Log;
 using Chiesi.Operation;
 using Chiesi.Turbine;
 using Chiesi_Service.Log;
+using Chiesi_Service.Recipe;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -52,6 +53,8 @@ namespace Chiesi.AverageSpeed
 
         public Convertion convert { get; set; }
 
+        public string operationID { get; set; }
+
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         IEquipament eq;
@@ -60,6 +63,8 @@ namespace Chiesi.AverageSpeed
         public HighSpeedMix(EquipamentType typeEq, string anchorLimit,
             string turbineLimit, string clenilLimit, string clenilStrongLimit, bool changeTable, bool clenilForte, bool checkBreak, string mixTime)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial
+            this.operationID = "6";
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.anchor = AnchorClass.GetAnchorClass();
             this.turbine = TurbineClass.GetTurbineClass();
@@ -94,13 +99,16 @@ namespace Chiesi.AverageSpeed
             return tagerror;
         }
 
-     
+      
+
         public override void Calculate(Text txt)
         {
             logAction.writeLog("Entrando no método 'Calculate do HighSpeedMix' para iniciar leituras das tags necessárias");
 
             double toConvertTime;
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq,this.operationID);
             bool gerarPdf = false;
             var x = "";
 

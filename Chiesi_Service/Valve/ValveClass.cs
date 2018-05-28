@@ -52,6 +52,8 @@ namespace Chiesi.Valve
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -60,6 +62,8 @@ namespace Chiesi.Valve
             string lowLimit, string highLimit, string valvName)
         {
 
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "10";
             this.valvName = valvName;
             this.checkIniValve = checkIniValve;
             this.finalValve = finalValve;
@@ -97,6 +101,9 @@ namespace Chiesi.Valve
             logAction.writeLog("Entrando no método 'Calculate do ValveClass(Recirculação)' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+
             bool gerarPdf = false;
 
             try
