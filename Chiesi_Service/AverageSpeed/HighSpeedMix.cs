@@ -55,16 +55,19 @@ namespace Chiesi.AverageSpeed
 
         public string operationID { get; set; }
 
+        public int index { get; set; }
+
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         IEquipament eq;
 
 
         public HighSpeedMix(EquipamentType typeEq, string anchorLimit,
-            string turbineLimit, string clenilLimit, string clenilStrongLimit, bool changeTable, bool clenilForte, bool checkBreak, string mixTime)
+            string turbineLimit, string clenilLimit, string clenilStrongLimit, bool changeTable, bool clenilForte, bool checkBreak, string mixTime, int index)
         {
             //ID da Operação - cada operação possui um ID exceto a incial
             this.operationID = "6";
+            this.index = index;
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.anchor = AnchorClass.GetAnchorClass();
             this.turbine = TurbineClass.GetTurbineClass();
@@ -99,93 +102,73 @@ namespace Chiesi.AverageSpeed
             return tagerror;
         }
 
-      
+
 
         public override void Calculate(Text txt)
         {
             logAction.writeLog("Entrando no método 'Calculate do HighSpeedMix' para iniciar leituras das tags necessárias");
 
-            double toConvertTime;
             checkError();
-            // It will search the infos correponding to the specific operation
-            var operationInfos = successor.SearchInfoInList(this.eq,this.operationID);
             bool gerarPdf = false;
             var x = "";
 
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(index);
+
             try
             {
-                // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
-                // TODOS DADOS SERÃO RECEBIDOS DO PLC
-
-
-                this.anchor.ReadPlc();
-                this.turbine.ReadPlc();
-                this.clenil.ReadPlc();
-                this.clenilStrong.ReadPlc();
 
                 if (!changeTable)
                 {
                     logAction.writeLog("Iniciando leituras das tags necessárias");
 
-                    if (Status.getStatus() != StatusType.Fail)
-                    {
-                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                    logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                    // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
+                    anchor.IniTime = Convert.ToDateTime(result.Hora_0);
+                    turbine.IniTime = Convert.ToDateTime(result.Hora_0);
 
-                        anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
-                        turbine.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
-                        toConvertTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
-                    }
+                    logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                    // Precisa verificar se a hora final da ancora e da turbina são as mesmas
+                    anchor.EndTime = Convert.ToDateTime(result.Hora_1);
+                    turbine.EndTime = Convert.ToDateTime(result.Hora_1);
 
-                    if (Status.getStatus() != StatusType.Fail)
-                    {
-                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                    // Define os novos valores do basic info = assinatura
+                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                    this.basicInfo.OperatorLogin = result.Asignature;
 
-                        anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
-                        turbine.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
-                        basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
-                        this.basicInfo.Date = anchor.EndTime;
-                    }
+                    logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
 
-                    if (Status.getStatus() != StatusType.Fail)
-                    {
-                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
-
-                        anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
-                        turbine.TurbineSpeed = convert.convertToDouble(StaticValues.TURBINESPEED, this.eq.Read(StaticValues.TURBINESPEED));
-                    }
+                    anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
+                    turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
                 }
                 else
                 {
                     logAction.writeLog("Iniciando leituras das tags necessárias");
 
-                    if (Status.getStatus() != StatusType.Fail)
-                    {
-                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                    logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                    // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
+                    anchor.IniTime = Convert.ToDateTime(result.Hora_0);
+                    clenil.IniTime = Convert.ToDateTime(result.Hora_0);
+                    clenilStrong.IniTime = Convert.ToDateTime(result.Hora_0);
 
-                        anchor.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
-                        clenil.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
-                        clenilStrong.IniTime = Convert.ToDateTime(this.eq.Read(StaticValues.INIHOURHIGHMIX));
-                        toConvertTime = convert.convertToDouble(StaticValues.TAGMIXTIME, this.eq.Read(StaticValues.TAGMIXTIME));
-                    }
+                    logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                    // Precisa verificar se a hora final da ancora e da turbina são as mesmas
+                    anchor.EndTime = Convert.ToDateTime(result.Hora_1);
+                    clenil.EndTime = Convert.ToDateTime(result.Hora_1);
+                    clenilStrong.EndTime = Convert.ToDateTime(result.Hora_1);
 
-                    if (Status.getStatus() != StatusType.Fail)
-                    {
-                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                    // Define os novos valores do basic info = assinatura
+                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                    this.basicInfo.OperatorLogin = result.Asignature;
 
-                        anchor.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
-                        clenil.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
-                        clenilStrong.EndTime = Convert.ToDateTime(this.eq.Read(StaticValues.ENDHOURHIGHMIX));
-                        basicInfo.ReadPlc(); // inicializa os valores da BasicInfo
-                        this.basicInfo.Date = anchor.EndTime;
-                    }
 
-                    if (Status.getStatus() != StatusType.Fail)
-                    {
-                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+                    logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
 
-                        anchor.AnchorSpeed = convert.convertToDouble(StaticValues.ANCHORSPEED, this.eq.Read(StaticValues.ANCHORSPEED));
-                        turbine.TurbineSpeed = convert.convertToDouble(StaticValues.TURBINESPEED, this.eq.Read(StaticValues.TURBINESPEED));
-                    }
+                    anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
+                    turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
                 }
 
             }

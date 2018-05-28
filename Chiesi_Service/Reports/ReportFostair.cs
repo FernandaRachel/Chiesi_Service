@@ -47,10 +47,10 @@ namespace Chiesi.Reports
             op3 = new FirstLoading(eqtype, "1º Carregamento de Álcool Etílico Anidro", "1.2", "3");
             op4 = new TempMonitoringClass(eqtype, true);
             op5 = new SecondLoadingClass(eqtype, "2º Carregamento de Álcool Etílico Anidro + Formoterol", "1.2", "3", true, false);
-            op7 = new AdditionClass(eqtype, "Adição de Dipropionato de Beclometasona", false, false);
-            op8 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, true, "10");
+            op7 = new AdditionClass(eqtype, "Adição de Dipropionato de Beclometasona", false, false,0);
+            op8 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, true, "10",0);
             op9 = new LowSpeedMix(eqtype, "30", "10", false);
-            op10 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false);
+            op10 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,1);
             op11 = new LowSpeedMix(eqtype, "10", "30", false);
             op12 = new TankFinalWeight(eqtype, "0", true);
             op13_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10");
@@ -58,7 +58,7 @@ namespace Chiesi.Reports
             op14 = new RecirculationHoseDrain(eqtype);
             op13_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8");
             op15 = new EndOfManipulation(eqtype, true, false);
-            op16 = new AdditionClass(eqtype, "Retirada de Amostra para Umidade e Titulação de HCL", false, true);
+            op16 = new AdditionClass(eqtype, "Retirada de Amostra para Umidade e Titulação de HCL", false, true,2);
 
             StartReport();
         }

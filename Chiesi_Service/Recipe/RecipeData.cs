@@ -22,7 +22,7 @@ namespace Chiesi_Service.Recipe
 
         public string Hora_1 { get; set; }
 
-        public string Data { get; set; }
+        public string Date { get; set; }
 
         public string Asignature { get; set; }
 
