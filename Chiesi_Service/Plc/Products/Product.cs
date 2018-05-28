@@ -24,7 +24,7 @@ namespace Chiesi.Products
 
         public string BatchTag { get; set; }
 
-        public double ProductTemp { get; private set; }
+        public double ProductTemp { get; set; }
 
         public string ProductTempTag { get; set; }
 

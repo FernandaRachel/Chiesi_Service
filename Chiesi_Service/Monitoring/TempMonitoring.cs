@@ -85,6 +85,7 @@ namespace Chiesi.Monitoring
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
 
             bool gerarPdf = false;
             double prodTemp = 0;
@@ -92,17 +93,21 @@ namespace Chiesi.Monitoring
             try
             {
 
-
                 logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
-                this.prod.ReadPlc(); // inicializa valores das prop da Product
-                this.shaker.ReadPlc();//inicializa valores das prop da Shaker
+                logAction.writeLog("Lendo temperatura e velocidade - baixa valocidade");
+                this.prod.ProductTemp = convert.convertToDouble("result.Param_0", result.Param_0);
+                this.shaker.ShakingSpeed= convert.convertToDouble("result.Param_1",result.Param_1);
 
-                logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
-                // PEGAR DATA E HORA DO PLC !!!!!!!!!!!!!!!
-                this.basicInfo.ReadPlc(); //inicializa valores das prop da Basic Info
-                // ----------------------
                 prodTemp = (this.prod.ProductTemp / 10);
+
+               
+
+                logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
+                // Define os novos valores do basic info = assinatura
+                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                this.basicInfo.OperatorLogin = result.Asignature;
 
             }
             catch (Exception e)
@@ -185,6 +190,7 @@ namespace Chiesi.Monitoring
                 "</table>" +
                 basicInfo.CreateString()
                 + breakline;
+
             logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
