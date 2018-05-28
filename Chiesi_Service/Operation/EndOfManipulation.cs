@@ -72,15 +72,15 @@ namespace Chiesi.Operation
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
 
 
             try
             {
                 // PEGAR DO PLC HORA E DATA
                 logAction.writeLog("Lendo hora do EndOfManipulation");
-                EndTime = DateTime.Now;
-                string endTimeString = EndTime.ToString("HH:mm");
-                string endData = EndTime.ToString("dd/MM/yyyy");
+                string endTimeString = String.Format(result.Hora_1, "HH:mm");
+                string endData = String.Format(result.Date, "dd/MM/yyyy");
 
                 var x = CreateString(endData, endTimeString);
 

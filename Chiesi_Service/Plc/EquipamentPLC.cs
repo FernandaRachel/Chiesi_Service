@@ -9,6 +9,7 @@ using Chiesi.Log;
 using System.Threading;
 using System.Configuration;
 using Chiesi_Service.Recipe;
+using Chiesi_Service.Log;
 
 namespace Chiesi
 {
@@ -25,6 +26,8 @@ namespace Chiesi
         private static object syncLock = new object();
         /* -------- */
         public ErrorLog errorLog { get; set; }
+
+        public LogAction logAction { get; set; }
 
 
         public static EquipamentPLC GetEquipamentPLC()
@@ -50,11 +53,13 @@ namespace Chiesi
         {
             address = ConfigurationManager.AppSettings["connectionString"];
             errorLog = new ErrorLog();
+            logAction = new LogAction();
             ReadAllData();
         }
 
         public Recipe ReadAllData()
         {
+            logAction.writeLog("Reading buffer header");
             // POPULATE THE HEADER(BeginOfManipulation)
             recipe.Code = Read(ConfigurationManager.AppSettings["TAGCODE"]);
             recipe.Batch = Read(ConfigurationManager.AppSettings["TAGBATCH"]);
@@ -65,6 +70,7 @@ namespace Chiesi
             recipe.RecipeSubType = Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]);
             recipe.RecipeName = Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]);
             // POPULATE THE ARRAY INDEX 0 OF DATA
+            logAction.writeLog("Reading Buffer Index 0");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[0].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[0].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[0].PARAMETROS[2]"]);
@@ -77,6 +83,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[0].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 1 OF DATA
+            logAction.writeLog("Reading Buffer Index 1");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[1].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[1].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[1].PARAMETROS[2]"]);
@@ -89,6 +96,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[1].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 2 OF DATA
+            logAction.writeLog("Reading Buffer Index 2");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[2].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[2].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[2].PARAMETROS[2]"]);
@@ -101,6 +109,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[2].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 3 OF DATA
+            logAction.writeLog("Reading Buffer Index 3");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[3].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[3].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[3].PARAMETROS[2]"]);
@@ -113,6 +122,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[3].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 4 OF DATA
+            logAction.writeLog("Reading Buffer Index 4");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[4].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[4].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[4].PARAMETROS[2]"]);
@@ -125,6 +135,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[4].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 5 OF DATA
+            logAction.writeLog("Reading Buffer Index 5");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[5].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[5].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[5].PARAMETROS[2]"]);
@@ -137,6 +148,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[5].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 6 OF DATA
+            logAction.writeLog("Reading Buffer Index 6");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[6].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[6].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[6].PARAMETROS[2]"]);
@@ -149,6 +161,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[6].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 7 OF DATA
+            logAction.writeLog("Reading Buffer Index 7");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[7].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[7].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[7].PARAMETROS[2]"]);
@@ -161,6 +174,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[7].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 8 OF DATA
+            logAction.writeLog("Reading Buffer Index 8");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[8].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[8].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[8].PARAMETROS[2]"]);
@@ -173,6 +187,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[8].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 9 OF DATA
+            logAction.writeLog("Reading Buffer Index 9");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[9].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[9].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[9].PARAMETROS[2]"]);
@@ -185,6 +200,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[9].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 10 OF DATA
+            logAction.writeLog("Reading Buffer Index 10");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[10].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[10].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[10].PARAMETROS[2]"]);
@@ -197,6 +213,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[10].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 11 OF DATA
+            logAction.writeLog("Reading Buffer Index 11");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[11].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[11].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[11].PARAMETROS[2]"]);
@@ -209,6 +226,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[11].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 12 OF DATA
+            logAction.writeLog("Reading Buffer Index 12");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[12].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[12].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[12].PARAMETROS[2]"]);
@@ -221,6 +239,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[12].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 13 OF DATA
+            logAction.writeLog("Reading Buffer Index 13");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[13].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[13].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[13].PARAMETROS[2]"]);
@@ -233,6 +252,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[13].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 14 OF DATA
+            logAction.writeLog("Reading Buffer Index 14");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[14].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[14].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[14].PARAMETROS[2]"]);
@@ -245,6 +265,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[14].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 15 OF DATA
+            logAction.writeLog("Reading Buffer Index 15");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[15].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[15].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[15].PARAMETROS[2]"]);
@@ -257,6 +278,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[15].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 16 OF DATA
+            logAction.writeLog("Reading Buffer Index 16");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[16].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[16].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[16].PARAMETROS[2]"]);
@@ -269,6 +291,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[16].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 17 OF DATA
+            logAction.writeLog("Reading Buffer Index 17");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[17].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[17].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[17].PARAMETROS[2]"]);
@@ -281,6 +304,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[17].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 18 OF DATA
+            logAction.writeLog("Reading Buffer Index 18");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[18].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[18].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[18].PARAMETROS[2]"]);
@@ -293,6 +317,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[18].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 19 OF DATA
+            logAction.writeLog("Reading Buffer Index 19");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[19].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[19].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[19].PARAMETROS[2]"]);
@@ -305,6 +330,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[19].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 20 OF DATA
+            logAction.writeLog("Reading Buffer Index 20");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[20].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[20].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[20].PARAMETROS[2]"]);
@@ -317,6 +343,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[20].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 21 OF DATA
+            logAction.writeLog("Reading Buffer Index 21");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[21].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[21].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[21].PARAMETROS[2]"]);
@@ -329,6 +356,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[21].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 22 OF DATA
+            logAction.writeLog("Reading Buffer Index 22");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[22].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[22].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[22].PARAMETROS[2]"]);
@@ -341,6 +369,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[22].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 23 OF DATA
+            logAction.writeLog("Reading Buffer Index 23");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[23].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[23].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[23].PARAMETROS[2]"]);
@@ -353,6 +382,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[23].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 24 OF DATA
+            logAction.writeLog("Reading Buffer Index 24");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[24].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[24].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[24].PARAMETROS[2]"]);
@@ -365,6 +395,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[24].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 25 OF DATA
+            logAction.writeLog("Reading Buffer Index 25");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[25].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[25].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[25].PARAMETROS[2]"]);
@@ -377,6 +408,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[25].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 26 OF DATA
+            logAction.writeLog("Reading Buffer Index 26");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[26].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[26].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[26].PARAMETROS[2]"]);
@@ -389,6 +421,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[26].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 27 OF DATA
+            logAction.writeLog("Reading Buffer Index 27");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[27].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[27].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[27].PARAMETROS[2]"]);
@@ -401,6 +434,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[27].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 28 OF DATA
+            logAction.writeLog("Reading Buffer Index 28");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[28].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[28].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[28].PARAMETROS[2]"]);
@@ -413,6 +447,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[28].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 29 OF DATA
+            logAction.writeLog("Reading Buffer Index 29");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[29].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[29].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[29].PARAMETROS[2]"]);
@@ -425,6 +460,7 @@ namespace Chiesi
             recipeData.Id = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[29].ID"]);
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 30 OF DATA
+            logAction.writeLog("Reading Buffer Index 30");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[30].PARAMETROS[0]"]);
             recipeData.Param_1 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[30].PARAMETROS[1]"]);
             recipeData.Param_2 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[30].PARAMETROS[2]"]);
@@ -449,7 +485,8 @@ namespace Chiesi
 
         public string Read(string Tag)
         {
-            //Tag = "xuxu";
+            logAction.writeLog("It is going to read tag named as: " + Tag);
+
             bool checkRead = false; // check if try returned "ok"
             bool checkError = false; // check if a tag or tag value is null
             string r = "";

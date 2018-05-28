@@ -83,12 +83,18 @@ namespace Chiesi.Operation
 
             try
             {
-                logAction.writeLog("Lendo hora inicial do BeginOfManipulation");
-                this.basicInfo.ReadPlc(); // inicializa valores das prop da BasicInfo
+                logAction.writeLog("Lendo basico infos do BeginOfManipulation");
+                // Define os novos valores do basic info = assinatura
+                this.basicInfo.Hour = Convert.ToDateTime(operationInfos.Hour);
+                this.basicInfo.Date = Convert.ToDateTime(operationInfos.Date);
+                this.basicInfo.OperatorLogin = operationInfos.Asignature;
+
                 logAction.writeLog("Iniciando leituras das tags necessárias do BeginOfManipulation");
-                this.prod.ReadPlc(); // inicializa valores das prop do Product
-                this.basicInfo.KeepBatch = this.prod.Batch;
-                Product = this.eq.Read(ConfigurationManager.AppSettings["TAGRECIPENAME"]);
+                this.prod.Batch = operationInfos.Batch;
+                this.prod.Code = operationInfos.Code;
+                this.prod.Product = operationInfos.RecipeName;
+
+                Product = this.prod.Product;
             }
             catch (Exception e)
             {

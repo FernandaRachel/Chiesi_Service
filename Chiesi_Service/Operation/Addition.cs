@@ -37,7 +37,7 @@ namespace Chiesi.Operation
         private IEquipament eq;
 
 
-        public AdditionClass(EquipamentType typeEq, string headerName, bool checkBreak, bool gerarPdf,int index)
+        public AdditionClass(EquipamentType typeEq, string headerName, bool checkBreak, bool gerarPdf, int index)
         {
             //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
             this.operationID = "7";
@@ -72,28 +72,23 @@ namespace Chiesi.Operation
 
             checkError();
             // It will search the infos correponding to the specific operation
+            logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(index);
 
-            if (!gerarPdf)
-            {
-            }
-            //var gerarPdf = false;
-
             try
             {
-                logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
-                this.infos.ReadPlc(); // inicializa valores das prop da infos
+
             }
             catch (Exception e)
             {
-                errorlog.writeLog("EndFilling", "tag não especificada", e.ToString(), DateTime.Now);
+                errorlog.writeLog("Addition", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
             // Gera o HTML com as informações
-            var x = CreateString(String.Format(result.Date,"dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
+            var x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
 
             try
             {
