@@ -54,10 +54,10 @@ namespace Chiesi.Reports
             op13 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, false, "10",1);
             op14 = new LowSpeedMix(eqtype, "10", "30", true);
             op15 = new TankFinalWeight(eqtype, "TankFinalWeight", false);
-            op16_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10",0);
-            op16_2 = new ValveClass(eqtype, "5", false, true, "200", "494", "V9",1);
+            op16_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10","20");
+            op16_2 = new ValveClass(eqtype, "5", false, true, "200", "494", "V9","19");
             op17 = new RecirculationHoseDrain(eqtype);
-            op16_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8",2);
+            op16_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8","18");
             op18 = new EndOfManipulation(eqtype, true, true);
             this.txt = new Text();
             StartReport();

@@ -61,12 +61,11 @@ namespace Chiesi.Valve
         private IEquipament eq;
 
         public ValveClass(EquipamentType typeEq, string valveTime, bool checkIniValve, bool finalValve,
-            string lowLimit, string highLimit, string valvName, int index)
+            string lowLimit, string highLimit, string valvName, string id)
         {
 
             //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
-            this.operationID = "10";
-            this.index = index;
+            this.operationID = id;
             this.valvName = valvName;
             this.checkIniValve = checkIniValve;
             this.finalValve = finalValve;
@@ -106,7 +105,7 @@ namespace Chiesi.Valve
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(index);
+            var result = operationInfos.ElementAt(0);
 
             bool gerarPdf = false;
 
