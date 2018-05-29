@@ -10,7 +10,6 @@ namespace Chiesi_Service.Recipe
     {
         public string Code;
         public string Batch;
-        public string ProductName;
         public string Date;
         public string Hour;
         public string Asignature;
