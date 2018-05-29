@@ -40,19 +40,21 @@ namespace Chiesi.Loading
 
         public LogAction logAction { get; set; }
 
-        public Dictionary<string, string> TagsValues { get; set; }
+        public string operationID { get; set; }
+
+        public int index { get; set; }
 
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         IEquipament eq;
 
-        //conts
 
-
-        public FourthLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell)
+        public FourthLoadingClass(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, int index)
         {
-            this.TagsValues = new Dictionary<string, string>();
+            //ID da Operação - cada operação possui um ID exceto a incial
+            this.index = index;
+            this.operationID = "5";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();
@@ -90,8 +92,11 @@ namespace Chiesi.Loading
             logAction.writeLog("Entrando no método 'Calculate do FourthLoading' para iniciar leituras das tags necessárias");
 
             checkError();
-            bool gerarPdf = false;
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(index);
 
+            bool gerarPdf = false;
             DateTime keepinidate = DateTime.Now;
             string cellVariation = "";
             string flowvariation = "";
@@ -100,34 +105,26 @@ namespace Chiesi.Loading
             {
                 logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
 
-                eq.Write(StaticValues.FLOWMETERLIMIT, limitFlow);
-                eq.Write(StaticValues.CELLLIMIT, limitCell);
-                Thread.Sleep(250);
-
-
-                // DATA SERÁ PEGA DO PLC
-
+                //LENDO HORA INCIAL
                 logAction.writeLog("Lendo hora inicial FourthLoading");
-                if (Status.getStatus() != StatusType.Fail)
-                {
-                    keepinidate = DateTime.Now;
-                }
+                gli.OutFlowStart = Convert.ToDateTime(result.Hora_0);
+                
+                //LENDO HORA FINAL
+                logAction.writeLog("Lendo hora final FourthLoading");
+                gli.OutFlowEnd = Convert.ToDateTime(result.Hora_1);
+                
+                //LENDO VARIAÇÕES E QUANTIDADES
+                logAction.writeLog("Lendo variações e quantidades do FourthLoading");
+                gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
+                flux.TheoricQty = result.Param_2;
+                cellVariation = result.Param_3.Replace(".", ",");
+                flowvariation = result.Param_4.Replace(".", ",");
 
-                if (Status.getStatus() != StatusType.Fail)
-                {
-                    cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".", ",");
-                    flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".", ",");
-                    this.flux.ReadPlc(); // inicializa os valores do Flowmeter
-                    this.cell.ReadPlc(); // inicializa os valores da LoadingCell
-                    this.infos.ReadPlc(); // inicializa os valores da BasicInfo
-                    this.gli.ReadPlc(); // inicializa os valores de Glicerol
-                    // DATA SERÁ PEGA DO PLC
-                    gli.OutFlowStart = keepinidate;
-                    gli.OutFlowEnd = DateTime.Now;
-                    this.infos.Date = gli.OutFlowEnd;
-                    // ------------------------------
-                    Thread.Sleep(300);
-                }
+                // Define os novos valores do basic info = assinatura
+                this.infos.Hour = Convert.ToDateTime(result.Hora_1);
+                this.infos.Date = Convert.ToDateTime(result.Date);
+                this.infos.OperatorLogin = result.Asignature;
 
             }
             catch (Exception e)
@@ -191,13 +188,6 @@ namespace Chiesi.Loading
                     "<th>Variação % </th>" +
                     "<th>Limite % </th>" +
                 "</tr>" +
-                //"<tr>" +
-                //    "<td>Glicerol</td>" +
-                //    "<td>" + values[0] + "</td>" +
-                //    "<td></td>" +
-                //    "<td></td>" +
-                //    "<td></td>" +
-                //"</tr>" +
                 "<tr>" +
                     "<td>Fluxímetro</td>" +
                     "<td>" + values[1] + "</td>" +

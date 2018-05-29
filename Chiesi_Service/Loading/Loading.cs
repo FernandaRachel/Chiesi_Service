@@ -36,6 +36,9 @@ namespace Chiesi.Loading
 
         public Convertion convert { get; set; }
 
+        public string operationID { get; set; }
+
+        public int index { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -43,8 +46,10 @@ namespace Chiesi.Loading
 
         //conts
 
-        public FirstLoading(EquipamentType typeEq, string headerName, string limitFlow, string limitCell)
+        public FirstLoading(EquipamentType typeEq, string headerName, string limitFlow, string limitCell, int index)
         {
+            this.operationID = "3";
+            this.index = index;
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.headerName = headerName;
             this.flux = FlowmeterClass.GetFlowmeterClass();
@@ -82,6 +87,10 @@ namespace Chiesi.Loading
             logAction.writeLog("Entrando no método 'Calculate do Loading' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(index);
+
             bool gerarPdf = false;
             string cellVariation = "";
             string flowvariation = "";
@@ -91,15 +100,19 @@ namespace Chiesi.Loading
 
             try
             {
-
                 logAction.writeLog("Iniciando leituras das tags necessárias de Loading");
 
-
-                cellVariation = eq.Read(StaticValues.TAGVARCELL).Replace(".", ",");
-                flowvariation = eq.Read(StaticValues.TAGVARFLOW).Replace(".", ",");
-                this.flux.ReadPlc(); // inicializa os valores do Flowmeter
-                this.cell.ReadPlc(); // inicializa os valores da LoadingCell
-                this.infos.ReadPlc(); // inicializa os valores da BasicInfo
+                //LENDO VARIAÇÕES e QUANTIDADES
+                logAction.writeLog("Iniciando leituras variações e quantidades");
+                flux.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                flux.TheoricQty = result.Param_1;
+                cellVariation = result.Param_2.Replace(".", ",");
+                flowvariation = result.Param_3.Replace(".", ",");
+                
+                // Define os novos valores do basic info = assinatura
+                this.infos.Hour = Convert.ToDateTime(result.Hora_1);
+                this.infos.Date = Convert.ToDateTime(result.Date);
+                this.infos.OperatorLogin = result.Asignature;
 
             }
             catch (Exception e)

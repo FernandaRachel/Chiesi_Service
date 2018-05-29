@@ -24,17 +24,21 @@ namespace Chiesi.Operation
 
         public DateTime EndTime { get; set; }
 
-        private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
-
-        private IEquipament eq;
-
         public ErrorLog errorlog { get; set; }
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
+        private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
+
+        private IEquipament eq;
+
 
         public EndOfManipulation(EquipamentType typeEq, bool checkBreak, bool gerarPdf)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "12";
             this.infos = BasicInfoClass.GetBasicInfo();
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.convert = new Convertion(typeEq);
@@ -66,14 +70,17 @@ namespace Chiesi.Operation
             logAction.writeLog("Entrando no método 'Calculate do EndOfManipulation' para iniciar leituras das tags necessárias");
 
             checkError();
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
+
 
             try
             {
                 // PEGAR DO PLC HORA E DATA
                 logAction.writeLog("Lendo hora do EndOfManipulation");
-                EndTime = DateTime.Now;
-                string endTimeString = EndTime.ToString("HH:mm");
-                string endData = EndTime.ToString("dd/MM/yyyy");
+                string endTimeString = String.Format(result.Hora_1, "HH:mm");
+                string endData = String.Format(result.Date, "dd/MM/yyyy");
 
                 var x = CreateString(endData, endTimeString);
 

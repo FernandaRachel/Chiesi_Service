@@ -28,6 +28,8 @@ namespace Chiesi.Operation
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
@@ -35,6 +37,8 @@ namespace Chiesi.Operation
 
         public ZeroLoadCell(EquipamentType typeEq)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "2";
             this.tank = TankClass.GetTankClass();
             this.basicInfo = BasicInfoClass.GetBasicInfo();
             this.eq = this.eqFact.ConstructEquipament(typeEq);
@@ -67,11 +71,14 @@ namespace Chiesi.Operation
 
 
             checkError();
-            bool gerarPdf = false;
+            // It will search the infos correponding to the specific operation
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(0);
 
+            bool gerarPdf = false;
+            double tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
             try
             {
-                this.tank.ReadPlc();
                
             }
             catch (Exception e)
@@ -83,7 +90,7 @@ namespace Chiesi.Operation
 
             // TESTANDO FORMAT DOT TO COMMA
             var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tank.TankWeight/100));
+            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tankWeigth/100));
 
             try
             {

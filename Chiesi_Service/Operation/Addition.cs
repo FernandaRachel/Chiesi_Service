@@ -28,14 +28,21 @@ namespace Chiesi.Operation
 
         public LogAction logAction { get; set; }
 
+        public string operationID { get; set; }
+
+        public int index { get; set; }
+
         private EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         private IEquipament eq;
 
 
-        public AdditionClass(EquipamentType typeEq, string headerName, bool checkBreak, bool gerarPdf)
+        public AdditionClass(EquipamentType typeEq, string headerName, bool checkBreak, bool gerarPdf, int index)
         {
+            //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            this.operationID = "7";
             this.eq = this.eqFact.ConstructEquipament(typeEq);
+            this.index = index;
             this.headerName = headerName;
             this.checkBreak = checkBreak;
             this.gerarPdf = gerarPdf;
@@ -64,25 +71,24 @@ namespace Chiesi.Operation
             logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
 
             checkError();
-
-            if (!gerarPdf)
-            {
-            }
-            //var gerarPdf = false;
+            // It will search the infos correponding to the specific operation
+            logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
+            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var result = operationInfos.ElementAt(index);
 
             try
             {
-                logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
-                this.infos.ReadPlc(); // inicializa valores das prop da infos
+
             }
             catch (Exception e)
             {
-                errorlog.writeLog("EndFilling", "tag não especificada", e.ToString(), DateTime.Now);
+                errorlog.writeLog("Addition", "tag não especificada", e.ToString(), DateTime.Now);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
                 this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
             }
 
-            var x = CreateString();
+            // Gera o HTML com as informações
+            var x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
 
             try
             {
@@ -115,7 +121,6 @@ namespace Chiesi.Operation
                 }
                 else
                 {
-                    this.eq.Write(StaticValues.TAGSIGN, "False");
                     successor.Calculate(txt);
                 }
             }
@@ -147,8 +152,12 @@ namespace Chiesi.Operation
 
             string txtCreate =
                 "<h3>" + headerName + "</h3>" +
-                infos.CreateString()
-                + breakline;
+                "<div class='basic-info'>" +
+                    "<label>Data : </label><span class='campo'>" + values[0] + "</span>" +
+                    "<label class='lab'>Hora : </label><span class='campo'>" + values[1] + "</span>" +
+                    "<br><label>Assinatura : </label><span class='campo'>" + values[3] + "</span>" +
+                "</div>"
+            + breakline;
 
             logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 

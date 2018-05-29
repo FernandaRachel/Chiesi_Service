@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chiesi_Service.Recipe;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,7 @@ namespace Chiesi
     interface IOperation
     {
 
-
         string CreateString(params string[] values);
-
-
-
-
 
     }
 }

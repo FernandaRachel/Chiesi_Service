@@ -16,15 +16,15 @@ namespace Chiesi.Products
 
         public string CodeTag { get; set; }
 
-        public string Product { get; private set; }
+        public string Product { get;  set; }
 
         public string ProductTag { get; set; }
 
-        public string Batch { get; private set; }
+        public string Batch { get;  set; }
 
         public string BatchTag { get; set; }
 
-        public double ProductTemp { get; private set; }
+        public double ProductTemp { get; set; }
 
         public string ProductTempTag { get; set; }
 
