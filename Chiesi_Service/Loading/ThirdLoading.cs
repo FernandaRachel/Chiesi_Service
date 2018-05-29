@@ -95,6 +95,8 @@ namespace Chiesi.Loading
         /// </summary>
         public override void Calculate(Text txt)
         {
+            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+
             logAction.writeLog("Entrando no método 'Calculate do ThirdLoading' para iniciar leituras das tags necessárias");
 
             checkError();

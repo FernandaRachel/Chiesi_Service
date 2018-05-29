@@ -80,6 +80,8 @@ namespace Chiesi.Monitoring
         /// </summary>
         public override void Calculate(Text txt)
         {
+            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+
             logAction.writeLog("Entrando no método 'Calculate do TempMonitoring' para iniciar leituras das tags necessárias");
 
             checkError();

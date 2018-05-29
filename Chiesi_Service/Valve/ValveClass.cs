@@ -111,6 +111,8 @@ namespace Chiesi.Valve
 
             try
             {
+                logAction.writeLog("------------------- ID: " + this.operationID +"----------------");
+
                 logAction.writeLog("Iniciando leituras das tags necessárias");
 
                 logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
