@@ -47,8 +47,8 @@ namespace Chiesi
 
             switch (equipamentType)
             {
-                case EquipamentType.Mock:
-                    return EquipamentMock.GetEquipamentMock();
+                //case EquipamentType.Mock:
+                //    return EquipamentMock.GetEquipamentMock();
 
                 case EquipamentType.PLC:
                     return EquipamentPLC.GetEquipamentPLC();

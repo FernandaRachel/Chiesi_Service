@@ -68,7 +68,7 @@ namespace Chiesi
             recipe.Hour = Read(ConfigurationManager.AppSettings["TAGHOUR_BEGINOFMANIPULATION"]);
             recipe.RecipeType = Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]);
             recipe.RecipeSubType = Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]);
-            recipe.RecipeName = Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]);
+            recipe.RecipeName = Read(ConfigurationManager.AppSettings["TAGRECIPENAME"]);
             // POPULATE THE ARRAY INDEX 0 OF DATA
             logAction.writeLog("Reading Buffer Index 0");
             recipeData.Param_0 = Read(ConfigurationManager.AppSettings["RECEITA.DADOS[0].PARAMETROS[0]"]);
