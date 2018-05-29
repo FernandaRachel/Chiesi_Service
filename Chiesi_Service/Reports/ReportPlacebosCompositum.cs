@@ -43,7 +43,7 @@ namespace Chiesi.Reports
             op8 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,0);
             op9 = new LowSpeedMix(eqtype, "15", "30", false);
             op10 = new TankFinalWeight(eqtype, "Peso final do Produto no Tanque", false);
-            op11 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8",0);
+            op11 = new ValveClass(eqtype, "5", true, true, "200", "494", "V8","18");
             op12 = new EndOfManipulation(eqtype, true, true);
             StartReport();
         }

@@ -66,6 +66,7 @@ namespace Chiesi.Operation
         /// </summary>
         public override void Calculate(Text txt)
         {
+            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
 
             logAction.writeLog("Entrando no método 'Calculate do ZeroLoadCell' para iniciar leituras das tags necessárias");
 

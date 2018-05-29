@@ -53,10 +53,10 @@ namespace Chiesi.Reports
             op10 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,1);
             op11 = new LowSpeedMix(eqtype, "10", "30", false);
             op12 = new TankFinalWeight(eqtype, "0", true);
-            op13_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10",0);
-            op13_2 = new ValveClass(eqtype, "5", false, true, "200", "494", "V9",1);
+            op13_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10","20");
+            op13_2 = new ValveClass(eqtype, "5", false, true, "200", "494", "V9","19");
             op14 = new RecirculationHoseDrain(eqtype);
-            op13_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8",2);
+            op13_3 = new ValveClass(eqtype, "1", true, true, "200", "494", "V8","18");
             op15 = new EndOfManipulation(eqtype, true, false);
             op16 = new AdditionClass(eqtype, "Retirada de Amostra para Umidade e Titulação de HCL", false, true,2);
 
