@@ -17,5 +17,10 @@ namespace Chiesi_Service.Recipe
         public string RecipeSubType;
         public string RecipeName;
         public List<RecipeData> Data;
+
+        public Recipe()
+        {
+            Data = new List<RecipeData>();
+        }
     }
 }

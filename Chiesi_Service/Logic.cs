@@ -120,12 +120,15 @@ namespace Chiesi
 
                 Thread NewThread = new Thread(Process);
                 NewThread.IsBackground = true;
-                NewThread.Start(); // inicia a Thread do LifeBit
+                //NewThread.Start(); // inicia a Thread do LifeBit
 
-                logAction.writeLog("Iniciando Loop referente ao relatório");
 
                 while (DontStopMeNOW)
                 {
+                    logAction.writeLog("Iniciando Loop referente ao relatório" + DateTime.Now.ToString("dd-MM-yyyy"));
+                    eq.ReadAllData(); 
+
+
                     if (Status.getStatus() != StatusType.Fail)
                     {
                         logAction.writeLog("Lendo tag de cancelar Operação - verifica se esta 'true'");
@@ -141,6 +144,8 @@ namespace Chiesi
                         // só setta os tipos e subtipos dos relatórios caso a op se inicie
                         while (!sign)
                         {
+                            //eq.ReadAllData();
+
                             if (cancelOp)
                             {
                                 

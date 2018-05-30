@@ -16,6 +16,7 @@ namespace Chiesi
         void Connect();
         Recipe ReadAllData();
         string Read(string Tag);
+        Dictionary<string, string> ReadAll();
         void Write(string Tag, string value);
     }
 }
