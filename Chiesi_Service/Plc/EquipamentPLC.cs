@@ -578,6 +578,8 @@ namespace Chiesi
             }
             Thread.Sleep(100);
 
+            logAction.writeLog("All Tags have been read");
+
             return Tags;
         }
 

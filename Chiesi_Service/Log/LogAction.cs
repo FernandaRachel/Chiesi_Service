@@ -23,7 +23,7 @@ namespace Chiesi_Service.Log
                 // Create a file to write to.
                 using (StreamWriter sw = File.CreateText(path))
                 {
-                    sw.WriteLine(info);
+                    sw.WriteLine(DateTime.Now +": " + info);
                     sw.Close();
                 }
             }
@@ -32,7 +32,7 @@ namespace Chiesi_Service.Log
             // if it is not deleted.
             using (StreamWriter sw = File.AppendText(path))
             {
-                sw.WriteLine(info);
+                sw.WriteLine(DateTime.Now + ": " + info);
                 sw.Close();
             }
         }
