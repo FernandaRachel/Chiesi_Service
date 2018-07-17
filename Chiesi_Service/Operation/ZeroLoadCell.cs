@@ -49,11 +49,11 @@ namespace Chiesi.Operation
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(500);
             }
             return tagerror;
@@ -74,56 +74,69 @@ namespace Chiesi.Operation
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(0);
 
-            bool gerarPdf = false;
-            double tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (operationInfos.Count > 0)
             {
-               
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("ZeroLoadCell", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
-            // TESTANDO FORMAT DOT TO COMMA
-            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tankWeigth/100));
+                var result = operationInfos.ElementAt(0);
 
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
-
-            if (!gerarPdf)
-            {
-                txt.addItem(x);
-                txt.saveTxt(x, false);
-
-                logAction.writeLog("Texto adicionado ao log.txt");
-            }
-
-            if (successor != null)
-            {
-                if (gerarPdf)
+                bool gerarPdf = false;
+                double tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
+                try
                 {
-                    Pdf pdf = new Pdf(txt.txtAtual);
-                    pdf.gerarPdf(txt.Header, basicInfo);
-                    txt.cleanTxt();
+
                 }
-                else
+                catch (Exception e)
                 {
-                    successor.Calculate(txt);
+                    errorlog.writeLog("ZeroLoadCell", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                 }
+
+                // TESTANDO FORMAT DOT TO COMMA
+                var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+                var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tankWeigth / 100));
+
+                try
+                {
+                    gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                if (!gerarPdf)
+                {
+                    txt.addItem(x);
+                    txt.saveTxt(x, false);
+
+                    logAction.writeLog("Texto adicionado ao log.txt");
+                }
+
+                if (successor != null)
+                {
+                    if (gerarPdf)
+                    {
+                        Pdf pdf = new Pdf(txt.txtAtual);
+                        pdf.gerarPdf(txt.Header, basicInfo);
+                        txt.cleanTxt();
+                    }
+                    else
+                    {
+                        successor.Calculate(txt);
+                    }
+                }
+            }
+            else
+            {
+                Pdf pdf = new Pdf(txt.txtAtual);
+                pdf.gerarPdf(txt.Header, basicInfo);
+                txt.cleanTxt();
             }
         }
 

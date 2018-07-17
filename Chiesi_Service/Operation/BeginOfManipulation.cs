@@ -83,7 +83,7 @@ namespace Chiesi.Operation
 
             try
             {
-                logAction.writeLog("Lendo basico infos do BeginOfManipulation");
+                logAction.writeLog("Lendo basic infos do BeginOfManipulation");
                 // Define os novos valores do basic info = assinatura
                 this.basicInfo.Hour = Convert.ToDateTime(operationInfos.Hour);
                 this.basicInfo.Date = Convert.ToDateTime(operationInfos.Date);

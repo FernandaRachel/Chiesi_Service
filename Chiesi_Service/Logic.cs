@@ -131,33 +131,26 @@ namespace Chiesi
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
-                        logAction.writeLog("Lendo tag de cancelar Operação - verifica se esta 'true'");
+                        logAction.writeLog("Lendo tag de ler infos - verifica se esta 'true'");
 
                         sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
-                        var cancelOp = Convert.ToBoolean(eq.Read(StaticValues.TAGCANCELOP));
-                        //verifica se a operação foi cancelada e derruba as TAGS - EVITA ERRO DE ACHAR QUE A OP INICIOU
-                        if (cancelOp)
-                        {
-                            eq.Write(StaticValues.TAGCANCELOP, "False");
-                        }
 
-                        // só setta os tipos e subtipos dos relatórios caso a op se inicie
+                        // Fica lendo o Sinal de "Pode ler" até que ele seja settado para True
                         while (!sign)
                         {
-                            //eq.ReadAllData();
-
-                            if (cancelOp)
-                            {
-                                
-                                eq.Write(StaticValues.TAGCANCELOP, "False");
-                            }
                             sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
                             Thread.Sleep(500);
                         }
 
+                        // DESCOMENTAR ISSO NA HORA DE TESTAR
+                        //logAction.writeLog("Entrando no ReadAllData() -----------------------'");
+                        //eq.ReadAllData();
+                        //logAction.writeLog("-------------------------------------------------'");
+                        //logAction.writeLog("Lendo Tipo e Subtipo do relatório'");
+
                         report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
                         subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
-
+                        // Setta tipo e subtipo do relatório
                         while (report == 0)
                         {
                             report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
@@ -170,16 +163,16 @@ namespace Chiesi
                             Thread.Sleep(500);
                         }
 
-                        // preciso ficar lendo o sinal no MAIN, ou apenas entre as op ?????????????
+                        //Se o STATUS estiver OK(Idle) - Inicia o relatório
                         if (Status.getStatus() == StatusType.Idle)
                         {
-                            eq.Write(StaticValues.TAGCANCELOP, "False");
                             eq.Write(ConfigurationManager.AppSettings["TAGPRODUCTYPE"], "0");
                             eq.Write(ConfigurationManager.AppSettings["TAGSUBTYPE"], "0");
 
+                            // INICIA A MONTAGEM DO RELATÓRIO
                             ReportFactory rf = new ReportFactory();
-                            rf.ConstructEquipament(report, subType, EquipamentType.PLC);// trocar o zero pela Tag do tipo de produto
-                                                                                        // executa tal relatório
+                            logAction.writeLog("Iniciando Preenchimento do Relatório");
+                            rf.ConstructEquipament(report, subType, EquipamentType.PLC);
 
                             // CONFIRM THAT ALL VALUES WERE READ
                             eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
@@ -191,7 +184,6 @@ namespace Chiesi
                     }
                     else
                     {
-
                         while (eq.Read(ConfigurationManager.AppSettings["TAGLIFEBIT"]).Equals("False")) { Thread.Sleep(1000); }
                         Status.SetModeToIdle();
                     }
@@ -208,6 +200,7 @@ namespace Chiesi
             }
         }
 
+        // SEGUNDA THREAD que fica lendo o LIFEBIT - PARA CHECAR COMUNICAÇÃO COM O PLC
         public static void Process()
         {
             EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
