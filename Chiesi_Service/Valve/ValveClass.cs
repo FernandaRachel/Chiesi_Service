@@ -169,16 +169,6 @@ namespace Chiesi.Valve
             var x = CreateString(IniTime.ToString("HH:mm"), EndTime.ToString("HH:mm"), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), String.Format(changeDotToComma, "{0:0.0}", lobules.lobulesSpeed), lowLimit, highLimit, valveTime);
 
 
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             if (!gerarPdf)
             {

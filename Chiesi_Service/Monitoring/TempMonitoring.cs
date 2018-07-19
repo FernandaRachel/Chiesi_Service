@@ -123,17 +123,6 @@ namespace Chiesi.Monitoring
             var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", prodTemp.ToString()), String.Format(changeDotToComma, "{0:0.0}", this.shaker.ShakingSpeed), this.shaker.RpmLimit.ToString());
 
 
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
-
             if (!gerarPdf)
             {
                 txt.addItem(x);
