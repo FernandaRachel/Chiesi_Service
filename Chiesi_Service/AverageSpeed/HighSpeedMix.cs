@@ -107,23 +107,20 @@ namespace Chiesi.AverageSpeed
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do HighSpeedMix' para iniciar leituras das tags necessárias");
 
             checkError();
+
             bool gerarPdf = false;
             var x = "";
-
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(index);
 
             try
             {
-
                 if (!changeTable)
                 {
-
                     logAction.writeLog("Iniciando leituras das tags necessárias");
 
                     logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");

@@ -97,8 +97,6 @@ namespace Chiesi.Loading
             string cellVariation = "";
             string flowvariation = "";
 
-            // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
-            // TODOS DADOS SERÃO RECEBIDOS DO PLC
 
             try
             {

@@ -99,22 +99,18 @@ namespace Chiesi.Valve
 
         public override void Calculate(Text txt)
         {
-
             logAction.writeLog("Entrando no método 'Calculate do ValveClass(Recirculação)' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
-
             bool gerarPdf = false;
 
             try
             {
                 logAction.writeLog("------------------- ID: " + this.operationID +"----------------");
-
                 logAction.writeLog("Iniciando leituras das tags necessárias");
-
                 logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
 
                 if (valvName.ToLower() == "v10")

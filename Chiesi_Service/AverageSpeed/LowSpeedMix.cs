@@ -78,26 +78,27 @@ namespace Chiesi.AverageSpeed
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do LowSpeedMix' para iniciar leituras das tags necessárias");
 
             checkError();
+
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
-
             bool gerarPdf = false;
+
+            if (mixTime == "30")
+                result = operationInfos.ElementAt(1);
 
 
             try
             {
-
                 logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
                 // LENDO HORA INCIAL
                 logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
                 anchor.IniTime = Convert.ToDateTime(result.Hora_0);
-                
+
                 // LENDO HORA FINAL
                 logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
                 anchor.EndTime = Convert.ToDateTime(result.Hora_1);
@@ -106,7 +107,7 @@ namespace Chiesi.AverageSpeed
                 logAction.writeLog("Lendo velocidades da mistura de baixa velocidade e basic infos");
                 anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
                 anchor.mixTime = convert.convertToDouble("mixTime", mixTime);
-                
+
                 // Define os novos valores do basic info = assinatura
                 this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
                 this.basicInfo.Date = Convert.ToDateTime(result.Date);
