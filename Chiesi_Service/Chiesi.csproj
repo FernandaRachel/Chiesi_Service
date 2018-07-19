@@ -174,7 +174,7 @@
     <Compile Include="Status.cs" />
     <Compile Include="Tanks\Tank.cs" />
     <Compile Include="Text\IText.cs" />
-    <Compile Include="Text\TextMock.cs" />
+    <Compile Include="Text\Text.cs" />
     <Compile Include="Turbine\Turbine.cs" />
     <Compile Include="Valve\ValveClass.cs" />
   </ItemGroup>

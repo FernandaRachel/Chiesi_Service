@@ -44,7 +44,7 @@ namespace Chiesi
             string path = ConfigurationManager.AppSettings["PATHLOGCHIESI"];
             if (firstOp && File.Exists(path))
             {
-                File.Copy(ConfigurationManager.AppSettings["PATHLOGCHIESI"], ConfigurationManager.AppSettings["PATHDUMP"] + DateTime.Now.Ticks + ".txt");
+                File.Copy(ConfigurationManager.AppSettings["PATHLOGCHIESI"], ConfigurationManager.AppSettings["PATHDUMP"] + DateTime.Now + ".txt");
                 File.Delete(path);
             }
             // This text is added only once to the file.

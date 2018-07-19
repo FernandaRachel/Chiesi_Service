@@ -49,21 +49,16 @@ namespace Chiesi
             string logopath = ConfigurationManager.AppSettings["LOGOPATH"];
             var headermodified = header.Replace("/", "");
             var htmlContent = preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody;
-            //var margins = new PageMargins();
             var htmlToPdf = new HtmlToPdfConverter();
 
-            //margins.Top = 200;
-            //margins.Bottom = 200;
-            //margins.Left = 200;
-            //margins.Right = 200;
+          
 
             htmlToPdf.CustomWkHtmlPageArgs = "--encoding utf-8 --images ";
             htmlToPdf.PageHeaderHtml = "<img id = 'logo' src = '" + logopath + "' >";
             htmlToPdf.PageFooterHtml = "<img class='fot' src =''>";
-            //htmlToPdf.Margins = margins;
 
             var pdfBytes = htmlToPdf.GeneratePdf(htmlContent);
-            File.WriteAllBytes(ConfigurationManager.AppSettings["RELATORIOPATH"] + headermodified + Batch + ".pdf", pdfBytes);
+            File.WriteAllBytes(path + headermodified + Batch + ".pdf", pdfBytes);
 
             htmlToPdf.LogReceived += (sender, e) =>
             {
@@ -84,23 +79,3 @@ namespace Chiesi
         }
     }
 }
-
-
-
-
-// IRON PDF
-//PdfDocument pdf = PdfGenerator.GeneratePdf(preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody);
-//pdf.Save(path + headermodified + DateTime.Now.Ticks + ".pdf");
-
-
-//Renderer.PrintOptions.Header = new HtmlHeaderFooter()
-//{
-//    Height = 50,
-//    HtmlFragment = "<img id='logo' src='" + logopath + "'>",
-//    BaseUrl = new Uri(@"c:\Images\").AbsoluteUri
-//};
-//Renderer.RenderHtmlAsPdf(preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody).
-//    SaveAs(path + headermodified +  DateTime.Now.Ticks + ".pdf");
-
-//PdfDocument pdf = PdfGenerator.GeneratePdf(preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody, PageSize.A4);
-//pdf.Save(path + headermodified + DateTime.Now.Ticks + ".pdf");

@@ -116,6 +116,7 @@ namespace Chiesi
                 int report;
                 int subType;
                 bool sign;
+                bool signOkRead;
                 Status.SetModeToIdle();
 
                 Thread NewThread = new Thread(Process);
@@ -126,6 +127,7 @@ namespace Chiesi
                 while (DontStopMeNOW)
                 {
                     logAction.writeLog("Iniciando Loop referente ao relatório" + DateTime.Now.ToString("dd-MM-yyyy"));
+                    // COLOCAR APÓS LOOP DE OKREAD
                     eq.ReadAllData(); 
 
 
@@ -134,8 +136,16 @@ namespace Chiesi
                         logAction.writeLog("Lendo tag de ler infos - verifica se esta 'true'");
 
                         sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
+                        signOkRead = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["OKREAD"]));
 
                         // Fica lendo o Sinal de "Pode ler" até que ele seja settado para True
+                        // Se OkRead estiver 'True' ele espera até estar "False"
+                        while (signOkRead)
+                        {
+                            signOkRead = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["OKREAD"]));
+                            Thread.Sleep(500);
+                        }
+
                         while (!sign)
                         {
                             sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
@@ -143,10 +153,10 @@ namespace Chiesi
                         }
 
                         // DESCOMENTAR ISSO NA HORA DE TESTAR
-                        //logAction.writeLog("Entrando no ReadAllData() -----------------------'");
-                        //eq.ReadAllData();
-                        //logAction.writeLog("-------------------------------------------------'");
-                        //logAction.writeLog("Lendo Tipo e Subtipo do relatório'");
+                        logAction.writeLog("Entrando no ReadAllData() -----------------------");
+                        eq.ReadAllData();
+                        logAction.writeLog("-------------------------------------------------");
+                        logAction.writeLog("Lendo Tipo e Subtipo do relatório");
 
                         report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
                         subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
