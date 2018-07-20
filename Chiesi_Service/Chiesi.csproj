@@ -119,7 +119,7 @@
     <Compile Include="Loading\Flowmeter.cs" />
     <Compile Include="Loading\FourthLoading.cs" />
     <Compile Include="Loading\ILoading.cs" />
-    <Compile Include="Loading\Loading.cs" />
+    <Compile Include="Loading\FirstLoading.cs" />
     <Compile Include="Loading\LoadingCell.cs" />
     <Compile Include="Loading\SecondLoadingClass.cs" />
     <Compile Include="Loading\ThirdLoading.cs" />

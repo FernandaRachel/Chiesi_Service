@@ -110,7 +110,7 @@ namespace Chiesi.Loading
                 flowvariation = result.Param_3.Replace(".", ",");
                 
                 // Define os novos valores do basic info = assinatura
-                this.infos.Hour = Convert.ToDateTime(result.Hora_1);
+                this.infos.Hour = Convert.ToDateTime(result.Hora_0);
                 this.infos.Date = Convert.ToDateTime(result.Date);
                 this.infos.OperatorLogin = result.Asignature;
 

@@ -83,10 +83,14 @@ namespace Chiesi.Operation
                 var result = operationInfos.ElementAt(0);
 
                 bool gerarPdf = false;
-                double tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
+                double tankWeigth = 0.0;
+
                 try
                 {
-
+                    tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
+                    basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
+                    basicInfo.Date = Convert.ToDateTime(result.Date);
+                    basicInfo.OperatorLogin = result.Asignature;
                 }
                 catch (Exception e)
                 {

@@ -71,16 +71,14 @@ namespace Chiesi.Operation
 
             checkError();
             // It will search the infos correponding to the specific operation
-            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(0);
-
+            var result = this.eq.recipe.WeightTank;
 
             bool gerarPdf = false;
 
             try
             {
                 logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
-                tanks.TankWeight = convert.convertToDouble("result.Param_0", result.Param_0);
+                tanks.TankWeight = convert.convertToDouble("result", result);
             }
             catch (Exception e)
             {

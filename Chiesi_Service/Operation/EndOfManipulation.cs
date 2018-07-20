@@ -81,7 +81,7 @@ namespace Chiesi.Operation
             {
                 // PEGAR DO PLC HORA E DATA
                 logAction.writeLog("Lendo hora do EndOfManipulation");
-                string endTimeString = String.Format(result.Hora_1, "HH:mm");
+                string endTimeString = String.Format(result.Hora_0, "HH:mm");
                 string endData = String.Format(result.Date, "dd/MM/yyyy");
 
                 var x = CreateString(endData, endTimeString);

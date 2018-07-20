@@ -107,7 +107,7 @@ namespace Chiesi.Monitoring
 
                 logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
                 // Define os novos valores do basic info = assinatura
-                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
                 this.basicInfo.Date = Convert.ToDateTime(result.Date);
                 this.basicInfo.OperatorLogin = result.Asignature;
 
