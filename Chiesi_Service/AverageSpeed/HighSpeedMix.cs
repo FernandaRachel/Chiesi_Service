@@ -114,7 +114,7 @@ namespace Chiesi.AverageSpeed
             bool gerarPdf = false;
             var x = "";
             // It will search the infos correponding to the specific operation
-            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(index);
 
             try
