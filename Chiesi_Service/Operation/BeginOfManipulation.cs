@@ -83,6 +83,7 @@ namespace Chiesi.Operation
 
             try
             {
+                this.basicInfo.KeepBatch = this.eq.recipe.Batch;
                 logAction.writeLog("Lendo basic infos do BeginOfManipulation");
                 // Define os novos valores do basic info = assinatura
                 this.basicInfo.Hour = Convert.ToDateTime(operationInfos.Hour);

@@ -83,7 +83,7 @@ namespace Chiesi.AverageSpeed
             checkError();
 
             // It will search the infos correponding to the specific operation
-            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
             bool gerarPdf = false;
 

@@ -73,7 +73,7 @@ namespace Chiesi.Operation
 
             checkError();
             // It will search the infos correponding to the specific operation
-            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
+            var operationInfos = SearchInfoInList(this.eq, this.operationID);
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
