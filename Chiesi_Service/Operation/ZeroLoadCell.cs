@@ -83,10 +83,14 @@ namespace Chiesi.Operation
                 var result = operationInfos.ElementAt(0);
 
                 bool gerarPdf = false;
-                double tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
+                double tankWeigth = 0.0;
+
                 try
                 {
-
+                    tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
+                    basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
+                    basicInfo.Date = Convert.ToDateTime(result.Date);
+                    basicInfo.OperatorLogin = result.Asignature;
                 }
                 catch (Exception e)
                 {
@@ -99,17 +103,7 @@ namespace Chiesi.Operation
                 var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
                 var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tankWeigth / 100));
 
-                try
-                {
-                    gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-                }
-                catch (Exception e)
-                {
-                    errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-                }
-
+             
                 if (!gerarPdf)
                 {
                     txt.addItem(x);

@@ -97,8 +97,6 @@ namespace Chiesi.Loading
             string cellVariation = "";
             string flowvariation = "";
 
-            // AQUI SERÁ NECESSÁRIO ADICIONAR AS NOVAS TAGS E PEGAR A DATA E HORA DAS ASSINATURAS DAS TAGS
-            // TODOS DADOS SERÃO RECEBIDOS DO PLC
 
             try
             {
@@ -112,7 +110,7 @@ namespace Chiesi.Loading
                 flowvariation = result.Param_3.Replace(".", ",");
                 
                 // Define os novos valores do basic info = assinatura
-                this.infos.Hour = Convert.ToDateTime(result.Hora_1);
+                this.infos.Hour = Convert.ToDateTime(result.Hora_0);
                 this.infos.Date = Convert.ToDateTime(result.Date);
                 this.infos.OperatorLogin = result.Asignature;
 
@@ -129,17 +127,6 @@ namespace Chiesi.Loading
             var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation, String.Format(changeDotToComma, "{0:0.0}", flux.Limit),
                 String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString());
 
-
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             if (!gerarPdf)
             {

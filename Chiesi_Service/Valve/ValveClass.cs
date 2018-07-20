@@ -99,35 +99,31 @@ namespace Chiesi.Valve
 
         public override void Calculate(Text txt)
         {
-
             logAction.writeLog("Entrando no método 'Calculate do ValveClass(Recirculação)' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
-
             bool gerarPdf = false;
 
             try
             {
                 logAction.writeLog("------------------- ID: " + this.operationID +"----------------");
-
                 logAction.writeLog("Iniciando leituras das tags necessárias");
-
                 logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
 
                 if (valvName.ToLower() == "v10")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
+                    IniTime = Convert.ToDateTime(result.Hora_0);
                 }
                 else if (valvName.ToLower() == "v9")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
+                    IniTime = Convert.ToDateTime(result.Hora_0);
                 }
                 else if (valvName.ToLower() == "v8")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
+                    IniTime = Convert.ToDateTime(result.Hora_0);
                 }
 
 
@@ -135,15 +131,15 @@ namespace Chiesi.Valve
                 logAction.writeLog("Lendo hora final da mistura de alta velocidade");
                 if (valvName.ToLower() == "v10")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
+                    EndTime = Convert.ToDateTime(result.Hora_1);
                 }
                 else if (valvName.ToLower() == "v9")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
+                    EndTime = Convert.ToDateTime(result.Hora_1);
                 }
                 else if (valvName.ToLower() == "v8")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
+                    EndTime = Convert.ToDateTime(result.Hora_1);
                 }
 
                 // Define os novos valores do basic info = assinatura
@@ -169,16 +165,6 @@ namespace Chiesi.Valve
             var x = CreateString(IniTime.ToString("HH:mm"), EndTime.ToString("HH:mm"), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), String.Format(changeDotToComma, "{0:0.0}", lobules.lobulesSpeed), lowLimit, highLimit, valveTime);
 
 
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             if (!gerarPdf)
             {

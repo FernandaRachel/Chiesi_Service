@@ -71,16 +71,14 @@ namespace Chiesi.Operation
 
             checkError();
             // It will search the infos correponding to the specific operation
-            var operationInfos = successor.SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(0);
-
+            var result = this.eq.recipe.WeightTank;
 
             bool gerarPdf = false;
 
             try
             {
                 logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
-                tanks.TankWeight = convert.convertToDouble("result.Param_0", result.Param_0);
+                tanks.TankWeight = convert.convertToDouble("result", result);
             }
             catch (Exception e)
             {
@@ -92,16 +90,6 @@ namespace Chiesi.Operation
             var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
             var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tanks.TankWeight/100));
 
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             if (!gerarPdf)
             {

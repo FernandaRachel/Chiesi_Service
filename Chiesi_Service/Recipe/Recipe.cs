@@ -16,6 +16,7 @@ namespace Chiesi_Service.Recipe
         public string RecipeType;
         public string RecipeSubType;
         public string RecipeName;
+        public string WeightTank;
         public List<RecipeData> Data;
 
         public Recipe()

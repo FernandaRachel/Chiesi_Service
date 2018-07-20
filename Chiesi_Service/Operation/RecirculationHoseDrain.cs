@@ -81,7 +81,6 @@ namespace Chiesi.Operation
 
             try
             {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
 
                 // PEGAR HORA E DATA DO PLC !!!!!!
                 iniTimeString = String.Format(result.Hora_0, "HH:mm"); 
@@ -97,17 +96,6 @@ namespace Chiesi.Operation
 
             var x = CreateString(iniTimeString, endTimeString);
 
-
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             if (!gerarPdf)
             {

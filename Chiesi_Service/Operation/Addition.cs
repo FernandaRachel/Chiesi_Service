@@ -92,19 +92,6 @@ namespace Chiesi.Operation
             // Gera o HTML com as informações
             var x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
 
-            try
-            {
-                if (!gerarPdf)
-                {
-                    gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-                }
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             // adiciona o texto na variavel global da classe Text
             txt.addItem(x);

@@ -72,7 +72,10 @@ namespace Chiesi
             recipe.RecipeType = Tags["TAGPRODUCTYPE"];
             recipe.RecipeSubType = Tags["TAGSUBTYPE"];
             recipe.RecipeName = Tags["TAGRECIPENAME"];
+            recipe.WeightTank = Tags["TAGPESOTANK"];
+            
             // POPULATE THE ARRAY INDEX 0 OF DATA
+
             logAction.writeLog("Reading Buffer Index 0");
             recipeData.Param_0 = Tags["RECEITA.DADOS[0].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[0].PARAMETROS[1]"];
@@ -86,6 +89,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[0].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 1 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 1");
             recipeData.Param_0 = Tags["RECEITA.DADOS[1].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[1].PARAMETROS[1]"];
@@ -99,6 +103,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[1].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 2 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 2");
             recipeData.Param_0 = Tags["RECEITA.DADOS[2].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[2].PARAMETROS[1]"];
@@ -112,6 +117,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[2].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 3 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 3");
             recipeData.Param_0 = Tags["RECEITA.DADOS[3].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[3].PARAMETROS[1]"];
@@ -125,6 +131,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[3].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 4 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 4");
             recipeData.Param_0 = Tags["RECEITA.DADOS[4].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[4].PARAMETROS[1]"];
@@ -138,6 +145,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[4].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 5 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 5");
             recipeData.Param_0 = Tags["RECEITA.DADOS[5].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[5].PARAMETROS[1]"];
@@ -151,6 +159,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[5].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 6 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 6");
             recipeData.Param_0 = Tags["RECEITA.DADOS[6].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[6].PARAMETROS[1]"];
@@ -164,6 +173,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[6].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 7 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 7");
             recipeData.Param_0 = Tags["RECEITA.DADOS[7].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[7].PARAMETROS[1]"];
@@ -177,6 +187,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[7].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 8 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 8");
             recipeData.Param_0 = Tags["RECEITA.DADOS[8].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[8].PARAMETROS[1]"];
@@ -190,6 +201,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[8].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 9 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 9");
             recipeData.Param_0 = Tags["RECEITA.DADOS[9].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[9].PARAMETROS[1]"];
@@ -203,6 +215,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[9].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 10 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 10");
             recipeData.Param_0 = Tags["RECEITA.DADOS[10].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[10].PARAMETROS[1]"];
@@ -216,6 +229,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[10].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 11 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 11");
             recipeData.Param_0 = Tags["RECEITA.DADOS[11].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[11].PARAMETROS[1]"];
@@ -229,6 +243,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[11].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 12 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 12");
             recipeData.Param_0 = Tags["RECEITA.DADOS[12].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[12].PARAMETROS[1]"];
@@ -242,6 +257,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[12].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 13 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 13");
             recipeData.Param_0 = Tags["RECEITA.DADOS[13].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[13].PARAMETROS[1]"];
@@ -255,6 +271,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[13].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 14 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 14");
             recipeData.Param_0 = Tags["RECEITA.DADOS[14].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[14].PARAMETROS[1]"];
@@ -268,6 +285,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[14].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 15 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 15");
             recipeData.Param_0 = Tags["RECEITA.DADOS[15].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[15].PARAMETROS[1]"];
@@ -281,6 +299,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[15].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 16 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 16");
             recipeData.Param_0 = Tags["RECEITA.DADOS[16].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[16].PARAMETROS[1]"];
@@ -294,6 +313,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[16].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 17 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 17");
             recipeData.Param_0 = Tags["RECEITA.DADOS[17].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[17].PARAMETROS[1]"];
@@ -307,6 +327,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[17].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 18 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 18");
             recipeData.Param_0 = Tags["RECEITA.DADOS[18].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[18].PARAMETROS[1]"];
@@ -320,6 +341,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[18].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 19 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 19");
             recipeData.Param_0 = Tags["RECEITA.DADOS[19].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[19].PARAMETROS[1]"];
@@ -333,6 +355,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[19].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 20 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 20");
             recipeData.Param_0 = Tags["RECEITA.DADOS[20].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[20].PARAMETROS[1]"];
@@ -346,6 +369,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[20].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 21 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 21");
             recipeData.Param_0 = Tags["RECEITA.DADOS[21].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[21].PARAMETROS[1]"];
@@ -359,6 +383,7 @@ namespace Chiesi
             recipeData.Id = Tags["RECEITA.DADOS[21].ID"];
             recipe.Data.Add(recipeData);
             // POPULATE THE ARRAY INDEX 22 OF DATA
+            recipeData = new RecipeData();
             logAction.writeLog("Reading Buffer Index 22");
             recipeData.Param_0 = Tags["RECEITA.DADOS[22].PARAMETROS[0]"];
             recipeData.Param_1 = Tags["RECEITA.DADOS[22].PARAMETROS[1]"];
@@ -508,10 +533,12 @@ namespace Chiesi
                         {
                             while (reader.Read())
                             {
+                                var teste = reader.IsDBNull(reader.GetOrdinal("TagValue"));
                                 //verifica se a tag é nula e seta ela como string vazia para não parar o relatório com erro de DB!!!
-                                if (reader.IsDBNull(0) || reader.IsDBNull(1))
+                                if (teste)
                                 {
                                     key = reader.GetString(0);
+                                    //var key2 = reader.GetString(1);
                                     value = "";
                                     errorLog.writeLog("EquipamentPLC ", "Read ", " tag nula", DateTime.Now);
                                     checkRead = true;

@@ -107,7 +107,7 @@ namespace Chiesi.Monitoring
 
                 logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
                 // Define os novos valores do basic info = assinatura
-                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
                 this.basicInfo.Date = Convert.ToDateTime(result.Date);
                 this.basicInfo.OperatorLogin = result.Asignature;
 
@@ -122,17 +122,6 @@ namespace Chiesi.Monitoring
             var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
             var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", prodTemp.ToString()), String.Format(changeDotToComma, "{0:0.0}", this.shaker.ShakingSpeed), this.shaker.RpmLimit.ToString());
 
-
-            try
-            {
-                gerarPdf = convert.convertToBoolean(StaticValues.TAGCANCELOP, eq.Read(StaticValues.TAGCANCELOP));
-            }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
 
             if (!gerarPdf)
             {
