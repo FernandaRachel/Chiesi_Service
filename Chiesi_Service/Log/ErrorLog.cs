@@ -12,7 +12,8 @@ namespace Chiesi.Log
     {
         public void writeLog(string operacao, string tag, string mensagem, DateTime date)
         {
-            string path = ConfigurationManager.AppSettings["PATHERRORLOGCHIESI"];
+            string path = ConfigurationManager.AppSettings["PATHERRORLOGCHIESI"] + 
+                DateTime.Now.Date.ToString("dd-MM-yyyy") + DateTime.Now.Date.ToString("HH")+  ".txt";
             // This text is added only once to the file.
             if (!File.Exists(path))
             {

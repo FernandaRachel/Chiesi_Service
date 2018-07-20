@@ -115,15 +115,15 @@ namespace Chiesi.Valve
 
                 if (valvName.ToLower() == "v10")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
+                    IniTime = Convert.ToDateTime(result.Hora_0);
                 }
                 else if (valvName.ToLower() == "v9")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
+                    IniTime = Convert.ToDateTime(result.Hora_0);
                 }
                 else if (valvName.ToLower() == "v8")
                 {
-                    IniTime = Convert.ToDateTime(this.eq.Read(result.Hora_0));
+                    IniTime = Convert.ToDateTime(result.Hora_0);
                 }
 
 
@@ -131,15 +131,15 @@ namespace Chiesi.Valve
                 logAction.writeLog("Lendo hora final da mistura de alta velocidade");
                 if (valvName.ToLower() == "v10")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
+                    EndTime = Convert.ToDateTime(result.Hora_1);
                 }
                 else if (valvName.ToLower() == "v9")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
+                    EndTime = Convert.ToDateTime(result.Hora_1);
                 }
                 else if (valvName.ToLower() == "v8")
                 {
-                    EndTime = Convert.ToDateTime(this.eq.Read(result.Hora_1));
+                    EndTime = Convert.ToDateTime(result.Hora_1);
                 }
 
                 // Define os novos valores do basic info = assinatura
