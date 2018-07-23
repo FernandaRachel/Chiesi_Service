@@ -84,17 +84,19 @@ namespace Chiesi.AverageSpeed
 
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(0);
             bool gerarPdf = false;
             string x = "";
 
-            if (mixTime == "30")
-                result = operationInfos.ElementAt(1);
+
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if (operationInfos.Count() > 0)
             {
+                var result = operationInfos.ElementAt(0);
+
+                if (mixTime == "30")
+                    result = operationInfos.ElementAt(1);
                 try
                 {
                     logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
@@ -127,7 +129,8 @@ namespace Chiesi.AverageSpeed
 
                 var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
                 x = CreateString(String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), anchor.mixTime.ToString());
-            }else
+            }
+            else
             {
                 gerarPdf = true;
             }

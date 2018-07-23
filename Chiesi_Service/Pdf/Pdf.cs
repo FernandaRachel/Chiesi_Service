@@ -45,7 +45,8 @@ namespace Chiesi
 
             string posBody = "</body></html>";
             string curpath = Directory.GetCurrentDirectory();
-            string path = ConfigurationManager.AppSettings["RELATORIOPATH"]; //mockpdf 
+            string path = ConfigurationManager.AppSettings["RELATORIOPATH"];
+            string pathBckp = ConfigurationManager.AppSettings["RELATORIOPATHBCKP"];
             string logopath = ConfigurationManager.AppSettings["LOGOPATH"];
             var headermodified = header.Replace("/", "");
             var htmlContent = preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody;
@@ -59,7 +60,8 @@ namespace Chiesi
 
             var pdfBytes = htmlToPdf.GeneratePdf(htmlContent);
             File.WriteAllBytes(path + headermodified + Batch + ".pdf", pdfBytes);
-
+            File.WriteAllBytes(pathBckp + headermodified + Batch + ".pdf", pdfBytes);
+            
             htmlToPdf.LogReceived += (sender, e) =>
             {
                 Console.WriteLine("WkHtmlToPdf Log: {0}", e.Data);

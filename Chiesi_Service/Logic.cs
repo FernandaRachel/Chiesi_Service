@@ -45,6 +45,9 @@ namespace Chiesi
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
+                        // CONFIRM THAT ALL VALUES WERE READ
+                        eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
+
                         logAction.writeLog("Lendo tag de ler infos - verifica se esta 'true'");
 
                         sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
@@ -58,11 +61,11 @@ namespace Chiesi
                             Thread.Sleep(500);
                         }
 
-                        while (!sign)
-                        {
-                            sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
-                            Thread.Sleep(500);
-                        }
+                        //while (!sign)
+                        //{
+                        //    sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
+                        //    Thread.Sleep(500);
+                        //}
 
 
                         logAction.writeLog("-------------------------------------------------");
@@ -94,8 +97,7 @@ namespace Chiesi
                             logAction.writeLog("Iniciando Preenchimento do Relatório");
                             rf.ConstructEquipament(report, subType, EquipamentType.PLC);
 
-                            // CONFIRM THAT ALL VALUES WERE READ
-                            eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
+                            
 
                             Thread.Sleep(2000);
                             Console.WriteLine("Press any key to exit.");

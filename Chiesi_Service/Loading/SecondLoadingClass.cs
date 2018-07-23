@@ -106,7 +106,6 @@ namespace Chiesi.Loading
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(index);
 
             bool gerarPdf = false;
             string cellVariation = "";
@@ -115,8 +114,10 @@ namespace Chiesi.Loading
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if ((index) < operationInfos.Count())
             {
+                var result = operationInfos.ElementAt(index);
+
                 try
                 {
                     logAction.writeLog("Iniciando leituras/escrita das tags necessárias");

@@ -76,13 +76,14 @@ namespace Chiesi.Operation
             // It will search the infos correponding to the specific operation
             logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(index);
             string x = "";
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if ((index) < operationInfos.Count())
             {
+                var result = operationInfos.ElementAt(index);
+
                 try
                 {
                     // Gera o HTML com as informações

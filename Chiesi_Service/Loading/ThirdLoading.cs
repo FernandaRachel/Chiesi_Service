@@ -101,7 +101,6 @@ namespace Chiesi.Loading
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(index);
 
             bool gerarPdf = false;
             string cellVariation = "";
@@ -110,8 +109,9 @@ namespace Chiesi.Loading
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if ((index) < operationInfos.Count())
             {
+                var result = operationInfos.ElementAt(index);
 
                 try
                 {
@@ -202,26 +202,19 @@ namespace Chiesi.Loading
                         "<th>Variação % </th>" +
                         "<th>Limite % </th>" +
                     "</tr>" +
-                    //"<tr>" +
-                    //    "<td>Glicerol</td>" +
-                    //    "<td>" + values[0] + "</td>" +
-                    //    "<td></td>" +
-                    //    "<td></td>" +
-                    //    "<td></td>" +
-                    //"</tr>" +
                     "<tr>" +
                         "<td>Fluxímetro</td>" +
                         "<td>" + values[1] + "</td>" +
                         "<td>" + values[2] + "</td>" +
                         "<td>" + values[3] + "</td>" +
-                        "<td> <" + limitFlow + "</td>" +
+                        "<td> < " + limitFlow + "</td>" +
                     "</tr>" +
                     "<tr>" +
                         "<td>Célula de Carga</td>" +
                         "<td>" + "" + "</td>" +
                         "<td>" + values[5] + "</td>" +
                         "<td>" + values[6] + "</td>" +
-                        "<td> <" + limitCell + "</td>" +
+                        "<td> < " + limitCell + "</td>" +
                     "</tr>" +
                 "</table>" +
                 this.infos.CreateString()
