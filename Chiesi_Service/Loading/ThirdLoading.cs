@@ -125,9 +125,9 @@ namespace Chiesi.Loading
                     logAction.writeLog("Iniciando leituras variações e quantidades");
                     gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
-                    flux.TheoricQty = result.Param_2;
-                    cellVariation = result.Param_3.Replace(".", ",");
-                    flowvariation = result.Param_4.Replace(".", ",");
+                    flux.TheoricQty = result.Param_2.Replace(".", ",");
+                    flowvariation = result.Param_3.Replace(".", ",");
+                    cellVariation = result.Param_4.Replace(".", ",");
 
                     //PEGAR HORA DO PLC
                     logAction.writeLog("Lendo hora final da mistura do ThirdLoading");

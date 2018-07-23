@@ -108,10 +108,11 @@ namespace Chiesi.Loading
 
                     //LENDO VARIAÇÕES e QUANTIDADES
                     logAction.writeLog("Iniciando leituras variações e quantidades");
-                    flux.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
-                    flux.TheoricQty = result.Param_1;
-                    cellVariation = result.Param_2.Replace(".", ",");
-                    flowvariation = result.Param_3.Replace(".", ",");
+                    cell.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                    flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
+                    flux.TheoricQty = result.Param_2.Replace(".", ",");
+                    cellVariation = result.Param_3.Replace(".", ",");
+                    flowvariation = result.Param_4.Replace(".", ",");
 
                     // Define os novos valores do basic info = assinatura
                     this.infos.Hour = Convert.ToDateTime(result.Hora_0);
