@@ -52,44 +52,52 @@ namespace Chiesi.Operation
 
         public bool checkError()
         {
-            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
+            var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
             while (tagerror)
             {
-                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"],eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
+                tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
                 Thread.Sleep(500);
             }
             return tagerror;
         }
 
-       
+
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
             var result = this.eq.recipe.WeightTank;
-
             bool gerarPdf = false;
+            string x = "";
 
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result != null)
             {
-                logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
-                tanks.TankWeight = convert.convertToDouble("result", result);
+                try
+                {
+                    logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
+                    tanks.TankWeight = convert.convertToDouble("result", result);
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("TankFinalWeight", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tanks.TankWeight / 100));
+
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("TankFinalWeight", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
-
-            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tanks.TankWeight/100));
-
 
             if (!gerarPdf)
             {
@@ -130,7 +138,7 @@ namespace Chiesi.Operation
                 breakline = "";
             }
 
-            string txtCreate = "<br><label><strong>Peso Final do Produto no Tanque : <strong></label><span class='campo'>" 
+            string txtCreate = "<br><label><strong>Peso Final do Produto no Tanque : <strong></label><span class='campo'>"
                 + values[0] + "</span> Kg"
                 + breakline;
 

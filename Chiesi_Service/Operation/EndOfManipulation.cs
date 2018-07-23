@@ -75,31 +75,37 @@ namespace Chiesi.Operation
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
+            string x = "";
 
-
-            try
+            if (result.Id != null)
             {
-                // PEGAR DO PLC HORA E DATA
-                logAction.writeLog("Lendo hora do EndOfManipulation");
-                string endTimeString = String.Format(result.Hora_0, "HH:mm");
-                string endData = String.Format(result.Date, "dd/MM/yyyy");
 
-                var x = CreateString(endData, endTimeString);
+                try
+                {
+                    // PEGAR DO PLC HORA E DATA
+                    logAction.writeLog("Lendo hora do EndOfManipulation");
+                    string endTimeString = String.Format(result.Hora_0, "HH:mm");
+                    string endData = String.Format(result.Date, "dd/MM/yyyy");
 
-                // adiciona o texto na variavel global da classe Text
-                txt.addItem(x);
-                //salva o texto no log.txt
-                txt.saveTxt(x, false);
+                    x = CreateString(endData, endTimeString);
 
-            }
-            catch (Exception e)
+                    // adiciona o texto na variavel global da classe Text
+                    txt.addItem(x);
+                    //salva o texto no log.txt
+                    txt.saveTxt(x, false);
+
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+            }else
             {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
 
-          
 
             if (successor != null)
             {

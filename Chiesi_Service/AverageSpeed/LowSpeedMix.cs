@@ -86,45 +86,54 @@ namespace Chiesi.AverageSpeed
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
             bool gerarPdf = false;
+            string x = "";
 
             if (mixTime == "30")
                 result = operationInfos.ElementAt(1);
 
-
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result.Id != null)
             {
-                logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
+                try
+                {
+                    logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
-                // LENDO HORA INCIAL
-                logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
-                anchor.IniTime = Convert.ToDateTime(result.Hora_0);
+                    // LENDO HORA INCIAL
+                    logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
+                    anchor.IniTime = Convert.ToDateTime(result.Hora_0);
 
-                // LENDO HORA FINAL
-                logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
-                anchor.EndTime = Convert.ToDateTime(result.Hora_1);
+                    // LENDO HORA FINAL
+                    logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
+                    anchor.EndTime = Convert.ToDateTime(result.Hora_1);
 
-                // LENDO VELOCIDADES E TEMPO DE MISTURA
-                logAction.writeLog("Lendo velocidades da mistura de baixa velocidade e basic infos");
-                anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
-                anchor.mixTime = convert.convertToDouble("mixTime", mixTime);
+                    // LENDO VELOCIDADES E TEMPO DE MISTURA
+                    logAction.writeLog("Lendo velocidades da mistura de baixa velocidade e basic infos");
+                    anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
+                    anchor.mixTime = convert.convertToDouble("mixTime", mixTime);
 
-                // Define os novos valores do basic info = assinatura
-                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
-                this.basicInfo.Date = Convert.ToDateTime(result.Date);
-                this.basicInfo.OperatorLogin = result.Asignature;
+                    // Define os novos valores do basic info = assinatura
+                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                    this.basicInfo.OperatorLogin = result.Asignature;
 
-            }
-            catch (Exception e)
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("Low SpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), anchor.mixTime.ToString());
+            }else
             {
-                errorlog.writeLog("Low SpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
 
-            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), anchor.mixTime.ToString());
-
-
+            // Se a OP NÃO foi cancelada ele adiciona o html dessa operação ao log
+            // Pois no relatório não pode ter a op que foi cancelada
             if (!gerarPdf)
             {
                 txt.addItem(x);

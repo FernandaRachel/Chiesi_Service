@@ -44,8 +44,10 @@ namespace Chiesi
             string path = ConfigurationManager.AppSettings["PATHLOGCHIESI"];
             if (firstOp && File.Exists(path))
             {
-                File.Copy(ConfigurationManager.AppSettings["PATHLOGCHIESI"], ConfigurationManager.AppSettings["PATHDUMP"] + 
-                    DateTime.Now.Date.ToString("dd-MM-yyyy") + DateTime.Now.Date.ToString("HH") +".txt");
+                File.Copy(ConfigurationManager.AppSettings["PATHLOGCHIESI"], ConfigurationManager.AppSettings["PATHDUMP"] +
+                    DateTime.Now.Date.ToString("dd-MM-yyyy") + DateTime.Now.ToString("HH") +
+                DateTime.Now.ToString("mm") + ".txt");
+
                 File.Delete(path);
             }
             // This text is added only once to the file.
@@ -81,7 +83,7 @@ namespace Chiesi
             string path = ConfigurationManager.AppSettings["PATHLOGCHIESI"];
             string pathtosave = ConfigurationManager.AppSettings["PATHLOGCHIESITOSAVE"];
             File.Delete(path);
-            
+
             txtAtual = "";
             return txtAtual;
         }

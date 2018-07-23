@@ -77,28 +77,35 @@ namespace Chiesi.Operation
             logAction.writeLog("Iniciando leituras das tags necessárias de Addition - apenas classe basicInfo");
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(index);
+            string x = "";
 
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result.Id != null)
             {
+                try
+                {
+                    // Gera o HTML com as informações
+                    x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
+                    // adiciona o texto na variavel global da classe Text
+                    txt.addItem(x);
+                    //salva o texto no log.txt
+                    txt.saveTxt(x, false);
 
+                    logAction.writeLog("Texto adicionado ao log.txt");
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("Addition", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("Addition", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
 
-            // Gera o HTML com as informações
-            var x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
-
-
-            // adiciona o texto na variavel global da classe Text
-            txt.addItem(x);
-            //salva o texto no log.txt
-            txt.saveTxt(x, false);
-
-            logAction.writeLog("Texto adicionado ao log.txt");
 
             if (successor != null)
             {

@@ -96,38 +96,50 @@ namespace Chiesi.Loading
             bool gerarPdf = false;
             string cellVariation = "";
             string flowvariation = "";
+            string x = "";
 
-
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result.Id != null)
             {
-                logAction.writeLog("Iniciando leituras das tags necessárias de Loading");
 
-                //LENDO VARIAÇÕES e QUANTIDADES
-                logAction.writeLog("Iniciando leituras variações e quantidades");
-                flux.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
-                flux.TheoricQty = result.Param_1;
-                cellVariation = result.Param_2.Replace(".", ",");
-                flowvariation = result.Param_3.Replace(".", ",");
-                
-                // Define os novos valores do basic info = assinatura
-                this.infos.Hour = Convert.ToDateTime(result.Hora_0);
-                this.infos.Date = Convert.ToDateTime(result.Date);
-                this.infos.OperatorLogin = result.Asignature;
+                try
+                {
+                    logAction.writeLog("Iniciando leituras das tags necessárias de Loading");
 
+                    //LENDO VARIAÇÕES e QUANTIDADES
+                    logAction.writeLog("Iniciando leituras variações e quantidades");
+                    flux.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                    flux.TheoricQty = result.Param_1;
+                    cellVariation = result.Param_2.Replace(".", ",");
+                    flowvariation = result.Param_3.Replace(".", ",");
+
+                    // Define os novos valores do basic info = assinatura
+                    this.infos.Hour = Convert.ToDateTime(result.Hora_0);
+                    this.infos.Date = Convert.ToDateTime(result.Date);
+                    this.infos.OperatorLogin = result.Asignature;
+
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("Loading", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
+
+                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation, String.Format(changeDotToComma, "{0:0.0}", flux.Limit),
+                    String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString());
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("Loading", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
 
-            CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
 
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation, String.Format(changeDotToComma, "{0:0.0}", flux.Limit),
-                String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString());
-
-
+            // Se a OP NÃO foi cancelada ele adiciona o html dessa operação ao log
+            // Pois no relatório não pode ter a op que foi cancelada
             if (!gerarPdf)
             {
 

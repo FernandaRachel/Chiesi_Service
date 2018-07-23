@@ -38,6 +38,7 @@ namespace Chiesi.Operation
         public ZeroLoadCell(EquipamentType typeEq)
         {
             //ID da Operação - cada operação possui um ID exceto a incial(BeginOfMAnipulation)
+            // e a ZeroLoadCell
             this.operationID = "2";
             this.tank = TankClass.GetTankClass();
             this.basicInfo = BasicInfoClass.GetBasicInfo();
@@ -67,9 +68,7 @@ namespace Chiesi.Operation
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do ZeroLoadCell' para iniciar leituras das tags necessárias");
-
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -79,7 +78,6 @@ namespace Chiesi.Operation
             // Se não retornou então a receita foi cancelada
             if (operationInfos.Count > 0)
             {
-
                 var result = operationInfos.ElementAt(0);
 
                 bool gerarPdf = false;
