@@ -81,7 +81,6 @@ namespace Chiesi.Monitoring
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do TempMonitoring' para iniciar leituras das tags necessárias");
 
             checkError();
@@ -91,37 +90,47 @@ namespace Chiesi.Monitoring
 
             bool gerarPdf = false;
             double prodTemp = 0;
+            string x = "";
 
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result.Id != null)
             {
+                try
+                {
 
-                logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
+                    logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
-                logAction.writeLog("Lendo temperatura e velocidade - baixa valocidade");
-                this.prod.ProductTemp = convert.convertToDouble("result.Param_0", result.Param_0);
-                this.shaker.ShakingSpeed= convert.convertToDouble("result.Param_1",result.Param_1);
+                    logAction.writeLog("Lendo temperatura e velocidade - baixa valocidade");
+                    this.prod.ProductTemp = convert.convertToDouble("result.Param_0", result.Param_0);
+                    this.shaker.ShakingSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
 
-                prodTemp = (this.prod.ProductTemp / 10);
+                    prodTemp = (this.prod.ProductTemp / 10);
 
-               
 
-                logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
-                // Define os novos valores do basic info = assinatura
-                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
-                this.basicInfo.Date = Convert.ToDateTime(result.Date);
-                this.basicInfo.OperatorLogin = result.Asignature;
+
+                    logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
+                    // Define os novos valores do basic info = assinatura
+                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
+                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                    this.basicInfo.OperatorLogin = result.Asignature;
+
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("TempMonitoring", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", prodTemp.ToString()), String.Format(changeDotToComma, "{0:0.0}", this.shaker.ShakingSpeed), this.shaker.RpmLimit.ToString());
 
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("TempMonitoring", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
-
-            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", prodTemp.ToString()), String.Format(changeDotToComma, "{0:0.0}", this.shaker.ShakingSpeed), this.shaker.RpmLimit.ToString());
-
 
             if (!gerarPdf)
             {

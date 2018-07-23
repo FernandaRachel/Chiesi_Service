@@ -106,64 +106,71 @@ namespace Chiesi.Valve
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(0);
             bool gerarPdf = false;
+            string x = "";
 
-            try
+            if (result != null)
             {
-                logAction.writeLog("------------------- ID: " + this.operationID +"----------------");
-                logAction.writeLog("Iniciando leituras das tags necessárias");
-                logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
 
-                if (valvName.ToLower() == "v10")
+                try
                 {
-                    IniTime = Convert.ToDateTime(result.Hora_0);
+                    logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+                    logAction.writeLog("Iniciando leituras das tags necessárias");
+                    logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+
+                    if (valvName.ToLower() == "v10")
+                    {
+                        IniTime = Convert.ToDateTime(result.Hora_0);
+                    }
+                    else if (valvName.ToLower() == "v9")
+                    {
+                        IniTime = Convert.ToDateTime(result.Hora_0);
+                    }
+                    else if (valvName.ToLower() == "v8")
+                    {
+                        IniTime = Convert.ToDateTime(result.Hora_0);
+                    }
+
+
+
+                    logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                    if (valvName.ToLower() == "v10")
+                    {
+                        EndTime = Convert.ToDateTime(result.Hora_1);
+                    }
+                    else if (valvName.ToLower() == "v9")
+                    {
+                        EndTime = Convert.ToDateTime(result.Hora_1);
+                    }
+                    else if (valvName.ToLower() == "v8")
+                    {
+                        EndTime = Convert.ToDateTime(result.Hora_1);
+                    }
+
+                    // Define os novos valores do basic info = assinatura
+                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                    this.basicInfo.OperatorLogin = result.Asignature;
+
+                    logAction.writeLog("Iniciando leituras das tags de velocidade");
+
+                    anchor.AnchorSpeed = Convert.ToDouble(result.Param_0);
+                    lobules.lobulesSpeed = Convert.ToDouble(result.Param_1);
+
                 }
-                else if (valvName.ToLower() == "v9")
+                catch (Exception e)
                 {
-                    IniTime = Convert.ToDateTime(result.Hora_0);
-                }
-                else if (valvName.ToLower() == "v8")
-                {
-                    IniTime = Convert.ToDateTime(result.Hora_0);
+                    errorlog.writeLog("ValveClass", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
                 }
 
-
-
-                logAction.writeLog("Lendo hora final da mistura de alta velocidade");
-                if (valvName.ToLower() == "v10")
-                {
-                    EndTime = Convert.ToDateTime(result.Hora_1);
-                }
-                else if (valvName.ToLower() == "v9")
-                {
-                    EndTime = Convert.ToDateTime(result.Hora_1);
-                }
-                else if (valvName.ToLower() == "v8")
-                {
-                    EndTime = Convert.ToDateTime(result.Hora_1);
-                }
-
-                // Define os novos valores do basic info = assinatura
-                this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
-                this.basicInfo.Date = Convert.ToDateTime(result.Date);
-                this.basicInfo.OperatorLogin = result.Asignature;
-
-                logAction.writeLog("Iniciando leituras das tags de velocidade");
-
-                anchor.AnchorSpeed = Convert.ToDouble(result.Param_0);
-                lobules.lobulesSpeed = Convert.ToDouble(result.Param_1);
-                
+                var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+                x = CreateString(IniTime.ToString("HH:mm"), EndTime.ToString("HH:mm"), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), String.Format(changeDotToComma, "{0:0.0}", lobules.lobulesSpeed), lowLimit, highLimit, valveTime);
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("ValveClass", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
-
-
-            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-            var x = CreateString(IniTime.ToString("HH:mm"), EndTime.ToString("HH:mm"), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), String.Format(changeDotToComma, "{0:0.0}", lobules.lobulesSpeed), lowLimit, highLimit, valveTime);
-
 
 
             if (!gerarPdf)

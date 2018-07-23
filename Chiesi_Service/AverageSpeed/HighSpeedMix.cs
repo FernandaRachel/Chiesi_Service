@@ -117,84 +117,96 @@ namespace Chiesi.AverageSpeed
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(index);
 
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result.Id != null)
             {
-                if (!changeTable)
+
+                try
                 {
-                    logAction.writeLog("Iniciando leituras das tags necessárias");
+                    if (!changeTable)
+                    {
+                        logAction.writeLog("Iniciando leituras das tags necessárias");
 
-                    logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
-                    // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
-                    anchor.IniTime = Convert.ToDateTime(result.Hora_0);
-                    turbine.IniTime = Convert.ToDateTime(result.Hora_0);
+                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                        // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
+                        anchor.IniTime = Convert.ToDateTime(result.Hora_0);
+                        turbine.IniTime = Convert.ToDateTime(result.Hora_0);
 
-                    logAction.writeLog("Lendo hora final da mistura de alta velocidade");
-                    // Precisa verificar se a hora final da ancora e da turbina são as mesmas
-                    anchor.EndTime = Convert.ToDateTime(result.Hora_1);
-                    turbine.EndTime = Convert.ToDateTime(result.Hora_1);
+                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                        // Precisa verificar se a hora final da ancora e da turbina são as mesmas
+                        anchor.EndTime = Convert.ToDateTime(result.Hora_1);
+                        turbine.EndTime = Convert.ToDateTime(result.Hora_1);
 
-                    // Define os novos valores do basic info = assinatura
-                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
-                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
-                    this.basicInfo.OperatorLogin = result.Asignature;
+                        // Define os novos valores do basic info = assinatura
+                        this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                        this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                        this.basicInfo.OperatorLogin = result.Asignature;
 
-                    logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
 
-                    anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
-                    turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
+                        anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
+                        turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
+                    }
+                    else
+                    {
+                        logAction.writeLog("Iniciando leituras das tags necessárias");
+
+                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                        // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
+                        anchor.IniTime = Convert.ToDateTime(result.Hora_0);
+                        clenil.IniTime = Convert.ToDateTime(result.Hora_0);
+                        clenilStrong.IniTime = Convert.ToDateTime(result.Hora_0);
+
+                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                        // Precisa verificar se a hora final da ancora e da turbina são as mesmas
+                        anchor.EndTime = Convert.ToDateTime(result.Hora_1);
+                        clenil.EndTime = Convert.ToDateTime(result.Hora_1);
+                        clenilStrong.EndTime = Convert.ToDateTime(result.Hora_1);
+
+                        // Define os novos valores do basic info = assinatura
+                        this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
+                        this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                        this.basicInfo.OperatorLogin = result.Asignature;
+
+
+                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+
+                        anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
+                        turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+
+                var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
+
+                if (changeTable)
+                {
+                    x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed),
+                        clenil.IniTime.ToString("HH:mm"), clenil.EndTime.ToString("HH:mm"), clenil.RpmLimit.ToString(),
+                        String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), clenilStrong.IniTime.ToString("HH:mm"), clenilStrong.EndTime.ToString("HH:mm"), clenilStrong.RpmLimit.ToString());
                 }
                 else
                 {
-                    logAction.writeLog("Iniciando leituras das tags necessárias");
-
-                    logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
-                    // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
-                    anchor.IniTime = Convert.ToDateTime(result.Hora_0);
-                    clenil.IniTime = Convert.ToDateTime(result.Hora_0);
-                    clenilStrong.IniTime = Convert.ToDateTime(result.Hora_0);
-
-                    logAction.writeLog("Lendo hora final da mistura de alta velocidade");
-                    // Precisa verificar se a hora final da ancora e da turbina são as mesmas
-                    anchor.EndTime = Convert.ToDateTime(result.Hora_1);
-                    clenil.EndTime = Convert.ToDateTime(result.Hora_1);
-                    clenilStrong.EndTime = Convert.ToDateTime(result.Hora_1);
-
-                    // Define os novos valores do basic info = assinatura
-                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_1);
-                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
-                    this.basicInfo.OperatorLogin = result.Asignature;
-
-
-                    logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
-
-                    anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
-                    turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
+                    x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(),
+                    String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), turbine.IniTime.ToString("HH:mm"), turbine.EndTime.ToString("HH:mm"), turbine.RpmLimit.ToString());
                 }
 
             }
-            catch (Exception e)
-            {
-                errorlog.writeLog("HighSpeedMix", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
-            }
-
-
-            var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-
-            if (changeTable)
-            {
-                x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed),
-                    clenil.IniTime.ToString("HH:mm"), clenil.EndTime.ToString("HH:mm"), clenil.RpmLimit.ToString(),
-                    String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), clenilStrong.IniTime.ToString("HH:mm"), clenilStrong.EndTime.ToString("HH:mm"), clenilStrong.RpmLimit.ToString());
-            }
             else
             {
-                x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(),
-                String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), turbine.IniTime.ToString("HH:mm"), turbine.EndTime.ToString("HH:mm"), turbine.RpmLimit.ToString());
+                gerarPdf = true;
             }
 
-
+            // Se a OP NÃO foi cancelada ele adiciona o html dessa operação ao log
+            // Pois no relatório não pode ter a op que foi cancelada
             if (!gerarPdf)
             {
                 txt.addItem(x);

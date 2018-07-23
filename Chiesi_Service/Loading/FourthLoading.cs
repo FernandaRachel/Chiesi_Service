@@ -90,10 +90,10 @@ namespace Chiesi.Loading
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do FourthLoading' para iniciar leituras das tags necessárias");
 
             checkError();
+
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
             var result = operationInfos.ElementAt(index);
@@ -102,45 +102,55 @@ namespace Chiesi.Loading
             DateTime keepinidate = DateTime.Now;
             string cellVariation = "";
             string flowvariation = "";
+            string x = "";
 
-            try
+            // Verifica se retornou alguma info
+            // Se não retornou então a receita foi cancelada
+            if (result.Id != null)
             {
-                logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
+                try
+                {
+                    logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
 
-                //LENDO HORA INCIAL
-                logAction.writeLog("Lendo hora inicial FourthLoading");
-                gli.OutFlowStart = Convert.ToDateTime(result.Hora_0);
-                
-                //LENDO HORA FINAL
-                logAction.writeLog("Lendo hora final FourthLoading");
-                gli.OutFlowEnd = Convert.ToDateTime(result.Hora_1);
-                
-                //LENDO VARIAÇÕES E QUANTIDADES
-                logAction.writeLog("Lendo variações e quantidades do FourthLoading");
-                gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
-                flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
-                flux.TheoricQty = result.Param_2;
-                cellVariation = result.Param_3.Replace(".", ",");
-                flowvariation = result.Param_4.Replace(".", ",");
+                    //LENDO HORA INCIAL
+                    logAction.writeLog("Lendo hora inicial FourthLoading");
+                    gli.OutFlowStart = Convert.ToDateTime(result.Hora_0);
 
-                // Define os novos valores do basic info = assinatura
-                this.infos.Hour = Convert.ToDateTime(result.Hora_1);
-                this.infos.Date = Convert.ToDateTime(result.Date);
-                this.infos.OperatorLogin = result.Asignature;
+                    //LENDO HORA FINAL
+                    logAction.writeLog("Lendo hora final FourthLoading");
+                    gli.OutFlowEnd = Convert.ToDateTime(result.Hora_1);
+
+                    //LENDO VARIAÇÕES E QUANTIDADES
+                    logAction.writeLog("Lendo variações e quantidades do FourthLoading");
+                    gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                    flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
+                    flux.TheoricQty = result.Param_2;
+                    cellVariation = result.Param_3.Replace(".", ",");
+                    flowvariation = result.Param_4.Replace(".", ",");
+
+                    // Define os novos valores do basic info = assinatura
+                    this.infos.Hour = Convert.ToDateTime(result.Hora_1);
+                    this.infos.Date = Convert.ToDateTime(result.Date);
+                    this.infos.OperatorLogin = result.Asignature;
+
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("FourthLoading", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
+
+                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", gli.GliQty), String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation,
+                    String.Format(changeDotToComma, "{0:0.0}", flux.Limit), String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString(), gli.OutFlowStart.ToString("HH:mm"), gli.OutFlowEnd.ToString("HH:mm"));
 
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("FourthLoading", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
-
-            CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
-
-            var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", gli.GliQty), String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation,
-                String.Format(changeDotToComma, "{0:0.0}", flux.Limit), String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString(), gli.OutFlowStart.ToString("HH:mm"), gli.OutFlowEnd.ToString("HH:mm"));
-
 
             if (!gerarPdf)
             {

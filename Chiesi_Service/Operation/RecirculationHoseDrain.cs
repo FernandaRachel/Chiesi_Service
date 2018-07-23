@@ -63,11 +63,10 @@ namespace Chiesi.Operation
             return tagerror;
         }
 
-       
+
         public override void Calculate(Text txt)
         {
             logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-
             logAction.writeLog("Entrando no método 'Calculate do RecirculationHoseDrain' para iniciar leituras das tags necessárias");
 
             checkError();
@@ -78,24 +77,33 @@ namespace Chiesi.Operation
             bool gerarPdf = false;
             string iniTimeString = "";
             string endTimeString = "";
+            string x = "";
 
-            try
+            if (result.Id != null)
             {
 
-                // PEGAR HORA E DATA DO PLC !!!!!!
-                iniTimeString = String.Format(result.Hora_0, "HH:mm"); 
-                endTimeString = String.Format(result.Hora_1, "HH:mm");
-                // ---------------------------------
+                try
+                {
+
+                    // PEGAR HORA E DATA DO PLC !!!!!!
+                    iniTimeString = String.Format(result.Hora_0, "HH:mm");
+                    endTimeString = String.Format(result.Hora_1, "HH:mm");
+                    // ---------------------------------
+                }
+                catch (Exception e)
+                {
+                    errorlog.writeLog("RecirculationHoseDrain", "tag não especificada", e.ToString(), DateTime.Now);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
+                    this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                }
+
+                x = CreateString(iniTimeString, endTimeString);
+
             }
-            catch (Exception e)
+            else
             {
-                errorlog.writeLog("RecirculationHoseDrain", "tag não especificada", e.ToString(), DateTime.Now);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORMESSAGE"], e.Message);
-                this.eq.Write(ConfigurationManager.AppSettings["TAGERRORPLC"], "True");
+                gerarPdf = true;
             }
-
-            var x = CreateString(iniTimeString, endTimeString);
-
 
             if (!gerarPdf)
             {
