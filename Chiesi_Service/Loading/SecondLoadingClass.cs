@@ -106,7 +106,6 @@ namespace Chiesi.Loading
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(index);
 
             bool gerarPdf = false;
             string cellVariation = "";
@@ -115,8 +114,10 @@ namespace Chiesi.Loading
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if ((index) < operationInfos.Count())
             {
+                var result = operationInfos.ElementAt(index);
+
                 try
                 {
                     logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
@@ -133,9 +134,9 @@ namespace Chiesi.Loading
                     logAction.writeLog("Iniciando leituras variações e quantidades");
                     gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
-                    flux.TheoricQty = result.Param_2;
-                    cellVariation = result.Param_3.Replace(".", ",");
-                    flowvariation = result.Param_4.Replace(".", ",");
+                    flux.TheoricQty = result.Param_2.Replace(".", ",");
+                    flowvariation = result.Param_3.Replace(".", ",");
+                    cellVariation = result.Param_4.Replace(".", ",");
 
 
                     // Define os novos valores do basic info = assinatura
@@ -153,7 +154,7 @@ namespace Chiesi.Loading
                 CultureInfo changeDotToComma = CultureInfo.GetCultureInfo("pt-BR");
 
                 x = CreateString(String.Format(changeDotToComma, "{0:0.0}", gli.GliQty), String.Format(changeDotToComma, "{0:0.0}", flux.TheoricQty), String.Format(changeDotToComma, "{0:0.0}", flux.RealQty / 100), flowvariation,
-                    String.Format(changeDotToComma, "{0:0.0}", flux.Limit), String.Format(changeDotToComma, "{0:0.0}", cell.RealQty / 100), cellVariation, cell.Limit.ToString(), gli.OutFlowStart.ToString("HH:mm"), gli.OutFlowEnd.ToString("HH:mm"));
+                    String.Format(changeDotToComma, "{0:0.0}", flux.Limit), String.Format(changeDotToComma, "{0:0.0}", gli.GliQty / 100), cellVariation, cell.Limit.ToString(), gli.OutFlowStart.ToString("HH:mm"), gli.OutFlowEnd.ToString("HH:mm"));
             }
             else
             {

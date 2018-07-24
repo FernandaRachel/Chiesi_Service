@@ -96,7 +96,6 @@ namespace Chiesi.Loading
 
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(index);
 
             bool gerarPdf = false;
             DateTime keepinidate = DateTime.Now;
@@ -106,8 +105,10 @@ namespace Chiesi.Loading
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if ((index) < operationInfos.Count())
             {
+                var result = operationInfos.ElementAt(index);
+
                 try
                 {
                     logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
@@ -122,11 +123,11 @@ namespace Chiesi.Loading
 
                     //LENDO VARIAÇÕES E QUANTIDADES
                     logAction.writeLog("Lendo variações e quantidades do FourthLoading");
-                    gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                    cell.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
-                    flux.TheoricQty = result.Param_2;
-                    cellVariation = result.Param_3.Replace(".", ",");
-                    flowvariation = result.Param_4.Replace(".", ",");
+                    flux.TheoricQty = result.Param_2.Replace(".", ",");
+                    flowvariation = result.Param_3.Replace(".", ",");
+                    cellVariation = result.Param_4.Replace(".", ",");
 
                     // Define os novos valores do basic info = assinatura
                     this.infos.Hour = Convert.ToDateTime(result.Hora_1);
@@ -195,14 +196,14 @@ namespace Chiesi.Loading
                     "<td>" + values[1] + "</td>" +
                     "<td>" + values[2] + "</td>" +
                     "<td>" + values[3] + "</td>" +
-                    "<td> <" + limitFlow + "</td>" +
+                    "<td> < " + limitFlow + "</td>" +
                 "</tr>" +
                 "<tr>" +
                     "<td>Célula de Carga</td>" +
                     "<td>" + "" + "</td>" +
                     "<td>" + values[5] + "</td>" +
                     "<td>" + values[6] + "</td>" +
-                    "<td> <" + limitCell + "</td>" +
+                    "<td> < " + limitCell + "</td>" +
                 "</tr>" +
             "</table>" +
             this.infos.CreateString();

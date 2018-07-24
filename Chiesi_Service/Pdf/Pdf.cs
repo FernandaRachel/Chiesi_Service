@@ -23,6 +23,11 @@ namespace Chiesi
 
         public BasicInfoClass binfos { get; set; }
 
+        IEquipament eq;
+
+        EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
+
+
         public Pdf(string txt)
         {
             reportTxt = txt;
@@ -30,6 +35,7 @@ namespace Chiesi
             logClass = new LogClass();
             text = new Text();
             Batch = binfos.KeepBatch;
+            eq = eqFact.ConstructEquipament(EquipamentType.PLC);
         }
 
 
@@ -45,13 +51,14 @@ namespace Chiesi
 
             string posBody = "</body></html>";
             string curpath = Directory.GetCurrentDirectory();
-            string path = ConfigurationManager.AppSettings["RELATORIOPATH"]; //mockpdf 
+            string path = ConfigurationManager.AppSettings["RELATORIOPATH"];
+            string pathBckp = ConfigurationManager.AppSettings["RELATORIOPATHBCKP"];
             string logopath = ConfigurationManager.AppSettings["LOGOPATH"];
             var headermodified = header.Replace("/", "");
             var htmlContent = preBody + "<h1 id='produto'>" + reportTxt + "</h1>" + posBody;
             var htmlToPdf = new HtmlToPdfConverter();
 
-          
+
 
             htmlToPdf.CustomWkHtmlPageArgs = "--encoding utf-8 --images ";
             htmlToPdf.PageHeaderHtml = "<img id = 'logo' src = '" + logopath + "' >";
@@ -59,6 +66,7 @@ namespace Chiesi
 
             var pdfBytes = htmlToPdf.GeneratePdf(htmlContent);
             File.WriteAllBytes(path + headermodified + Batch + ".pdf", pdfBytes);
+            File.WriteAllBytes(pathBckp + headermodified + Batch + ".pdf", pdfBytes);
 
             htmlToPdf.LogReceived += (sender, e) =>
             {
@@ -69,6 +77,9 @@ namespace Chiesi
 
             Status.SetModeToIdle();
             text.cleanTxt();
+
+            eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
+
 
             return "PDF FINAL GERADO";
         }

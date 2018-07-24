@@ -86,7 +86,6 @@ namespace Chiesi.Monitoring
             checkError();
             // It will search the infos correponding to the specific operation
             var operationInfos = SearchInfoInList(this.eq, this.operationID);
-            var result = operationInfos.ElementAt(0);
 
             bool gerarPdf = false;
             double prodTemp = 0;
@@ -94,8 +93,10 @@ namespace Chiesi.Monitoring
 
             // Verifica se retornou alguma info
             // Se não retornou então a receita foi cancelada
-            if (result.Id != null)
+            if (operationInfos.Count() > 0)
             {
+                var result = operationInfos.ElementAt(0);
+
                 try
                 {
 
