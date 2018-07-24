@@ -46,7 +46,6 @@ namespace Chiesi
                     if (Status.getStatus() != StatusType.Fail)
                     {
                         // CONFIRM THAT ALL VALUES WERE READ
-                        eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
 
                         logAction.writeLog("Lendo tag de ler infos - verifica se esta 'true'");
 
@@ -61,11 +60,11 @@ namespace Chiesi
                             Thread.Sleep(500);
                         }
 
-                        //while (!sign)
-                        //{
-                        //    sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
-                        //    Thread.Sleep(500);
-                        //}
+                        while (!sign)
+                        {
+                            sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
+                            Thread.Sleep(500);
+                        }
 
 
                         logAction.writeLog("-------------------------------------------------");

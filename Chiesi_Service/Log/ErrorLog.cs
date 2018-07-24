@@ -12,16 +12,15 @@ namespace Chiesi.Log
     {
         public void writeLog(string operacao, string tag, string mensagem, DateTime date)
         {
-            string path = ConfigurationManager.AppSettings["PATHERRORLOGCHIESI"] + 
-                DateTime.Now.Date.ToString("dd-MM-yyyy") + DateTime.Now.ToString("HH")+
-                DateTime.Now.ToString("mm") + ".txt";
+            string path = ConfigurationManager.AppSettings["PATHERRORLOGCHIESI"] +
+                DateTime.Now.Date.ToString("dd-MM-yyyy") + DateTime.Now.ToString("HH") + ".txt";
             // This text is added only once to the file.
             if (!File.Exists(path))
             {
                 // Create a file to write to.
                 using (StreamWriter sw = File.CreateText(path))
                 {
-                    sw.WriteLine("Operação:" + operacao +"Tag:"+ tag + "Data:" + date  + "Mensagem :" + mensagem);
+                    sw.WriteLine("Operação:" + operacao + "Tag:" + tag + "Data:" + date + "Mensagem :" + mensagem);
                     sw.Close();
                 }
             }

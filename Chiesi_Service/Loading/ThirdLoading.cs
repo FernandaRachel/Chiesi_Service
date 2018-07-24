@@ -123,7 +123,7 @@ namespace Chiesi.Loading
 
                     //LENDO VARIAÇÕES e QTD
                     logAction.writeLog("Iniciando leituras variações e quantidades");
-                    gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
+                    cell.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
                     flux.TheoricQty = result.Param_2.Replace(".", ",");
                     flowvariation = result.Param_3.Replace(".", ",");

@@ -21,8 +21,8 @@ namespace Chiesi.Log
         public void writeLog(string header, BasicInfoClass basicInfo)
         {
             // Pega do App.config o endereço para salvar o Log AD
-            string path = ConfigurationManager.AppSettings["PATHADCHIESI"] + DateTime.Now.ToString("dd-MM-yyyy")+ ".txt";
-            
+            string path = ConfigurationManager.AppSettings["PATHADCHIESI"] + ".txt";
+
             // This text is added only once to the file.
             if (!File.Exists(path))
             {
