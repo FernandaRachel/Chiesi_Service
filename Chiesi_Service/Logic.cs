@@ -60,11 +60,11 @@ namespace Chiesi
                             Thread.Sleep(500);
                         }
 
-                        while (!sign)
-                        {
-                            sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
-                            Thread.Sleep(500);
-                        }
+                        //while (!sign)
+                        //{
+                        //    sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
+                        //    Thread.Sleep(500);
+                        //}
 
 
                         logAction.writeLog("-------------------------------------------------");
