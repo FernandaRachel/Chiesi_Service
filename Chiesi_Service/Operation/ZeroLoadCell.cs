@@ -82,6 +82,7 @@ namespace Chiesi.Operation
 
                 bool gerarPdf = false;
                 double tankWeigth = 0.0;
+                string tankWightModified = "";
 
                 try
                 {
@@ -89,6 +90,8 @@ namespace Chiesi.Operation
                     basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
                     basicInfo.Date = Convert.ToDateTime(result.Date);
                     basicInfo.OperatorLogin = result.Asignature;
+                    tankWeigth = (tankWeigth / 100);
+                    tankWightModified = tankWeigth.ToString().Replace(".", ",");
                 }
                 catch (Exception e)
                 {
@@ -99,7 +102,7 @@ namespace Chiesi.Operation
 
                 // TESTANDO FORMAT DOT TO COMMA
                 var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-                var x = CreateString(String.Format(changeDotToComma, "{0:0.0}", tankWeigth / 100));
+                var x = CreateString(tankWightModified);
 
              
                 if (!gerarPdf)
