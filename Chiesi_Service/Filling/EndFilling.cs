@@ -26,7 +26,7 @@ namespace Chiesi.Filling
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
@@ -42,12 +42,12 @@ namespace Chiesi.Filling
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
             this.checkBreak = checkBreak;
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -64,7 +64,7 @@ namespace Chiesi.Filling
         public override void Calculate(Text txt)
         {
 
-            logAction.writeLog("Entrando no método 'EndFilling' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("Entrando no método 'EndFilling' para iniciar leituras das tags necessárias");
 
             var gerarPdf = true;
 

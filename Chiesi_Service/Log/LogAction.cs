@@ -17,7 +17,7 @@ namespace Chiesi_Service.Log
         public void writeLog(string info)
         {
             string path = ConfigurationManager.AppSettings["PATHLOGACTION"] +
-                DateTime.Now.Date.ToString("dd-MM-yyyy") +
+                DateTime.Now.Date. ToString("dd-MM-yyyy") +
                 DateTime.Now.ToString("HH") + ".txt";
             // This text is added only once to the file.
             if (!File.Exists(path))

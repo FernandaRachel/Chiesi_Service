@@ -41,6 +41,7 @@ namespace Chiesi
 
         public string gerarPdf(string header, BasicInfoClass basicInfo)
         {
+            
 
             string preBody = "<html>" +
                 "               <head>";
@@ -68,17 +69,18 @@ namespace Chiesi
             File.WriteAllBytes(path + headermodified + Batch + ".pdf", pdfBytes);
             File.WriteAllBytes(pathBckp + headermodified + Batch + ".pdf", pdfBytes);
 
-            htmlToPdf.LogReceived += (sender, e) =>
-            {
-                Console.WriteLine("WkHtmlToPdf Log: {0}", e.Data);
-            };
+            eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
 
-            logClass.writeLog(header, basicInfo);
+            //htmlToPdf.LogReceived += (sender, e) =>
+            //{
+            //    Console.WriteLine("WkHtmlToPdf Log: {0}", e.Data);
+            //};
+
+            //logClass.writeLog(header, basicInfo);
 
             Status.SetModeToIdle();
             text.cleanTxt();
 
-            eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
 
 
             return "PDF FINAL GERADO";

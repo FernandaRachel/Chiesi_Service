@@ -42,7 +42,7 @@ namespace Chiesi.Loading
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public Convertion convert { get; set; }
 
@@ -75,13 +75,13 @@ namespace Chiesi.Loading
             this.changeColumn = changeColumn;
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -99,8 +99,8 @@ namespace Chiesi.Loading
         /// </summary>
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do SecondLoaading' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do SecondLoaading' para iniciar leituras das tags necessárias");
 
             //var signal = WaitSign();
             checkError();
@@ -120,18 +120,18 @@ namespace Chiesi.Loading
 
                 try
                 {
-                    logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
+                    ////logAction.writeLog("Iniciando leituras/escrita das tags necessárias");
 
                     //LENDO HORA INCIAL
-                    logAction.writeLog("Lendo hora inicial do SecondLoading");
+                    ////logAction.writeLog("Lendo hora inicial do SecondLoading");
                     gli.OutFlowStart = Convert.ToDateTime(result.Hora_0);
-
+                    var auxIniFlow = Convert.ToDateTime(result.Hora_0);
                     //LENDO HORA FINAL
-                    logAction.writeLog("Lendo hora final  do SecondLoading");
-                    gli.OutFlowEnd = Convert.ToDateTime(result.Hora_1);
+                    ////logAction.writeLog("Lendo hora final  do SecondLoading");
+                    gli.OutFlowEnd = auxIniFlow.AddMinutes(3);
 
                     //LENDO VARIAÇÕES E QUANTIDADES
-                    logAction.writeLog("Iniciando leituras variações e quantidades");
+                    ////logAction.writeLog("Iniciando leituras variações e quantidades");
                     gli.GliQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
                     flux.TheoricQty = result.Param_2.Replace(".", ",");
@@ -165,7 +165,7 @@ namespace Chiesi.Loading
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
 
@@ -186,7 +186,7 @@ namespace Chiesi.Loading
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string column;
             string escoamento;
@@ -245,7 +245,7 @@ namespace Chiesi.Loading
                 this.infos.CreateString()
                     + breakline;
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

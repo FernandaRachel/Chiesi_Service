@@ -56,7 +56,7 @@ namespace Chiesi.Operation
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            //logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -75,7 +75,7 @@ namespace Chiesi.Operation
         /// </summary>
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("Entrando no método 'Calculate do BeginOfManipulation' para iniciar leituras das tags necessárias");
+            //logAction.writeLog("Entrando no método 'Calculate do BeginOfManipulation' para iniciar leituras das tags necessárias");
 
             checkError();
             var operationInfos = this.eq.recipe;
@@ -84,13 +84,13 @@ namespace Chiesi.Operation
             try
             {
                 this.basicInfo.KeepBatch = this.eq.recipe.Batch;
-                logAction.writeLog("Lendo basic infos do BeginOfManipulation");
+                //logAction.writeLog("Lendo basic infos do BeginOfManipulation");
                 // Define os novos valores do basic info = assinatura
                 this.basicInfo.Hour = Convert.ToDateTime(operationInfos.Hour);
                 this.basicInfo.Date = Convert.ToDateTime(operationInfos.Date);
                 this.basicInfo.OperatorLogin = operationInfos.Asignature;
 
-                logAction.writeLog("Iniciando leituras das tags necessárias do BeginOfManipulation");
+                //logAction.writeLog("Iniciando leituras das tags necessárias do BeginOfManipulation");
                 this.prod.Batch = operationInfos.Batch;
                 this.prod.Code = operationInfos.Code;
                 this.prod.Product = operationInfos.RecipeName;
@@ -112,7 +112,7 @@ namespace Chiesi.Operation
                 txt.addItem(x);
                 txt.saveTxt(x, true);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                //logAction.writeLog("Texto adicionado ao log.txt");
             }
 
 
@@ -135,7 +135,7 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            //logAction.writeLog("Iniciando CreateString");
 
             string txtCreate =
                             "<h3>Inicio da Manipulação - Seleção da Receita</h3>" +
@@ -144,7 +144,7 @@ namespace Chiesi.Operation
                             "<label class='lab'>Lote : </label><span class='campo'>" + prod.Batch + "</span><br>" +
                             basicInfo.CreateString();
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            //logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

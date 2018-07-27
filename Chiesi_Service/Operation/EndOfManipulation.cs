@@ -26,7 +26,7 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public string operationID { get; set; }
 
@@ -45,13 +45,13 @@ namespace Chiesi.Operation
             this.errorlog = new ErrorLog();
             this.checkBreak = checkBreak;
             this.gerarPdf = gerarPdf;
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -67,9 +67,9 @@ namespace Chiesi.Operation
 
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
 
-            logAction.writeLog("Entrando no método 'Calculate do EndOfManipulation' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("Entrando no método 'Calculate do EndOfManipulation' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -83,7 +83,7 @@ namespace Chiesi.Operation
                 try
                 {
                     // PEGAR DO PLC HORA E DATA
-                    logAction.writeLog("Lendo hora do EndOfManipulation");
+                    ////logAction.writeLog("Lendo hora do EndOfManipulation");
                     string endTimeString = String.Format(result.Hora_0, "HH:mm");
                     string endData = String.Format(result.Date, "dd/MM/yyyy");
 
@@ -133,7 +133,7 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string breakline;
 
@@ -151,7 +151,7 @@ namespace Chiesi.Operation
                             "<label>Data: </label><span class='campo'>" + values[0] + "</span>" +
                             "<label> Hora: </label><span class='campo'>" + values[1] + "</span>"
                             + breakline;
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

@@ -35,19 +35,19 @@ namespace Chiesi
 
                 Thread NewThread = new Thread(Process);
                 NewThread.IsBackground = true;
-                //NewThread.Start(); // inicia a Thread do LifeBit
+                NewThread.Start(); // inicia a Thread do LifeBit
 
 
                 while (DontStopMeNOW)
                 {
-                    logAction.writeLog("Iniciando Loop referente ao relatório" + DateTime.Now.ToString("dd-MM-yyyy"));
+                    //logAction.writeLog("Iniciando Loop referente ao relatório" + DateTime.Now.ToString("dd-MM-yyyy"));
                     
 
                     if (Status.getStatus() != StatusType.Fail)
                     {
                         // CONFIRM THAT ALL VALUES WERE READ
 
-                        logAction.writeLog("Lendo tag de ler infos - verifica se esta 'true'");
+                        //logAction.writeLog("Lendo tag de ler infos - verifica se esta 'true'");
 
                         sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
                         signOkRead = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["OKREAD"]));
@@ -60,15 +60,15 @@ namespace Chiesi
                             Thread.Sleep(500);
                         }
 
-                        //while (!sign)
-                        //{
-                        //    sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
-                        //    Thread.Sleep(500);
-                        //}
+                        while (!sign)
+                        {
+                            sign = Convert.ToBoolean(eq.Read(ConfigurationManager.AppSettings["CANREAD"]));
+                            Thread.Sleep(500);
+                        }
 
 
-                        logAction.writeLog("-------------------------------------------------");
-                        logAction.writeLog("Lendo Tipo e Subtipo do relatório");
+                        //logAction.writeLog("-------------------------------------------------");
+                        //logAction.writeLog("Lendo Tipo e Subtipo do relatório");
 
                         report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
                         subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
@@ -88,19 +88,19 @@ namespace Chiesi
                         //Se o STATUS estiver OK(Idle) - Inicia o relatório
                         if (Status.getStatus() == StatusType.Idle)
                         {
-                            logAction.writeLog("Entrando no ReadAllData() -----------------------");
+                            //logAction.writeLog("Entrando no ReadAllData() -----------------------");
                             eq.ReadAllData();
 
                             // INICIA A MONTAGEM DO RELATÓRIO
                             ReportFactory rf = new ReportFactory();
-                            logAction.writeLog("Iniciando Preenchimento do Relatório");
+                            //logAction.writeLog("Iniciando Preenchimento do Relatório");
                             rf.ConstructEquipament(report, subType, EquipamentType.PLC);
 
                             
 
                             Thread.Sleep(2000);
-                            Console.WriteLine("Press any key to exit.");
-                            Console.Read();
+                            //Console.WriteLine("Press any key to exit.");
+                            //Console.Read();
                         }
                     }
                     else

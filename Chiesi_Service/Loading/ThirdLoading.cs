@@ -38,7 +38,7 @@ namespace Chiesi.Loading
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public Convertion convert { get; set; }
 
@@ -69,14 +69,14 @@ namespace Chiesi.Loading
             this.limitCell = limitCell;
             this.checkBreak = checkBreak;
             this.convert = new Convertion(typeEq);
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
 
         }
 
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -95,8 +95,8 @@ namespace Chiesi.Loading
         /// </summary>
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do ThirdLoading' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do ThirdLoading' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -115,23 +115,22 @@ namespace Chiesi.Loading
 
                 try
                 {
-                    logAction.writeLog("Iniciando leituras das tags necessárias do ThirdLoading");
+                    ////logAction.writeLog("Iniciando leituras das tags necessárias do ThirdLoading");
 
                     //PEGAR HORA DO PLC
-                    logAction.writeLog("Lendo hora inicial da mistura do ThirdLoading");
+                    ////logAction.writeLog("Lendo hora inicial da mistura do ThirdLoading");
                     gli.OutFlowStart = Convert.ToDateTime(result.Hora_0);
 
                     //LENDO VARIAÇÕES e QTD
-                    logAction.writeLog("Iniciando leituras variações e quantidades");
+                    ////logAction.writeLog("Iniciando leituras variações e quantidades");
                     cell.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
                     flux.TheoricQty = result.Param_2.Replace(".", ",");
                     flowvariation = result.Param_3.Replace(".", ",");
                     cellVariation = result.Param_4.Replace(".", ",");
 
-                    //PEGAR HORA DO PLC
-                    logAction.writeLog("Lendo hora final da mistura do ThirdLoading");
-                    gli.OutFlowEnd = Convert.ToDateTime(result.Hora_1);
+                    var auxIniFlow = Convert.ToDateTime(result.Hora_0);
+                    gli.OutFlowEnd = auxIniFlow.AddMinutes(3);
 
                     // Define os novos valores do basic info = assinatura
                     this.infos.Hour = Convert.ToDateTime(result.Hora_1);

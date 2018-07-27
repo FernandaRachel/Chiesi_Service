@@ -67,8 +67,8 @@ namespace Chiesi.Operation
         /// </summary>
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do ZeroLoadCell' para iniciar leituras das tags necessárias");
+            //logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            //logAction.writeLog("Entrando no método 'Calculate do ZeroLoadCell' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -87,9 +87,9 @@ namespace Chiesi.Operation
                 try
                 {
                     tankWeigth = convert.convertToDouble("result.Param_0", result.Param_0);
-                    basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
-                    basicInfo.Date = Convert.ToDateTime(result.Date);
-                    basicInfo.OperatorLogin = result.Asignature;
+                    this.basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
+                    this.basicInfo.Date = Convert.ToDateTime(result.Date);
+                    this.basicInfo.OperatorLogin = result.Asignature;
                     tankWeigth = (tankWeigth / 100);
                     tankWightModified = tankWeigth.ToString().Replace(".", ",");
                 }
@@ -110,7 +110,7 @@ namespace Chiesi.Operation
                     txt.addItem(x);
                     txt.saveTxt(x, false);
 
-                    logAction.writeLog("Texto adicionado ao log.txt");
+                    //logAction.writeLog("Texto adicionado ao log.txt");
                 }
 
                 if (successor != null)
@@ -137,14 +137,14 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            //logAction.writeLog("Iniciando CreateString");
 
             string txtCreate =
                 "<h3>Zerar Célula de Carga</h3>" +
                 "<label>Peso do Tanque : </label><span class='campo'>" + values[0] + "kg</span>" +
                 "<br>" + basicInfo.CreateString();
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            //logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }
