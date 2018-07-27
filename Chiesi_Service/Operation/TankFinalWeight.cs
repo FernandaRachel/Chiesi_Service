@@ -23,7 +23,7 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public string OperationName { get; set; }
 
@@ -47,7 +47,7 @@ namespace Chiesi.Operation
             this.tanks = TankClass.GetTankClass();
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
         public bool checkError()
@@ -65,8 +65,8 @@ namespace Chiesi.Operation
 
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do Addition' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -80,7 +80,7 @@ namespace Chiesi.Operation
             {
                 try
                 {
-                    logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
+                    ////logAction.writeLog("Iniciando leituras das tags necessárias do TankFinalWeight");
                     tanks.TankWeight = convert.convertToDouble("result", result);
                 }
                 catch (Exception e)
@@ -104,7 +104,7 @@ namespace Chiesi.Operation
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -125,7 +125,7 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string breakline;
 
@@ -142,7 +142,7 @@ namespace Chiesi.Operation
                 + values[0] + "</span> Kg"
                 + breakline;
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

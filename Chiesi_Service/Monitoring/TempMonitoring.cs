@@ -34,7 +34,7 @@ namespace Chiesi.Monitoring
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public Convertion convert { get; set; }
 
@@ -56,12 +56,12 @@ namespace Chiesi.Monitoring
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
             this.checkBreak = checkBreak;
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -80,8 +80,8 @@ namespace Chiesi.Monitoring
         /// </summary>
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do TempMonitoring' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do TempMonitoring' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -100,9 +100,9 @@ namespace Chiesi.Monitoring
                 try
                 {
 
-                    logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
+                    ////logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
-                    logAction.writeLog("Lendo temperatura e velocidade - baixa valocidade");
+                    ////logAction.writeLog("Lendo temperatura e velocidade - baixa valocidade");
                     this.prod.ProductTemp = convert.convertToDouble("result.Param_0", result.Param_0);
                     this.shaker.ShakingSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
 
@@ -110,7 +110,7 @@ namespace Chiesi.Monitoring
 
 
 
-                    logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
+                    ////logAction.writeLog("Lendo basic info da mistura de baixa velocidade");
                     // Define os novos valores do basic info = assinatura
                     this.basicInfo.Hour = Convert.ToDateTime(result.Hora_0);
                     this.basicInfo.Date = Convert.ToDateTime(result.Date);
@@ -138,7 +138,7 @@ namespace Chiesi.Monitoring
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -158,7 +158,7 @@ namespace Chiesi.Monitoring
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string breakline;
 
@@ -192,7 +192,7 @@ namespace Chiesi.Monitoring
                 basicInfo.CreateString()
                 + breakline;
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

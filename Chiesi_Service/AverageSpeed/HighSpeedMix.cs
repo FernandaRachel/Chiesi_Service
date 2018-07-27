@@ -49,7 +49,7 @@ namespace Chiesi.AverageSpeed
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public Convertion convert { get; set; }
 
@@ -84,13 +84,13 @@ namespace Chiesi.AverageSpeed
             this.eq = this.eqFact.ConstructEquipament(typeEq);
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
 
         }
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -106,8 +106,8 @@ namespace Chiesi.AverageSpeed
 
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do HighSpeedMix' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do HighSpeedMix' para iniciar leituras das tags necessárias");
 
             checkError();
 
@@ -126,14 +126,14 @@ namespace Chiesi.AverageSpeed
                 {
                     if (!changeTable)
                     {
-                        logAction.writeLog("Iniciando leituras das tags necessárias");
+                        ////logAction.writeLog("Iniciando leituras das tags necessárias");
 
-                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                        ////logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
                         // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
                         anchor.IniTime = Convert.ToDateTime(result.Hora_0);
                         turbine.IniTime = Convert.ToDateTime(result.Hora_0);
 
-                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                        ////logAction.writeLog("Lendo hora final da mistura de alta velocidade");
                         // Precisa verificar se a hora final da ancora e da turbina são as mesmas
                         anchor.EndTime = Convert.ToDateTime(result.Hora_1);
                         turbine.EndTime = Convert.ToDateTime(result.Hora_1);
@@ -143,22 +143,22 @@ namespace Chiesi.AverageSpeed
                         this.basicInfo.Date = Convert.ToDateTime(result.Date);
                         this.basicInfo.OperatorLogin = result.Asignature;
 
-                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+                        ////logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
 
                         anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
                         turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
                     }
                     else
                     {
-                        logAction.writeLog("Iniciando leituras das tags necessárias");
+                        ////logAction.writeLog("Iniciando leituras das tags necessárias");
 
-                        logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                        ////logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
                         // Precisa verificar se a hora incial da ancora e da turbina são as mesmas
                         anchor.IniTime = Convert.ToDateTime(result.Hora_0);
                         clenil.IniTime = Convert.ToDateTime(result.Hora_0);
                         clenilStrong.IniTime = Convert.ToDateTime(result.Hora_0);
 
-                        logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                        ////logAction.writeLog("Lendo hora final da mistura de alta velocidade");
                         // Precisa verificar se a hora final da ancora e da turbina são as mesmas
                         anchor.EndTime = Convert.ToDateTime(result.Hora_1);
                         clenil.EndTime = Convert.ToDateTime(result.Hora_1);
@@ -170,7 +170,7 @@ namespace Chiesi.AverageSpeed
                         this.basicInfo.OperatorLogin = result.Asignature;
 
 
-                        logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
+                        ////logAction.writeLog("Lendo velocidades da mistura de alta velocidade");
 
                         anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
                         turbine.TurbineSpeed = convert.convertToDouble("result.Param_1", result.Param_1);
@@ -212,7 +212,7 @@ namespace Chiesi.AverageSpeed
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -221,6 +221,8 @@ namespace Chiesi.AverageSpeed
                 {
                     Pdf pdf = new Pdf(txt.txtAtual);
                     pdf.gerarPdf(txt.Header, basicInfo);
+                    
+                    
                     txt.cleanTxt();
                 }
                 else
@@ -233,7 +235,7 @@ namespace Chiesi.AverageSpeed
         // Este método forma o layout do html e adiciona os valores necessários dentros dos devidos campos
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string column;
             string td;
@@ -321,7 +323,7 @@ namespace Chiesi.AverageSpeed
                 "<tr>" +
                 column + basicInfo.CreateString();
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

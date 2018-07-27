@@ -50,7 +50,7 @@ namespace Chiesi.Valve
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public string operationID { get; set; }
 
@@ -78,13 +78,13 @@ namespace Chiesi.Valve
             this.errorlog = new ErrorLog();
             this.convert = new Convertion(typeEq);
             this.eq = this.eqFact.ConstructEquipament(typeEq);
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -99,7 +99,7 @@ namespace Chiesi.Valve
 
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("Entrando no método 'Calculate do ValveClass(Recirculação)' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("Entrando no método 'Calculate do ValveClass(Recirculação)' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -113,9 +113,9 @@ namespace Chiesi.Valve
 
                 try
                 {
-                    logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-                    logAction.writeLog("Iniciando leituras das tags necessárias");
-                    logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
+                    ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+                    ////logAction.writeLog("Iniciando leituras das tags necessárias");
+                    ////logAction.writeLog("Lendo hora inicial da mistura de alta velocidade");
 
                     if (valvName.ToLower() == "v10")
                     {
@@ -132,7 +132,7 @@ namespace Chiesi.Valve
 
 
 
-                    logAction.writeLog("Lendo hora final da mistura de alta velocidade");
+                    ////logAction.writeLog("Lendo hora final da mistura de alta velocidade");
                     if (valvName.ToLower() == "v10")
                     {
                         EndTime = Convert.ToDateTime(result.Hora_1);
@@ -151,7 +151,7 @@ namespace Chiesi.Valve
                     this.basicInfo.Date = Convert.ToDateTime(result.Date);
                     this.basicInfo.OperatorLogin = result.Asignature;
 
-                    logAction.writeLog("Iniciando leituras das tags de velocidade");
+                    ////logAction.writeLog("Iniciando leituras das tags de velocidade");
 
                     anchor.AnchorSpeed = Convert.ToDouble(result.Param_0);
                     lobules.lobulesSpeed = Convert.ToDouble(result.Param_1);
@@ -178,7 +178,7 @@ namespace Chiesi.Valve
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
 
@@ -188,6 +188,8 @@ namespace Chiesi.Valve
                 {
                     Pdf pdf = new Pdf(txt.txtAtual);
                     pdf.gerarPdf(txt.Header, basicInfo);
+                    
+                    
                     txt.cleanTxt();
                 }
                 else
@@ -200,7 +202,7 @@ namespace Chiesi.Valve
         public string CreateString(params string[] values)
         {
 
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string txtCreate = "";
 
@@ -231,7 +233,7 @@ namespace Chiesi.Valve
             if (finalValve)
                 txtCreate += "</table>" + basicInfo.CreateString();
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

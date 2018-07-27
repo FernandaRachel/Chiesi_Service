@@ -28,7 +28,7 @@ namespace Chiesi.Loading
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public string limitFlow { get; set; }
 
@@ -59,14 +59,14 @@ namespace Chiesi.Loading
             this.limitCell = limitCell;
             this.limitFlow = limitFlow;
             this.convert = new Convertion(typeEq);
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
 
         }
 
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -84,8 +84,8 @@ namespace Chiesi.Loading
         /// </summary>
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do Loading' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do Loading' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -104,10 +104,10 @@ namespace Chiesi.Loading
 
                 try
                 {
-                    logAction.writeLog("Iniciando leituras das tags necessárias de Loading");
+                    ////logAction.writeLog("Iniciando leituras das tags necessárias de Loading");
 
                     //LENDO VARIAÇÕES e QUANTIDADES
-                    logAction.writeLog("Iniciando leituras variações e quantidades");
+                    ////logAction.writeLog("Iniciando leituras variações e quantidades");
                     cell.RealQty = convert.convertToDouble("result.Param_0", result.Param_0);
                     flux.RealQty = convert.convertToDouble("result.Param_1", result.Param_1);
                     flux.TheoricQty = result.Param_2.Replace(".", ",");
@@ -146,7 +146,7 @@ namespace Chiesi.Loading
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
 
@@ -168,7 +168,7 @@ namespace Chiesi.Loading
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string txtCreate =
                 "<h3>" + headerName + "</h3>" +
@@ -197,7 +197,7 @@ namespace Chiesi.Loading
                 "</table></html>" +
                 this.infos.CreateString();
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

@@ -34,7 +34,7 @@ namespace Chiesi.AverageSpeed
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public Convertion convert { get; set; }
 
@@ -57,12 +57,12 @@ namespace Chiesi.AverageSpeed
             this.rpmLimit = rpmLimit;
             this.checkBreak = checkBreak;
             this.convert = new Convertion(typeEq);
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
         public bool checkError()
         {
-            logAction.writeLog("Entrando no método 'checkError'");
+            ////logAction.writeLog("Entrando no método 'checkError'");
 
             var tagerror = convert.convertToBoolean(ConfigurationManager.AppSettings["TAGERRORPLC"], eq.Read(ConfigurationManager.AppSettings["TAGERRORPLC"]));
 
@@ -77,8 +77,8 @@ namespace Chiesi.AverageSpeed
 
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do LowSpeedMix' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do LowSpeedMix' para iniciar leituras das tags necessárias");
 
             checkError();
 
@@ -99,18 +99,18 @@ namespace Chiesi.AverageSpeed
                     result = operationInfos.ElementAt(1);
                 try
                 {
-                    logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
+                    ////logAction.writeLog("Iniciando leituras das tags necessárias de baixa velocidade");
 
                     // LENDO HORA INCIAL
-                    logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
+                    ////logAction.writeLog("Lendo hora inicial da mistura de baixa velocidade");
                     anchor.IniTime = Convert.ToDateTime(result.Hora_0);
 
                     // LENDO HORA FINAL
-                    logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
+                    ////logAction.writeLog("Lendo hora final da mistura de baixa velocidade");
                     anchor.EndTime = Convert.ToDateTime(result.Hora_1);
 
                     // LENDO VELOCIDADES E TEMPO DE MISTURA
-                    logAction.writeLog("Lendo velocidades da mistura de baixa velocidade e basic infos");
+                    ////logAction.writeLog("Lendo velocidades da mistura de baixa velocidade e basic infos");
                     anchor.AnchorSpeed = convert.convertToDouble("result.Param_0", result.Param_0);
                     anchor.mixTime = convert.convertToDouble("mixTime", mixTime);
 
@@ -142,7 +142,7 @@ namespace Chiesi.AverageSpeed
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -162,7 +162,7 @@ namespace Chiesi.AverageSpeed
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string breakline;
 
@@ -198,7 +198,7 @@ namespace Chiesi.AverageSpeed
                 + basicInfo.CreateString()
                 + breakline;
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }

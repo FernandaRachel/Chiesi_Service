@@ -29,7 +29,7 @@ namespace Chiesi.Operation
 
         public ErrorLog errorlog { get; set; }
 
-        public LogAction logAction { get; set; }
+        //public //logAction //logAction { get; set; }
 
         public string operationID { get; set; }
 
@@ -48,7 +48,7 @@ namespace Chiesi.Operation
             this.infos = BasicInfoClass.GetBasicInfo();
             this.convert = new Convertion(typeEq);
             this.errorlog = new ErrorLog();
-            this.logAction = new LogAction();
+            //this.logAction = new //logAction();
         }
 
         public bool checkError()
@@ -66,8 +66,8 @@ namespace Chiesi.Operation
 
         public override void Calculate(Text txt)
         {
-            logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
-            logAction.writeLog("Entrando no método 'Calculate do RecirculationHoseDrain' para iniciar leituras das tags necessárias");
+            ////logAction.writeLog("------------------- ID: " + this.operationID + "----------------");
+            ////logAction.writeLog("Entrando no método 'Calculate do RecirculationHoseDrain' para iniciar leituras das tags necessárias");
 
             checkError();
             // It will search the infos correponding to the specific operation
@@ -110,7 +110,7 @@ namespace Chiesi.Operation
                 txt.addItem(x);
                 txt.saveTxt(x, false);
 
-                logAction.writeLog("Texto adicionado ao log.txt");
+                ////logAction.writeLog("Texto adicionado ao log.txt");
             }
 
             if (successor != null)
@@ -131,13 +131,13 @@ namespace Chiesi.Operation
 
         public string CreateString(params string[] values)
         {
-            logAction.writeLog("Iniciando CreateString");
+            ////logAction.writeLog("Iniciando CreateString");
 
             string txtCreate =
                 "<h3>Drenagem da Mangueira de Recirculação</h3>" +
                 "<label> Escoamento do Produto: &nbsp</label>Inicio : <span class='campo'>" + values[0] + "</span> Final : <span class='campo'>" + values[1] + "</span>";
 
-            logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
+            ////logAction.writeLog("CreateString executado, string gerada: " + "\n" + txtCreate);
 
             return txtCreate;
         }
