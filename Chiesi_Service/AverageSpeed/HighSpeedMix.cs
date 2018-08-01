@@ -260,7 +260,7 @@ namespace Chiesi.AverageSpeed
                     column =
                        "<tr>" +
                            "<td rowspan='2'>Agitador Turbina</td>" +
-                           "<td>Clenil Compositium Forte</td>" +
+                           //"<td>Clenil Compositum Forte</td>" + 
                            "<td>" + values[9] + "Rpm</td>" +
                            "<td>" + values[10] + "</td>" +
                            "<td>" + values[11] + "</td>" +
@@ -274,7 +274,7 @@ namespace Chiesi.AverageSpeed
                     column =
                       "<tr>" +
                           "<td rowspan='2'>Agitador Turbina</td>" +
-                          "<td>Clenil Compositium</td>" +
+                          //"<td>Clenil Compositum</td>" +
                           "<td>" + values[5] + "Rpm</td>" +
                           "<td>" + values[6] + "</td>" +
                           "<td>" + values[7] + "</td>" +
@@ -314,7 +314,7 @@ namespace Chiesi.AverageSpeed
                     "<th> Tempo </th>" +
                 "</tr>" +
                 "<tr>" +
-                    "<td>Agitador Âncora</td>" + td +
+                    "<td rowspan='2'>Agitador Âncora</td>" + //td +
                     "<td>" + values[1] + "Rpm </td>" +
                     "<td>" + values[2] + "</td>" +
                     "<td>" + values[3] + "</td>" +

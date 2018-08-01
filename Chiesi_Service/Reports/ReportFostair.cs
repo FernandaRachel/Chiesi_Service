@@ -49,9 +49,9 @@ namespace Chiesi.Reports
             op5 = new SecondLoadingClass(eqtype, "2º Carregamento de Álcool Etílico Anidro + Formoterol", "1.2", "3", true, false,0);
             op7 = new AdditionClass(eqtype, "Adição de Dipropionato de Beclometasona", false, false,0);
             op8 = new HighSpeedMix(eqtype, "30", "1500", "0", "0", false, false, true, "10",0);
-            op9 = new LowSpeedMix(eqtype, "30", "10", false);
+            op9 = new LowSpeedMix(eqtype, "10", "30", false);
             op10 = new AdditionClass(eqtype, "Adição de Excipiente pelo Bocal T2", false, false,1);
-            op11 = new LowSpeedMix(eqtype, "10", "30", false);
+            op11 = new LowSpeedMix(eqtype, "10", "30", false,true);
             op12 = new TankFinalWeight(eqtype, "0", true);
             op13_1 = new ValveClass(eqtype, "5", true, false, "200", "494", "V10","20");
             op13_2 = new ValveClass(eqtype, "5", false, true, "200", "494", "V9","19");

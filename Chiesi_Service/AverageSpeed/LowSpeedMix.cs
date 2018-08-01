@@ -39,13 +39,14 @@ namespace Chiesi.AverageSpeed
         public Convertion convert { get; set; }
 
         public Dictionary<string, string> TagsValues { get; set; }
+        public bool secondTable { get; set; }
 
         EquipamentFactory eqFact = EquipamentFactory.GetEquipamentFactory();
 
         IEquipament eq;
 
 
-        public LowSpeedMix(EquipamentType typeEq, string mixTime, string rpmLimit, bool checkBreak)
+        public LowSpeedMix(EquipamentType typeEq, string mixTime, string rpmLimit, bool checkBreak,bool secondTable = false)
         {
             //ID da Operação - cada operação possui um ID exceto a incial
             this.operationID = "8";
@@ -57,6 +58,10 @@ namespace Chiesi.AverageSpeed
             this.rpmLimit = rpmLimit;
             this.checkBreak = checkBreak;
             this.convert = new Convertion(typeEq);
+            if ( secondTable == true)
+                this.secondTable = true;
+            else
+                this.secondTable = false;
             //this.logAction = new //logAction();
         }
 
@@ -95,7 +100,7 @@ namespace Chiesi.AverageSpeed
             {
                 var result = operationInfos.ElementAt(0);
 
-                if (mixTime == "30")
+                if (secondTable)
                     result = operationInfos.ElementAt(1);
                 try
                 {
