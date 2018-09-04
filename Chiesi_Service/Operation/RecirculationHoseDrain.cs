@@ -86,8 +86,8 @@ namespace Chiesi.Operation
                 {
 
                     // PEGAR HORA E DATA DO PLC !!!!!!
-                    iniTimeString = String.Format(result.Hora_0, "HH:mm");
-                    endTimeString = String.Format(result.Hora_1, "HH:mm");
+                    iniTimeString = String.Format(result.Hora_0, "HH:mm:ss");
+                    endTimeString = String.Format(result.Hora_1, "HH:mm:ss");
                     // ---------------------------------
                 }
                 catch (Exception e)

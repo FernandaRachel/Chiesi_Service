@@ -32,7 +32,7 @@ namespace Chiesi.Log
                     sw.WriteLine(header + ", gerado por: " + '\n' +
                     " Assinatura: " + basicInfo.OperatorLogin + '\n' +
                     " Data: " + basicInfo.Date.ToString("dd/MM/yyyy") + '\n' +
-                    " Hora: " + basicInfo.Hour.ToString("HH:mm") + '\n');
+                    " Hora: " + basicInfo.Hour.ToString("HH:mm:ss") + '\n');
                 }
             }
 
@@ -43,7 +43,7 @@ namespace Chiesi.Log
                 sw.WriteLine(header + ", gerado por: " + '\n' +
                    " Assinatura: " + basicInfo.OperatorLogin + '\n' +
                    " Data: " + basicInfo.Date.ToString("dd/MM/yyyy") + '\n' +
-                   " Hora: " + basicInfo.Hour.ToString("HH:mm") + '\n');
+                   " Hora: " + basicInfo.Hour.ToString("HH:mm:ss") + '\n');
             }
 
             // Open the file to read from.

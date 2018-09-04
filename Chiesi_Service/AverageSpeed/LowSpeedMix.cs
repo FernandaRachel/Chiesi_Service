@@ -133,7 +133,7 @@ namespace Chiesi.AverageSpeed
                 }
 
                 var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), anchor.mixTime.ToString());
+                x = CreateString(String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm:ss"), anchor.EndTime.ToString("HH:mm:ss"), anchor.RpmLimit.ToString(), anchor.mixTime.ToString());
             }
             else
             {

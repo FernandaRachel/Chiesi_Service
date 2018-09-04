@@ -87,7 +87,7 @@ namespace Chiesi.Operation
                 try
                 {
                     // Gera o HTML com as informações
-                    x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm"), String.Format(result.Hora_1, "HH:mm"), result.Asignature);
+                    x = CreateString(String.Format(result.Date, "dd/MM/yyyy"), String.Format(result.Hora_0, "HH:mm:ss"), String.Format(result.Hora_1, "HH:mm:ss"), result.Asignature);
                     // adiciona o texto na variavel global da classe Text
                     txt.addItem(x);
                     //salva o texto no log.txt

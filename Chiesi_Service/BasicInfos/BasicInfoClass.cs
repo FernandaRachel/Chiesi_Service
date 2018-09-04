@@ -80,7 +80,7 @@ namespace Chiesi.BasicInfos
             string txtCreate =
                 "<div class='basic-info'>" +
                     "<label>Data : </label><span class='campo'>" + Date.ToString("dd/MM/yyyy") + "</span>" +
-                    "<label class='lab'>Hora : </label><span class='campo'>" + Hour.ToString("HH:mm") + "</span>" +
+                    "<label class='lab'>Hora : </label><span class='campo'>" + Hour.ToString("HH:mm:ss") + "</span>" +
                     "<br><label>Assinatura : </label><span class='campo'>" + OperatorLogin + "</span>" +
                 "</div>";
             return txtCreate;

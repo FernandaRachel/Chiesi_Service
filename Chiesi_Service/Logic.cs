@@ -72,16 +72,12 @@ namespace Chiesi
 
                         report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
                         subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
-                        // Setta tipo e subtipo do relatório
-                        while (report == 0)
+
+                        // Se o tipo e subtipo forem 0
+                        // Então é receita de Etanol, essa receita NÃO tem relatório
+                        if (report == 0 || subType == 0)
                         {
-                            report = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGPRODUCTYPE"]));
-                            Thread.Sleep(500);
-                            Console.WriteLine("while");
-                        }
-                        while (subType == 0)
-                        {
-                            subType = Convert.ToInt32(eq.Read(ConfigurationManager.AppSettings["TAGSUBTYPE"]));
+                            eq.Write(ConfigurationManager.AppSettings["OKREAD"], "True");
                             Thread.Sleep(500);
                         }
 

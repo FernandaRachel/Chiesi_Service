@@ -189,14 +189,14 @@ namespace Chiesi.AverageSpeed
 
                 if (changeTable)
                 {
-                    x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(), String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed),
-                        clenil.IniTime.ToString("HH:mm"), clenil.EndTime.ToString("HH:mm"), clenil.RpmLimit.ToString(),
-                        String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), clenilStrong.IniTime.ToString("HH:mm"), clenilStrong.EndTime.ToString("HH:mm"), clenilStrong.RpmLimit.ToString());
+                    x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm:ss"), anchor.EndTime.ToString("HH:mm:ss"), anchor.RpmLimit.ToString(), String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed),
+                        clenil.IniTime.ToString("HH:mm:ss"), clenil.EndTime.ToString("HH:mm:ss"), clenil.RpmLimit.ToString(),
+                        String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), clenilStrong.IniTime.ToString("HH:mm:ss"), clenilStrong.EndTime.ToString("HH:mm:ss"), clenilStrong.RpmLimit.ToString());
                 }
                 else
                 {
-                    x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm"), anchor.EndTime.ToString("HH:mm"), anchor.RpmLimit.ToString(),
-                    String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), turbine.IniTime.ToString("HH:mm"), turbine.EndTime.ToString("HH:mm"), turbine.RpmLimit.ToString());
+                    x = CreateString(mixTime.ToString(), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), anchor.IniTime.ToString("HH:mm:ss"), anchor.EndTime.ToString("HH:mm:ss"), anchor.RpmLimit.ToString(),
+                    String.Format(changeDotToComma, "{0:0.0}", turbine.TurbineSpeed), turbine.IniTime.ToString("HH:mm:ss"), turbine.EndTime.ToString("HH:mm:ss"), turbine.RpmLimit.ToString());
                 }
 
             }

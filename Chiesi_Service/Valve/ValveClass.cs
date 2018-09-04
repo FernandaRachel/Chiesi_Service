@@ -165,7 +165,7 @@ namespace Chiesi.Valve
                 }
 
                 var changeDotToComma = System.Globalization.CultureInfo.GetCultureInfo("de-De");
-                x = CreateString(IniTime.ToString("HH:mm"), EndTime.ToString("HH:mm"), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), String.Format(changeDotToComma, "{0:0.0}", lobules.lobulesSpeed), lowLimit, highLimit, valveTime);
+                x = CreateString(IniTime.ToString("HH:mm:ss"), EndTime.ToString("HH:mm:ss"), String.Format(changeDotToComma, "{0:0.0}", anchor.AnchorSpeed), String.Format(changeDotToComma, "{0:0.0}", lobules.lobulesSpeed), lowLimit, highLimit, valveTime);
             }
             else
             {
