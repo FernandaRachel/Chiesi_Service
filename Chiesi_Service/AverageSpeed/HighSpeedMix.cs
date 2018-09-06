@@ -254,12 +254,13 @@ namespace Chiesi.AverageSpeed
             if (changeTable)
             {
                 td = "<td></td>";
-                qtd = "2";
+                qtd = "1";
                 if (clenilForte)
                 {
                     column =
                        "<tr>" +
-                           "<td rowspan='2'>Agitador Turbina</td>" +
+                           //"<td rowspan='2'>Agitador Turbina</td>" +
+                           "<td rowspan=''>Agitador Turbina</td>" +
                            //"<td>Clenil Compositum Forte</td>" + 
                            "<td>" + values[9] + "Rpm</td>" +
                            "<td>" + values[10] + "</td>" +
@@ -273,7 +274,8 @@ namespace Chiesi.AverageSpeed
                 {
                     column =
                       "<tr>" +
-                          "<td rowspan='2'>Agitador Turbina</td>" +
+                          //"<td rowspan='2'>Agitador Turbina</td>" +
+                          "<td rowspan=''>Agitador Turbina</td>" +
                           //"<td>Clenil Compositum</td>" +
                           "<td>" + values[5] + "Rpm</td>" +
                           "<td>" + values[6] + "</td>" +
@@ -319,7 +321,7 @@ namespace Chiesi.AverageSpeed
                     "<td>" + values[2] + "</td>" +
                     "<td>" + values[3] + "</td>" +
                     "<td>" + anchorLimit + "</td>" +
-                    "<td rowspan='4'>" + mixTime + " min </td>" +
+                    "<td rowspan='4'>" + this.mixTime.ToString() + " min </td>" +
                 "<tr>" +
                 column + basicInfo.CreateString();
 
